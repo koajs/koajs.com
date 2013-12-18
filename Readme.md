@@ -9,6 +9,6 @@
 
 ```
 $ npm install
-$ make
+$ make -j4
 $ open index.html
 ```

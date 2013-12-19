@@ -5,9 +5,17 @@ html
     link(rel='stylesheet', href='public/style.css')
     link(rel='stylesheet', href='public/icons/css/slate.css')
     link(rel='stylesheet', href='http://fonts.googleapis.com/css?family=Italiana&subset=latin')
+    meta(name='viewport', content='user-scalable=no, width=device-width, initial-scale=1.0, maximum-scale=1.0')
   body
     section#top
-      a#menu(href='#'): i.icon-menu
+      #menu
+        a#toggle(href='#'): i.icon-menu
+        ul
+          li: a(href='#introduction') Introduction
+          li: a(href='#application') Application
+          li: a(href='#context') Context
+          li: a(href='#request') Request
+          li: a(href='#response') Response
 
       #heading
         #logo Koa

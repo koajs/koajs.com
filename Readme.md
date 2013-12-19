@@ -1,13 +1,12 @@
-
 # Koajs.com
 
   The Koa website.
 
 ## Contributing
 
- If you'd like to contribute to the documentation please
+ We store documentation in the Koa repo so that they are versioned along with the changes, if you'd like to contribute to the documentation please
  edit the markdown files in the [koa](https://github.com/koajs/koa/tree/master/docs)
- repository.
+ repository. 
 
 ## Building
 

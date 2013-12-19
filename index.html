@@ -23,6 +23,46 @@ app.use(function *(){
 });
 
 app.listen(3000);</code></pre>
+<h2 id="cascading">Cascading</h2>
+<p>  Koa middleware cascading in a more traditional way as you may be use to with similar tools,
+  this was previsouly not impossible - but difficult to make user friendly due to node&#39;s callbacks,
+  however with generators we can achieve &quot;true&quot; middlware. Contrasting Connect&#39;s implementation which
+  simply passes control through series of functions until one returns, Koa yields &quot;downstream&quot;, then
+  control flows back &quot;upstream&quot;.</p>
+<p>  The following example responds with &quot;Hello World&quot;, however first the request flows through
+  the <code>x-response-time</code> and <code>logging</code> middleware to mark when the request started, then continue
+  to yield control through the to the response middleware. When a middleware invokes <code>yield next</code>
+  the function suspends and passes control to the next middleware defined. After there are no more
+  middleware to execute downstream, the stack will unwind and each middleware is resumed to perform
+  its upstream behaviour.</p>
+<pre><code class="lang-js">var koa = require(&#39;koa&#39;);
+var app = koa();
+
+// x-response-time
+
+app.use(function *(next){
+  var start = new Date;
+  yield next;
+  var ms = new Date - start;
+  this.set(&#39;X-Response-Time&#39;, ms + &#39;ms&#39;);
+});
+
+// logger
+
+app.use(function *(next){
+  var start = new Date;
+  yield next;
+  var ms = new Date - start;
+  console.log(&#39;%s %s - %s&#39;, this.method, this.url, ms);
+});
+
+// response
+
+app.use(function *(){
+  this.body = &#39;Hello World&#39;;
+});
+
+app.listen(3000);</code></pre>
 <h2 id="settings">Settings</h2>
 <p>  Application settings are properties on the <code>app</code> instance, currently
   the following are supported:</p>

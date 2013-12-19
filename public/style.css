@@ -122,6 +122,10 @@ section:nth-child(2n) {
   z-index: 50;
 }
 
+#menu:hover ul {
+  display: block;
+}
+
 #menu a {
   color: inherit;
 }
@@ -133,16 +137,17 @@ section:nth-child(2n) {
   padding: 5px;
   background: rgba(255,255,255,.9);
   border-radius: 2px;
-  border: 1px solid #efefef;
-  border-bottom: 1px solid transparent;
+  border: 1px solid transparent;
   z-index: 5;
 }
 
 #menu a#toggle:hover {
+  border: 1px solid #efefef;
   border-bottom: none;
 }
 
 #menu ul {
+  display: none;
   position: absolute;
   top: 35px;
   right: 0;

@@ -5,10 +5,41 @@ to ditch callbacks and greatly increase error-handling. Koa does not bundle any
 middleware within core, and provides an elegant suite of methods that make
 writing servers fast and enjoyable.
 </p></div></section><section><div class="content"><h1 id="application">Application</h1>
+<p>  A Koa application is an object containing an array of middleware generator functions
+  which are composed and executed in a stack-like manner upon request. Koa is similar to many
+  other middleware systems that you may have encountered such as Ruby&#39;s Rack, Connect, and so on -
+  however a key design decision was made to provide high level &quot;sugar&quot; at the otherwise low-level
+  middleware layer. This improves interoperability, robustness, and makes writing middleware much
+  more enjoyable.</p>
+<p>  This includes methods for common tasks like content-negotation, cache freshness, proxy support, and redirection
+  among others. Despite supplying a reasonably large number of helpful methods Koa maintains a small footprint, as
+  no middleware are bundled.</p>
+<p>  The obligatory hello world application:</p>
+<pre><code class="lang-js">var koa = require(&#39;koa&#39;);
+var app = koa();
+
+app.use(function *(){
+  this.body = &#39;Hello World&#39;;
+});
+
+app.listen(3000);</code></pre>
+<h2 id="settings">Settings</h2>
+<p>  Application settings are properties on the <code>app</code> instance, currently
+  the following are supported:</p>
+<ul>
+<li><code>app.name</code> optionally give your application a name</li>
+<li><code>app.env</code> defaulting to the <strong>NODE_ENV</strong> or &quot;development&quot;</li>
+<li><code>app.proxy</code> when true proxy header fields will be trusted</li>
+<li><code>app.subdomainOffset</code> offset of <code>.subdomains</code> to ignore [2]</li>
+<li><code>app.jsonSpaces</code> default JSON response spaces [2]</li>
+<li><code>app.outputErrors</code> output err.stack to stderr [false in &quot;test&quot; environment]</li>
+</ul>
+<h2 id="app-listen-">app.listen(...)</h2>
 <p>  A Koa application is not a 1-to-1 representation of an HTTP server,
   as one or more Koa applications may be mounted together to form larger
   applications, with a single HTTP server.</p>
-<p>  The following is a useless Koa application bound to port <code>3000</code>:</p>
+<p>  Create and return an HTTP server, passing the given arguments to
+  <code>Server#listen()</code>. These arguments are documented on <a href="http://nodejs.org/api/http.html#http_server_listen_port_hostname_backlog_callback">nodejs.org</a>. The following is a useless Koa application bound to port <code>3000</code>:</p>
 <pre><code class="lang-js">var koa = require(&#39;koa&#39;);
 var app = koa();
 app.listen(3000);</code></pre>
@@ -24,20 +55,6 @@ var koa = require(&#39;koa&#39;);
 var app = koa();
 http.createServer(app.callback()).listen(3000);
 http.createServer(app.callback()).listen(3001);</code></pre>
-<h2 id="settings">Settings</h2>
-<p>  Application settings are properties on the <code>app</code> instance, currently
-  the following are supported:</p>
-<ul>
-<li><code>app.name</code> optionally give your application a name</li>
-<li><code>app.env</code> defaulting to the <strong>NODE_ENV</strong> or &quot;development&quot;</li>
-<li><code>app.proxy</code> when true proxy header fields will be trusted</li>
-<li><code>app.subdomainOffset</code> offset of <code>.subdomains</code> to ignore [2]</li>
-<li><code>app.jsonSpaces</code> default JSON response spaces [2]</li>
-<li><code>app.outputErrors</code> output err.stack to stderr [false in &quot;test&quot; environment]</li>
-</ul>
-<h2 id="app-listen-">app.listen(...)</h2>
-<p>  Create and return an HTTP server, passing the given arguments to
-  <code>Server#listen()</code>. These arguments are documented on <a href="http://nodejs.org/api/http.html#http_server_listen_port_hostname_backlog_callback">nodejs.org</a>.</p>
 <h2 id="app-callback-">app.callback()</h2>
 <p>  Return a callback function suitable for the <code>http.createServer()</code>
   method to handle a request.
@@ -188,10 +205,6 @@ throw err;</code></pre>
   such as <code>methodOverride()</code>.</p>
 <h3 id="req-length">req.length</h3>
 <p>  Return request Content-Length as a number when present, or <code>undefined</code>.</p>
-<h3 id="req-type">req.type</h3>
-<p>  Get request <code>Content-Type</code> void of parameters such as &quot;charset&quot;.</p>
-<pre><code class="lang-js">var ct = this.type;
-// =&gt; &quot;image/png&quot;</code></pre>
 <h3 id="req-url">req.url</h3>
 <p>  Get request URL.</p>
 <h3 id="req-url-">req.url=</h3>
@@ -200,6 +213,21 @@ throw err;</code></pre>
 <p>  Get request pathname.</p>
 <h3 id="req-path-">req.path=</h3>
 <p>  Set request pathname and retain query-string when present.</p>
+<h3 id="req-querystring">req.querystring</h3>
+<p>  Get raw query string void of <code>?</code>.</p>
+<h3 id="req-querystring-">req.querystring=</h3>
+<p>  Set raw query string.</p>
+<h3 id="req-search">req.search</h3>
+<p>  Get raw query string with the <code>?</code>.</p>
+<h3 id="req-search-">req.search=</h3>
+<p>  Set raw query string.</p>
+<h3 id="req-host">req.host</h3>
+<p>  Get host void of port number when present. Supports <code>X-Forwarded-Host</code>
+  when <code>app.proxy</code> is <strong>true</strong>, otherwise <code>Host</code> is used.</p>
+<h3 id="req-type">req.type</h3>
+<p>  Get request <code>Content-Type</code> void of parameters such as &quot;charset&quot;.</p>
+<pre><code class="lang-js">var ct = this.type;
+// =&gt; &quot;image/png&quot;</code></pre>
 <h3 id="req-query">req.query</h3>
 <p>  Get parsed query-string, returning an empty object when no
   query-string is present. Note that this getter does <em>not</em>
@@ -213,17 +241,6 @@ throw err;</code></pre>
 <p>  Set query-string to the given object. Note that this
   setter does <em>not</em> support nested objects.</p>
 <pre><code class="lang-js">this.query = { next: &#39;/login&#39; };</code></pre>
-<h3 id="req-querystring">req.querystring</h3>
-<p>  Get raw query string void of <code>?</code>.</p>
-<h3 id="req-querystring-">req.querystring=</h3>
-<p>  Set raw query string.</p>
-<h3 id="req-search">req.search</h3>
-<p>  Get raw query string with the <code>?</code>.</p>
-<h3 id="req-search-">req.search=</h3>
-<p>  Set raw query string.</p>
-<h3 id="req-host">req.host</h3>
-<p>  Get host void of port number when present. Supports <code>X-Forwarded-Host</code>
-  when <code>app.proxy</code> is <strong>true</strong>, otherwise <code>Host</code> is used.</p>
 <h3 id="req-fresh">req.fresh</h3>
 <p>  Check if a request cache is &quot;fresh&quot;, aka the contents have not changed. This
   method is for cache negotiation between <code>If-None-Match</code> / <code>ETag</code>, and <code>If-Modified-Since</code> and <code>Last-Modified</code>. It should be referenced after setting one or more of these response headers.</p>
@@ -532,7 +549,10 @@ this.body = &#39;Redirecting to shopping cart&#39;;</code></pre>
 <p>  Set the ETag of a response including the wrapped <code>&quot;</code>s.
   Note that there is no corresponding <code>res.etag</code> getter.</p>
 <pre><code class="lang-js">this.response.etag = crypto.createHash(&#39;md5&#39;).update(this.body).digest(&#39;hex&#39;);</code></pre>
-</div></section><section><div class="content"><h2 id="writing-middleware">Writing Middleware</h2>
+</div></section><section><div class="content"><h1 id="guide">Guide</h1>
+<p>  This guide covers Koa topics are not directly API related, such as best practices for writing middleware,
+  application structure suggestions.</p>
+<h2 id="writing-middleware">Writing Middleware</h2>
 <p>  Koa middleware are simple functions which return a <code>GeneratorFunction</code>, and accept another. When
   the middleware is run by an &quot;upstream&quot; middleware, it must manually <code>yield</code> to the &quot;downstream&quot; middleware.</p>
 <p>  For example if you wanted to track how long it takes for a request to propagate through Koa by adding an

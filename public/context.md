@@ -4,7 +4,7 @@
   into a single object which provides many helpful methods for writing
   web applications and APIs.
 
-  Many accesors and methods simply delegate to their `ctx.request` or `ctx.response`
+  Many accessors and methods simply delegate to their `ctx.request` or `ctx.response`
   equivalents for convenience, and are otherwise identical.
 
   These operations are used so frequently in HTTP server development
@@ -128,10 +128,11 @@ Note: koa uses the [cookies](https://github.com/jed/cookies) module where option
 ```js
 this.throw(403)
 this.throw('name required', 400)
+this.throw(400, 'name required')
 this.throw('something exploded')
 ```
 
-  For example `this.throw('name required', 400)` is requivalent to:
+  For example `this.throw('name required', 400)` is equivalent to:
 
 ```js
 var err = new Error('name required');

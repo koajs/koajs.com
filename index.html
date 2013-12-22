@@ -24,7 +24,7 @@ app.use(function *(){
 
 app.listen(3000);</code></pre>
 <h2 id="cascading">Cascading</h2>
-<p>  Koa middleware cascading in a more traditional way as you may be use to with similar tools -
+<p>  Koa middleware cascading in a more traditional way as you may be used to with similar tools -
   this was previously difficult to make user friendly with node&#39;s use of callbacks.
   However with generators we can achieve &quot;true&quot; middlware. Contrasting Connect&#39;s implementation which
   simply passes control through series of functions until one returns, Koa yields &quot;downstream&quot;, then

@@ -101,7 +101,7 @@ http.createServer(app.callback()).listen(3001);</code></pre>
   You may also use this callback function to mount your koa app in a
   Connect/Express app.</p>
 <h2 id="app-use-function-">app.use(function)</h2>
-<p>  Add the given middleware function to this application. See <a href="#middleware">Middleware</a> for
+<p>  Add the given middleware function to this application. See <a href="https://github.com/koajs/koa/wiki#middleware">Middleware</a> for
   more information.</p>
 <h2 id="app-keys-">app.keys=</h2>
 <p> Set signed cookie keys.</p>
@@ -143,6 +143,52 @@ app.keys = new KeyGrip([&#39;im a newer secret&#39;, &#39;i like turtle&#39;], &
   this.request; // is a koa Request
   this.response; // is a koa Response
 });</code></pre>
+<h2 id="api">API</h2>
+<p>  <code>Context</code> specific methods and accessors.</p>
+<h3 id="ctx-req">ctx.req</h3>
+<p>  Node&#39;s <code>request</code> object.</p>
+<h3 id="ctx-res">ctx.res</h3>
+<p>  Node&#39;s <code>response</code> object.</p>
+<h3 id="ctx-request">ctx.request</h3>
+<p>  A koa <code>Request</code> object.</p>
+<h3 id="ctx-response">ctx.response</h3>
+<p>  A koa <code>Response</code> object.</p>
+<h3 id="ctx-app">ctx.app</h3>
+<p>  Application instance reference.</p>
+<h3 id="ctx-cookies-get-name-options-">ctx.cookies.get(name, [options])</h3>
+<p>  Get cookie <code>name</code> with <code>options</code>:</p>
+<ul>
+<li><code>signed</code> the cookie requested should be signed</li>
+</ul>
+<p>Note: koa uses the <a href="https://github.com/jed/cookies">cookies</a> module where options are simply passed.</p>
+<h3 id="ctx-cookies-set-name-value-options-">ctx.cookies.set(name, value, [options])</h3>
+<p>  Set cookie <code>name</code> to <code>value</code> with <code>options</code>:</p>
+<ul>
+<li><code>signed</code> sign the cookie value</li>
+<li><code>expires</code> a <code>Date</code> for cookie expiration</li>
+<li><code>path</code> cookie path, <code>/&#39;</code> by default</li>
+<li><code>domain</code> cookie domain</li>
+<li><code>secure</code> secure cookie</li>
+<li><code>httpOnly</code> server-accessible cookie, <strong>true</strong> by default</li>
+</ul>
+<p>Note: koa uses the <a href="https://github.com/jed/cookies">cookies</a> module where options are simply passed.</p>
+<h3 id="ctx-throw-msg-status-">ctx.throw(msg, [status])</h3>
+<p>  Helper method to throw an error with a <code>.status</code> property
+  defaulting to <code>500</code> that will allow Koa to respond appropriately.
+  The following combinations are allowed:</p>
+<pre><code class="lang-js">this.throw(403)
+this.throw(&#39;name required&#39;, 400)
+this.throw(400, &#39;name required&#39;)
+this.throw(&#39;something exploded&#39;)</code></pre>
+<p>  For example <code>this.throw(&#39;name required&#39;, 400)</code> is equivalent to:</p>
+<pre><code class="lang-js">var err = new Error(&#39;name required&#39;);
+err.status = 400;
+throw err;</code></pre>
+<p>  Note that these are user-level errors and are flagged with
+  <code>err.expose</code> meaning the messages are appropriate for
+  client responses, which is typically not the case for
+  error messages since you do not want to leak failure
+  details.</p>
 <h2 id="request-aliases">Request aliases</h2>
 <p>  The following accessors and alias <a href="#request">Request</a> equivalents:</p>
 <ul>
@@ -192,52 +238,6 @@ app.keys = new KeyGrip([&#39;im a newer secret&#39;, &#39;i like turtle&#39;], &
 <li><code>ctx.lastModified=</code></li>
 <li><code>ctx.etag=</code></li>
 </ul>
-<h2 id="api">API</h2>
-<p>  <code>Context</code> specific methods and accessors.</p>
-<h3 id="ctx-req">ctx.req</h3>
-<p>  Node&#39;s <code>request</code> object.</p>
-<h3 id="ctx-res">ctx.res</h3>
-<p>  Node&#39;s <code>response</code> object.</p>
-<h3 id="ctx-request">ctx.request</h3>
-<p>  A koa <code>Request</code> object.</p>
-<h3 id="ctx-response">ctx.response</h3>
-<p>  A koa <code>Response</code> object.</p>
-<h3 id="ctx-app">ctx.app</h3>
-<p>  Application instance reference.</p>
-<h3 id="ctx-cookies-get-name-options-">ctx.cookies.get(name, [options])</h3>
-<p>  Get cookie <code>name</code> with <code>options</code>:</p>
-<ul>
-<li><code>signed</code> the cookie requested should be signed</li>
-</ul>
-<p>Note: koa uses the <a href="https://github.com/jed/cookies">cookies</a> module where options are simply passed.</p>
-<h3 id="ctx-cookies-set-name-value-options-">ctx.cookies.set(name, value, [options])</h3>
-<p>  Set cookie <code>name</code> to <code>value</code> with <code>options</code>:</p>
-<ul>
-<li><code>signed</code> sign the cookie value</li>
-<li><code>expires</code> a <code>Date</code> for cookie expiration</li>
-<li><code>path</code> cookie path, <code>/&#39;</code> by default</li>
-<li><code>domain</code> cookie domain</li>
-<li><code>secure</code> secure cookie</li>
-<li><code>httpOnly</code> server-accessible cookie, <strong>true</strong> by default</li>
-</ul>
-<p>Note: koa uses the <a href="https://github.com/jed/cookies">cookies</a> module where options are simply passed.</p>
-<h3 id="ctx-throw-msg-status-">ctx.throw(msg, [status])</h3>
-<p>  Helper method to throw an error with a <code>.status</code> property
-  defaulting to <code>500</code> that will allow Koa to respond appropriately.
-  The following combinations are allowed:</p>
-<pre><code class="lang-js">this.throw(403)
-this.throw(&#39;name required&#39;, 400)
-this.throw(400, &#39;name required&#39;)
-this.throw(&#39;something exploded&#39;)</code></pre>
-<p>  For example <code>this.throw(&#39;name required&#39;, 400)</code> is equivalent to:</p>
-<pre><code class="lang-js">var err = new Error(&#39;name required&#39;);
-err.status = 400;
-throw err;</code></pre>
-<p>  Note that these are user-level errors and are flagged with
-  <code>err.expose</code> meaning the messages are appropriate for
-  client responses, which is typically not the case for
-  error messages since you do not want to leak failure
-  details.</p>
 </div></section><section><div class="content"><h1 id="request">Request</h1>
 <p>  A Koa <code>Request</code> object is an abstraction on top of node&#39;s vanilla request object,
   providing additional functionality that is useful for every day HTTP server

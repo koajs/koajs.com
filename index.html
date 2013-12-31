@@ -11,7 +11,7 @@ writing servers fast and enjoyable.
   however a key design decision was made to provide high level &quot;sugar&quot; at the otherwise low-level
   middleware layer. This improves interoperability, robustness, and makes writing middleware much
   more enjoyable.</p>
-<p>  This includes methods for common tasks like content-negotation, cache freshness, proxy support, and redirection
+<p>  This includes methods for common tasks like content-negotiation, cache freshness, proxy support, and redirection
   among others. Despite supplying a reasonably large number of helpful methods Koa maintains a small footprint, as
   no middleware are bundled.</p>
 <p>  The obligatory hello world application:</p>
@@ -149,6 +149,13 @@ app.keys = new KeyGrip([&#39;im a newer secret&#39;, &#39;i like turtle&#39;], &
 <p>  Node&#39;s <code>request</code> object.</p>
 <h3 id="ctx-res">ctx.res</h3>
 <p>  Node&#39;s <code>response</code> object.</p>
+<p>  Bypassing Koa&#39;s response handling is <strong>not supported</strong>. Avoid using the following node properties:</p>
+<ul>
+<li><code>res.statusCode</code></li>
+<li><code>res.writeHead()</code></li>
+<li><code>res.write()</code></li>
+<li><code>res.end()</code></li>
+</ul>
 <h3 id="ctx-request">ctx.request</h3>
 <p>  A koa <code>Request</code> object.</p>
 <h3 id="ctx-response">ctx.response</h3>

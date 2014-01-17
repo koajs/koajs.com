@@ -212,6 +212,7 @@ throw err;</code></pre>
 <li><code>ctx.querystring=</code></li>
 <li><code>ctx.length</code></li>
 <li><code>ctx.host</code></li>
+<li><code>ctx.host=</code></li>
 <li><code>ctx.fresh</code></li>
 <li><code>ctx.stale</code></li>
 <li><code>ctx.socket</code></li>
@@ -278,6 +279,8 @@ throw err;</code></pre>
 <h3 id="req-host">req.host</h3>
 <p>  Get host void of port number when present. Supports <code>X-Forwarded-Host</code>
   when <code>app.proxy</code> is <strong>true</strong>, otherwise <code>Host</code> is used.</p>
+<h3 id="req-host-">req.host=</h3>
+<p>  Set the <code>Host</code> header field to a new value.</p>
 <h3 id="req-type">req.type</h3>
 <p>  Get request <code>Content-Type</code> void of parameters such as &quot;charset&quot;.</p>
 <pre><code class="lang-js">var ct = this.type;
@@ -439,15 +442,25 @@ this.acceptsLanguages([&#39;en&#39;, &#39;es&#39;]);
 <pre><code class="lang-js">// Accept-Language: en;q=0.8, es, pt
 this.acceptsLanguages();
 // =&gt; [&quot;es&quot;, &quot;pt&quot;, &quot;en&quot;]</code></pre>
+<h3 id="req-idempotent">req.idempotent</h3>
+<p>  Check if the request is idempotent.</p>
+<h3 id="req-socket">req.socket</h3>
+<p>  Return the request socket.</p>
+<h3 id="req-get-field-">req.get(field)</h3>
+<p>  Return request header.</p>
 </div></section><section><div class="content"><h1 id="response">Response</h1>
 <p>  A Koa <code>Response</code> object is an abstraction on top of node&#39;s vanilla response object,
   providing additional functionality that is useful for every day HTTP server
   development.</p>
 <h2 id="api">API</h2>
 <h3 id="res-header">res.header</h3>
-<p> Response header object.</p>
+<p>  Response header object.</p>
+<h3 id="res-socket">res.socket</h3>
+<p>  Request socket.</p>
 <h3 id="res-status">res.status</h3>
-<p>  Get response status.</p>
+<p>  Get response status. By default, <code>res.status</code> is not set unlike node&#39;s <code>res.statusCode</code> which defaults to <code>200</code>.</p>
+<h3 id="res-statusstring">res.statusString</h3>
+<p>  Response status string</p>
 <h3 id="res-status-">res.status=</h3>
 <p>  Set response status via numeric code or case-insensitive string:</p>
 <ul>
@@ -517,9 +530,7 @@ so you can make a correction.</p>
 <p>  Return response Content-Length as a number when present, or deduce
   from <code>res.body</code> when possible, or <code>undefined</code>.</p>
 <h3 id="res-body">res.body</h3>
-<p>  Get response body. When <code>res.body</code> is <code>null</code> and <code>res.status</code> is still
-  200 it is considered a 404. This is to prevent the developer from manually
-  specifying <code>this.status = 200</code> on every response.</p>
+<p>  Get response body.</p>
 <h3 id="res-body-">res.body=</h3>
 <p>  Set response body to one of the following:</p>
 <ul>
@@ -527,7 +538,9 @@ so you can make a correction.</p>
 <li><code>Buffer</code> written</li>
 <li><code>Stream</code> piped</li>
 <li><code>Object</code> json-stringified</li>
-<li><code>null</code> no content response</li>
+<li><p><code>null</code> no content response</p>
+<p>If <code>res.status</code> has not been set, Koa will automatically set the status to <code>200</code> or <code>204</code>.</p>
+</li>
 </ul>
 <h4 id="string">String</h4>
 <p>  The Content-Type is defaulted to text/html or text/plain, both with
@@ -602,6 +615,10 @@ this.body = &#39;Redirecting to shopping cart&#39;;</code></pre>
 <p>  Set the ETag of a response including the wrapped <code>&quot;</code>s.
   Note that there is no corresponding <code>res.etag</code> getter.</p>
 <pre><code class="lang-js">this.response.etag = crypto.createHash(&#39;md5&#39;).update(this.body).digest(&#39;hex&#39;);</code></pre>
+<h3 id="res-append-field-val-">res.append(field, val)</h3>
+<p>  Append <code>val</code> to header <code>field</code>.</p>
+<h3 id="res-vary-field-">res.vary(field)</h3>
+<p>  Vary on <code>field</code>.</p>
 </div></section><section><div class="content"><h1 id="links">Links</h1><p>Community links to discover third-party middleware for Koa, full runnable examples,
 thorough guides and more! If you have questions join us in IRC!
 </p><ul><li><a href="https://github.com/koajs/koa">GitHub repository</a></li><li><a href="https://github.com/koajs/examples">Examples</a></li><li><a href="https://github.com/koajs/koa/wiki">Middleware</a></li><li><a href="https://github.com/koajs/koa/wiki">Wiki</a></li><li><a href="https://plus.google.com/communities/101845768320796750641">G+ Community</a></li><li><a href="https://groups.google.com/forum/#!forum/koajs">Mailing list</a></li><li><a href="https://github.com/koajs/koa/blob/master/docs/guide.md">Guide</a></li><li><a href="https://github.com/koajs/koa/blob/master/docs/faq.md">FAQ</a></li><li><strong>#koajs</strong> on freenode</li></ul></div></section></body></html>

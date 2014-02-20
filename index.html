@@ -4,136 +4,12 @@ for web applications and APIs. Through leveraging generators Koa allows you
 to ditch callbacks and greatly increase error-handling. Koa does not bundle any
 middleware within core, and provides an elegant suite of methods that make
 writing servers fast and enjoyable.
-</p></div></section><section><div class="content"><h1 id="application">Application</h1>
-<p>  A Koa application is an object containing an array of middleware generator functions
-  which are composed and executed in a stack-like manner upon request. Koa is similar to many
-  other middleware systems that you may have encountered such as Ruby&#39;s Rack, Connect, and so on -
-  however a key design decision was made to provide high level &quot;sugar&quot; at the otherwise low-level
-  middleware layer. This improves interoperability, robustness, and makes writing middleware much
-  more enjoyable.</p>
-<p>  This includes methods for common tasks like content-negotiation, cache freshness, proxy support, and redirection
-  among others. Despite supplying a reasonably large number of helpful methods Koa maintains a small footprint, as
-  no middleware are bundled.</p>
-<p>  The obligatory hello world application:</p>
-<pre><code class="lang-js">var koa = require(&#39;koa&#39;);
-var app = koa();
-
-app.use(function *(){
-  this.body = &#39;Hello World&#39;;
-});
-
-app.listen(3000);</code></pre>
-<h2 id="cascading">Cascading</h2>
-<p>  Koa middleware cascade in a more traditional way as you may be used to with similar tools -
-  this was previously difficult to make user friendly with node&#39;s use of callbacks.
-  However with generators we can achieve &quot;true&quot; middleware. Contrasting Connect&#39;s implementation which
-  simply passes control through series of functions until one returns, Koa yields &quot;downstream&quot;, then
-  control flows back &quot;upstream&quot;.</p>
-<p>  The following example responds with &quot;Hello World&quot;, however first the request flows through
-  the <code>x-response-time</code> and <code>logging</code> middleware to mark when the request started, then continue
-  to yield control through the to the response middleware. When a middleware invokes <code>yield next</code>
-  the function suspends and passes control to the next middleware defined. After there are no more
-  middleware to execute downstream, the stack will unwind and each middleware is resumed to perform
-  its upstream behaviour.</p>
-<pre><code class="lang-js">var koa = require(&#39;koa&#39;);
-var app = koa();
-
-// x-response-time
-
-app.use(function *(next){
-  var start = new Date;
-  yield next;
-  var ms = new Date - start;
-  this.set(&#39;X-Response-Time&#39;, ms + &#39;ms&#39;);
-});
-
-// logger
-
-app.use(function *(next){
-  var start = new Date;
-  yield next;
-  var ms = new Date - start;
-  console.log(&#39;%s %s - %s&#39;, this.method, this.url, ms);
-});
-
-// response
-
-app.use(function *(){
-  this.body = &#39;Hello World&#39;;
-});
-
-app.listen(3000);</code></pre>
-<h2 id="settings">Settings</h2>
-<p>  Application settings are properties on the <code>app</code> instance, currently
-  the following are supported:</p>
-<ul>
-<li><code>app.name</code> optionally give your application a name</li>
-<li><code>app.env</code> defaulting to the <strong>NODE_ENV</strong> or &quot;development&quot;</li>
-<li><code>app.proxy</code> when true proxy header fields will be trusted</li>
-<li><code>app.subdomainOffset</code> offset of <code>.subdomains</code> to ignore [2]</li>
-<li><code>app.jsonSpaces</code> default JSON response spaces [2]</li>
-<li><code>app.outputErrors</code> output err.stack to stderr [false in &quot;test&quot; environment]</li>
-</ul>
-<h2 id="app-listen-">app.listen(...)</h2>
-<p>  A Koa application is not a 1-to-1 representation of a HTTP server.
-  One or more Koa applications may be mounted together to form larger
-  applications with a single HTTP server.</p>
-<p>  Create and return an HTTP server, passing the given arguments to
-  <code>Server#listen()</code>. These arguments are documented on <a href="http://nodejs.org/api/http.html#http_server_listen_port_hostname_backlog_callback">nodejs.org</a>. The following is a useless Koa application bound to port <code>3000</code>:</p>
-<pre><code class="lang-js">var koa = require(&#39;koa&#39;);
-var app = koa();
-app.listen(3000);</code></pre>
-<p>  The <code>app.listen(...)</code> method is simply sugar for the following:</p>
-<pre><code class="lang-js">var http = require(&#39;http&#39;);
-var koa = require(&#39;koa&#39;);
-var app = koa();
-http.createServer(app.callback()).listen(3000);</code></pre>
-<p>  This means you can spin up the same application as both HTTP and HTTPS
-  or on multiple addresses:</p>
-<pre><code class="lang-js">var http = require(&#39;http&#39;);
-var koa = require(&#39;koa&#39;);
-var app = koa();
-http.createServer(app.callback()).listen(3000);
-http.createServer(app.callback()).listen(3001);</code></pre>
-<h2 id="app-callback-">app.callback()</h2>
-<p>  Return a callback function suitable for the <code>http.createServer()</code>
-  method to handle a request.
-  You may also use this callback function to mount your koa app in a
-  Connect/Express app.</p>
-<h2 id="app-use-function-">app.use(function)</h2>
-<p>  Add the given middleware function to this application. See <a href="https://github.com/koajs/koa/wiki#middleware">Middleware</a> for
-  more information.</p>
-<h2 id="app-keys-">app.keys=</h2>
-<p> Set signed cookie keys.</p>
-<p> These are passed to <a href="https://github.com/jed/keygrip">KeyGrip</a>,
- however you may also pass your own <code>KeyGrip</code> instance. For
- example the following are acceptable:</p>
-<pre><code class="lang-js">app.keys = [&#39;im a newer secret&#39;, &#39;i like turtle&#39;];
-app.keys = new KeyGrip([&#39;im a newer secret&#39;, &#39;i like turtle&#39;], &#39;sha256&#39;);</code></pre>
-<p>  These keys may be rotated and are used when signing cookies
-  with the <code>{ signed: true }</code> option:</p>
-<pre><code class="lang-js">this.cookies.set(&#39;name&#39;, &#39;tobi&#39;, { signed: true });</code></pre>
-<h2 id="error-handling">Error Handling</h2>
-<p>  By default outputs all errors to stderr unless <strong>NODE_ENV</strong> is &quot;test&quot;. To perform custom error-handling logic such as centralized logging you
-  can add an &quot;error&quot; event listener:</p>
-<pre><code class="lang-js">app.on(&#39;error&#39;, function(err){
-  log.error(&#39;server error&#39;, err);
-});</code></pre>
-<p>  If an error in the req/res cycle and it is <em>not</em> possible to respond to the client, the <code>Context</code> instance is also passed:</p>
-<pre><code class="lang-js">app.on(&#39;error&#39;, function(err, ctx){
-  log.error(&#39;server error&#39;, err, ctx);
-});</code></pre>
-<p>  When an error occurs <em>and</em> it is still possible to respond to the client, aka no data has been written to the socket, Koa will respond
-  appropriately with a 500 &quot;Internal Server Error&quot;. In either case
-  an app-level &quot;error&quot; is emitted for logging purposes.</p>
-</div></section><section><div class="content"><h1 id="context">Context</h1>
+</p></div></section><section><div class="content"></div></section><section><div class="content"><h1 id="context">Context</h1>
 <p>  A Koa Context encapsulates node&#39;s <code>request</code> and <code>response</code> objects
   into a single object which provides many helpful methods for writing
-  web applications and APIs.</p>
-<p>  Many accessors and methods simply delegate to their <code>ctx.request</code> or <code>ctx.response</code>
-  equivalents for convenience, and are otherwise identical.</p>
-<p>  These operations are used so frequently in HTTP server development
-  that they are added at this level, instead of a higher level framework,
+  web applications and APIs.
+  These operations are used so frequently in HTTP server development
+  that they are added at this level instead of a higher level framework,
   which would force middleware to re-implement this common functionality.</p>
 <p>  A <code>Context</code> is created <em>per</em> request, and is referenced in middleware
   as the receiver, or the <code>this</code> identifier, as shown in the following
@@ -143,6 +19,9 @@ app.keys = new KeyGrip([&#39;im a newer secret&#39;, &#39;i like turtle&#39;], &
   this.request; // is a koa Request
   this.response; // is a koa Response
 });</code></pre>
+<p>  Many of the context&#39;s accessors and methods simply delegate to their <code>ctx.request</code> or <code>ctx.response</code>
+  equivalents for convenience, and are otherwise identical. For example <code>ctx.type</code> and <code>ctx.length</code>
+  delegate to the <code>response</code> object, and <code>ctx.path</code> and <code>ctx.method</code> delegate to the <code>request</code>.</p>
 <h2 id="api">API</h2>
 <p>  <code>Context</code> specific methods and accessors.</p>
 <h3 id="ctx-req">ctx.req</h3>
@@ -196,6 +75,9 @@ throw err;</code></pre>
   client responses, which is typically not the case for
   error messages since you do not want to leak failure
   details.</p>
+<h3 id="ctx-respond">ctx.respond</h3>
+<p>  To bypass Koa&#39;s built-in response handling, you may explicitly set <code>this.respond = false;</code>. Use this if you want to write to the raw <code>res</code> object instead of letting Koa handle the response for you.</p>
+<p>  Note that using this is <strong>not</strong> supported by Koa. This may break intended functionality of Koa middleware and Koa itself. Using this properly is considered a hack and is only a convenience to those wishing to use traditional <code>fn(req, res)</code> functions and middleware within Koa.</p>
 <h2 id="request-aliases">Request aliases</h2>
 <p>  The following accessors and alias <a href="#request">Request</a> equivalents:</p>
 <ul>
@@ -210,7 +92,7 @@ throw err;</code></pre>
 <li><code>ctx.query=</code></li>
 <li><code>ctx.querystring</code></li>
 <li><code>ctx.querystring=</code></li>
-<li><code>ctx.length</code></li>
+<li><code>ctx.type</code></li>
 <li><code>ctx.host</code></li>
 <li><code>ctx.host=</code></li>
 <li><code>ctx.fresh</code></li>
@@ -235,9 +117,12 @@ throw err;</code></pre>
 <li><code>ctx.body=</code></li>
 <li><code>ctx.status</code></li>
 <li><code>ctx.status=</code></li>
+<li><code>ctx.length</code></li>
 <li><code>ctx.length=</code></li>
 <li><code>ctx.type</code></li>
 <li><code>ctx.type=</code></li>
+<li><code>ctx.charset</code></li>
+<li><code>ctx.charset=</code></li>
 <li><code>ctx.headerSent</code></li>
 <li><code>ctx.redirect()</code></li>
 <li><code>ctx.attachment()</code></li>
@@ -283,8 +168,12 @@ throw err;</code></pre>
 <p>  Set the <code>Host</code> header field to a new value.</p>
 <h3 id="req-type">req.type</h3>
 <p>  Get request <code>Content-Type</code> void of parameters such as &quot;charset&quot;.</p>
-<pre><code class="lang-js">var ct = this.type;
+<pre><code class="lang-js">var ct = this.request.type;
 // =&gt; &quot;image/png&quot;</code></pre>
+<h3 id="res-charset">res.charset</h3>
+<p>  Get request charset when present, or <code>undefined</code>:</p>
+<pre><code class="lang-js">this.request.charset
+// =&gt; &quot;utf-8&quot;</code></pre>
 <h3 id="req-query">req.query</h3>
 <p>  Get parsed query-string, returning an empty object when no
   query-string is present. Note that this getter does <em>not</em>
@@ -359,16 +248,22 @@ this.is(&#39;html&#39;); // =&gt; false</code></pre>
 } else {
   this.throw(415, &#39;images only!&#39;);
 }</code></pre>
+<h3 id="content-negotiation">Content Negotiation</h3>
+<p>  Koa&#39;s <code>request</code> object includes helpful content negotiation utilities powered by <a href="http://github.com/expressjs/accepts">accepts</a> and <a href="https://github.com/federomero/negotiator">negotiator</a>. These utilities are:</p>
+<ul>
+<li><code>req.accepts(types)</code></li>
+<li><code>req.acceptsEncodings(types)</code></li>
+<li><code>req.acceptsCharsets(charsets)</code></li>
+<li><p><code>req.acceptsLanguages(langs)</code></p>
+<p>If no types are supplied, <strong>all</strong> acceptable types are returned.</p>
+<p>If multiple types are supplied, the best match will be returned. If no matches are found, a <code>false</code> is returned, and you should send a <code>406 &quot;Not Acceptable&quot;</code> response to the client.</p>
+<p>In the case of missing accept headers where any type is acceptable, the first type will be returned. Thus, the order of types you supply is important.</p>
+</li>
+</ul>
 <h3 id="req-accepts-types-">req.accepts(types)</h3>
-<p>  Check if the given <code>type(s)</code> is acceptable, returning
-  the best match when true, otherwise <code>false</code>, in which
-  case you should respond with 406 &quot;Not Acceptable&quot;.</p>
-<p>  The <code>type</code> value may be one or more mime type string
+<p>  Check if the given <code>type(s)</code> is acceptable, returning the best match when true, otherwise <code>false</code>. The <code>type</code> value may be one or more mime type string
   such as &quot;application/json&quot;, the extension name
-  such as &quot;json&quot;, or an array <code>[&quot;json&quot;, &quot;html&quot;, &quot;text/plain&quot;]</code>.
-  When a list or array is given the <em>best</em> match, if any is returned.</p>
-<p>  Note that if the client did not send an <code>Accept</code> header,
-  the first <code>type</code> will be returned.</p>
+  such as &quot;json&quot;, or an array <code>[&quot;json&quot;, &quot;html&quot;, &quot;text/plain&quot;]</code>.</p>
 <pre><code class="lang-js">// Accept: text/html
 this.accepts(&#39;html&#39;);
 // =&gt; &quot;html&quot;
@@ -386,11 +281,17 @@ this.accepts(&#39;application/json&#39;);
 // Accept: text/*, application/json
 this.accepts(&#39;image/png&#39;);
 this.accepts(&#39;png&#39;);
-// =&gt; undefined
+// =&gt; false
 
 // Accept: text/*;q=.5, application/json
 this.accepts([&#39;html&#39;, &#39;json&#39;]);
 this.accepts(&#39;html&#39;, &#39;json&#39;);
+// =&gt; &quot;json&quot;
+
+// No Accept header
+this.accepts(&#39;html&#39;, &#39;json&#39;);
+// =&gt; &quot;html&quot;
+this.accepts(&#39;json&#39;, &#39;html&#39;);
 // =&gt; &quot;json&quot;</code></pre>
 <p>  You may call <code>this.accepts()</code> as may times as you like,
   or use a switch:</p>
@@ -398,25 +299,25 @@ this.accepts(&#39;html&#39;, &#39;json&#39;);
   case &#39;json&#39;: break;
   case &#39;html&#39;: break;
   case &#39;text&#39;: break;
-  default: this.throw(406);
+  default: this.throw(406, &#39;json, html, or text only&#39;);
 }</code></pre>
 <h3 id="req-acceptsencodings-encodings-">req.acceptsEncodings(encodings)</h3>
-<p>  Check if <code>encodings</code> are acceptable, returning
-  the best match when true, otherwise <code>identity</code>.</p>
+<p>  Check if <code>encodings</code> are acceptable, returning the best match when true, otherwise <code>false</code>. Note that you should include <code>identity</code> as one of the encodings!</p>
 <pre><code class="lang-js">// Accept-Encoding: gzip
-this.acceptsEncodings(&#39;gzip&#39;, &#39;deflate&#39;);
+this.acceptsEncodings(&#39;gzip&#39;, &#39;deflate&#39;, &#39;identity&#39;);
 // =&gt; &quot;gzip&quot;
 
-this.acceptsEncodings([&#39;gzip&#39;, &#39;deflate&#39;]);
+this.acceptsEncodings([&#39;gzip&#39;, &#39;deflate&#39;, &#39;identity&#39;]);
 // =&gt; &quot;gzip&quot;</code></pre>
 <p>  When no arguments are given all accepted encodings
   are returned as an array:</p>
 <pre><code class="lang-js">// Accept-Encoding: gzip, deflate
 this.acceptsEncodings();
-// =&gt; [&quot;gzip&quot;, &quot;deflate&quot;]</code></pre>
+// =&gt; [&quot;gzip&quot;, &quot;deflate&quot;, &quot;identity&quot;]</code></pre>
+<p>  Note that the <code>identity</code> encoding (which means no encoding) could be unacceptable if the client explicitly sends <code>identity;q=0</code>. Although this is an edge case, you should still handle the case where this method returns <code>false</code>.</p>
 <h3 id="req-acceptscharsets-charsets-">req.acceptsCharsets(charsets)</h3>
 <p>  Check if <code>charsets</code> are acceptable, returning
-  the best match when true, otherwise <code>undefined</code>.</p>
+  the best match when true, otherwise <code>false</code>.</p>
 <pre><code class="lang-js">// Accept-Charset: utf-8, iso-8859-1;q=0.2, utf-7;q=0.5
 this.acceptsCharsets(&#39;utf-8&#39;, &#39;utf-7&#39;);
 // =&gt; &quot;utf-8&quot;
@@ -430,7 +331,7 @@ this.acceptsCharsets();
 // =&gt; [&quot;utf-8&quot;, &quot;utf-7&quot;, &quot;iso-8859-1&quot;]</code></pre>
 <h3 id="req-acceptslanguages-langs-">req.acceptsLanguages(langs)</h3>
 <p>  Check if <code>langs</code> are acceptable, returning
-  the best match when true, otherwise <code>undefined</code>.</p>
+  the best match when true, otherwise <code>false</code>.</p>
 <pre><code class="lang-js">// Accept-Language: en;q=0.8, es, pt
 this.acceptsLanguages(&#39;es&#39;, &#39;en&#39;);
 // =&gt; &quot;es&quot;
@@ -552,10 +453,6 @@ so you can make a correction.</p>
 <p>  The Content-Type is defaulted to application/octet-stream.</p>
 <h4 id="object">Object</h4>
 <p>  The Content-Type is defaulted to application/json.</p>
-<h4 id="notes">Notes</h4>
-<p>  To alter the JSON response formatting use the <code>app.jsonSpaces</code>
-  setting, for example to compress JSON responses set:</p>
-<pre><code class="lang-js">app.jsonSpaces = 0;</code></pre>
 <h3 id="res-get-field-">res.get(field)</h3>
 <p>  Get a response header field value with case-insensitive <code>field</code>.</p>
 <pre><code class="lang-js">var etag = this.get(&#39;ETag&#39;);</code></pre>
@@ -584,6 +481,13 @@ this.type = &#39;png&#39;;</code></pre>
   example <code>res.type = &#39;html&#39;</code> will default to &quot;utf-8&quot;, however
   when explicitly defined in full as <code>res.type = &#39;text/html&#39;</code>
   no charset is assigned.</p>
+<h3 id="res-charset">res.charset</h3>
+<p>  Get response charset when present, or <code>undefined</code>:</p>
+<pre><code class="lang-js">this.type = &#39;text/plain; charset=utf-8&#39;;
+this.charset
+// =&gt; &quot;utf-8&quot;</code></pre>
+<h3 id="res-charset-">res.charset=</h3>
+<p>  Set the response charset, overriding if present.</p>
 <h3 id="res-redirect-url-alt-">res.redirect(url, [alt])</h3>
 <p>  Perform a [302] redirect to <code>url</code>.</p>
 <p>  The string &quot;back&quot; is special-cased

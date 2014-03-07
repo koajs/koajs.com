@@ -238,12 +238,10 @@ throw err;</code></pre>
 <li><code>ctx.body=</code></li>
 <li><code>ctx.status</code></li>
 <li><code>ctx.status=</code></li>
-<li><code>ctx.length</code></li>
 <li><code>ctx.length=</code></li>
-<li><code>ctx.type</code></li>
+<li><code>ctx.length</code></li>
 <li><code>ctx.type=</code></li>
-<li><code>ctx.charset</code></li>
-<li><code>ctx.charset=</code></li>
+<li><code>ctx.type</code></li>
 <li><code>ctx.headerSent</code></li>
 <li><code>ctx.redirect()</code></li>
 <li><code>ctx.attachment()</code></li>
@@ -602,13 +600,6 @@ this.type = &#39;png&#39;;</code></pre>
   example <code>res.type = &#39;html&#39;</code> will default to &quot;utf-8&quot;, however
   when explicitly defined in full as <code>res.type = &#39;text/html&#39;</code>
   no charset is assigned.</p>
-<h3 id="res-charset">res.charset</h3>
-<p>  Get response charset when present, or <code>undefined</code>:</p>
-<pre><code class="lang-js">this.type = &#39;text/plain; charset=utf-8&#39;;
-this.charset
-// =&gt; &quot;utf-8&quot;</code></pre>
-<h3 id="res-charset-">res.charset=</h3>
-<p>  Set the response charset, overriding if present.</p>
 <h3 id="res-redirect-url-alt-">res.redirect(url, [alt])</h3>
 <p>  Perform a [302] redirect to <code>url</code>.</p>
 <p>  The string &quot;back&quot; is special-cased

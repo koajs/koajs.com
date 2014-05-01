@@ -4,7 +4,12 @@ for web applications and APIs. Through leveraging generators Koa allows you
 to ditch callbacks and greatly increase error-handling. Koa does not bundle any
 middleware within core, and provides an elegant suite of methods that make
 writing servers fast and enjoyable.
-</p></div></section><section><div class="content"><h1 id="application">Application</h1>
+</p></div></section><section><div class="content"><h1 id="installation">Installation</h1>
+<p> Koa currently requires node 0.11.x for the --harmony flag which exposes generators to your script. If you&#39;re running an earlier version of node you may install <a href="https://github.com/visionmedia/n">n</a>, a node version manager to quickly install 0.11.x:</p>
+<pre><code>$ npm install -g n
+$ n 0.11.12
+$ node --harmony my-koa-app.js</code></pre>
+<h1 id="application">Application</h1>
 <p>  A Koa application is an object containing an array of middleware generator functions
   which are composed and executed in a stack-like manner upon request. Koa is similar to many
   other middleware systems that you may have encountered such as Ruby&#39;s Rack, Connect, and so on -

@@ -204,7 +204,7 @@ throw err;</code></pre>
   details.</p>
 <h3 id="ctx-respond">ctx.respond</h3>
 <p>  To bypass Koa&#39;s built-in response handling, you may explicitly set <code>this.respond = false;</code>. Use this if you want to write to the raw <code>res</code> object instead of letting Koa handle the response for you.</p>
-<p>  Note that using this is <strong>not</strong> supported by Koa. This may break intended functionality of Koa middleware and Koa itself. Using this properly is considered a hack and is only a convenience to those wishing to use traditional <code>fn(req, res)</code> functions and middleware within Koa.</p>
+<p>  Note that using this is <strong>not</strong> supported by Koa. This may break intended functionality of Koa middleware and Koa itself. Using this property is considered a hack and is only a convenience to those wishing to use traditional <code>fn(req, res)</code> functions and middleware within Koa.</p>
 <h2 id="request-aliases">Request aliases</h2>
 <p>  The following accessors and alias <a href="#request">Request</a> equivalents:</p>
 <ul>
@@ -213,6 +213,7 @@ throw err;</code></pre>
 <li><code>ctx.method=</code></li>
 <li><code>ctx.url</code></li>
 <li><code>ctx.url=</code></li>
+<li><code>ctx.originalUrl</code></li>
 <li><code>ctx.path</code></li>
 <li><code>ctx.path=</code></li>
 <li><code>ctx.query</code></li>
@@ -220,7 +221,7 @@ throw err;</code></pre>
 <li><code>ctx.querystring</code></li>
 <li><code>ctx.querystring=</code></li>
 <li><code>ctx.host</code></li>
-<li><code>ctx.host=</code></li>
+<li><code>ctx.hostname</code></li>
 <li><code>ctx.fresh</code></li>
 <li><code>ctx.stale</code></li>
 <li><code>ctx.socket</code></li>
@@ -273,6 +274,8 @@ throw err;</code></pre>
 <p>  Get request URL.</p>
 <h3 id="req-url-">req.url=</h3>
 <p>  Set request URL, useful for url rewrites.</p>
+<h3 id="req-originalurl">req.originalUrl</h3>
+<p>  Get request original URL.</p>
 <h3 id="req-path">req.path</h3>
 <p>  Get request pathname.</p>
 <h3 id="req-path-">req.path=</h3>
@@ -286,10 +289,11 @@ throw err;</code></pre>
 <h3 id="req-search-">req.search=</h3>
 <p>  Set raw query string.</p>
 <h3 id="req-host">req.host</h3>
-<p>  Get host void of port number when present. Supports <code>X-Forwarded-Host</code>
+<p>  Get host (hostname:port) when present. Supports <code>X-Forwarded-Host</code>
   when <code>app.proxy</code> is <strong>true</strong>, otherwise <code>Host</code> is used.</p>
-<h3 id="req-host-">req.host=</h3>
-<p>  Set the <code>Host</code> header field to a new value.</p>
+<h3 id="req-hostname">req.hostname</h3>
+<p>  Get hostname when present. Supports <code>X-Forwarded-Host</code>
+  when <code>app.proxy</code> is <strong>true</strong>, otherwise <code>Host</code> is used.</p>
 <h3 id="req-type">req.type</h3>
 <p>  Get request <code>Content-Type</code> void of parameters such as &quot;charset&quot;.</p>
 <pre><code class="lang-js">var ct = this.request.type;
@@ -348,7 +352,7 @@ this.body = yield db.find(&#39;something&#39;);</code></pre>
 <p>  For example, if the domain is &quot;tobi.ferrets.example.com&quot;:
   If <code>app.subdomainOffset</code> is not set, this.subdomains is <code>[&quot;ferrets&quot;, &quot;tobi&quot;]</code>.
   If <code>app.subdomainOffset</code> is 3, this.subdomains is <code>[&quot;tobi&quot;]</code>.</p>
-<h3 id="req-is-type-">req.is(type)</h3>
+<h3 id="req-is-types-">req.is(types...)</h3>
 <p>  Check if the incoming request contains the &quot;Content-Type&quot;
   header field, and it contains any of the give mime <code>type</code>s.
   If there is no request body, <code>undefined</code> is returned.
@@ -484,10 +488,8 @@ this.acceptsLanguages();
 <p>  Request socket.</p>
 <h3 id="res-status">res.status</h3>
 <p>  Get response status. By default, <code>res.status</code> is not set unlike node&#39;s <code>res.statusCode</code> which defaults to <code>200</code>.</p>
-<h3 id="res-statusstring">res.statusString</h3>
-<p>  Response status string</p>
 <h3 id="res-status-">res.status=</h3>
-<p>  Set response status via numeric code or case-insensitive string:</p>
+<p>  Set response status via numeric code:</p>
 <ul>
 <li>100 &quot;continue&quot;</li>
 <li>101 &quot;switching protocols&quot;</li>
@@ -605,6 +607,27 @@ this.type = &#39;png&#39;;</code></pre>
   example <code>res.type = &#39;html&#39;</code> will default to &quot;utf-8&quot;, however
   when explicitly defined in full as <code>res.type = &#39;text/html&#39;</code>
   no charset is assigned.</p>
+<h3 id="res-is-types-">res.is(types...)</h3>
+<p>  Very similar to <code>this.request.is()</code>.
+  Check whether the response type is one of the supplied types.
+  This is particularly useful for creating middleware that
+  change certain responses.</p>
+<p>  For example, this is a middleware that minifies
+  all HTML response except for streamss.</p>
+<pre><code class="lang-js">var minify = require(&#39;html-minifier&#39;);
+
+app.use(function *minifyHTML(next){
+  yield* next;
+
+  if (!this.response.is(&#39;html&#39;)) return;
+
+  var body = this.response.body;
+  if (!body) return;
+  // too difficult to do this with a stream
+  if (&#39;function&#39; == typeof body.pipe) return;
+  if (Buffer.isBuffer(body)) body = body.toString(&#39;utf8&#39;);
+  this.response.body = minify(body);
+});</code></pre>
 <h3 id="res-redirect-url-alt-">res.redirect(url, [alt])</h3>
 <p>  Perform a [302] redirect to <code>url</code>.</p>
 <p>  The string &quot;back&quot; is special-cased
@@ -636,8 +659,6 @@ this.body = &#39;Redirecting to shopping cart&#39;;</code></pre>
 <p>  Set the ETag of a response including the wrapped <code>&quot;</code>s.
   Note that there is no corresponding <code>res.etag</code> getter.</p>
 <pre><code class="lang-js">this.response.etag = crypto.createHash(&#39;md5&#39;).update(this.body).digest(&#39;hex&#39;);</code></pre>
-<h3 id="res-append-field-val-">res.append(field, val)</h3>
-<p>  Append <code>val</code> to header <code>field</code>.</p>
 <h3 id="res-vary-field-">res.vary(field)</h3>
 <p>  Vary on <code>field</code>.</p>
 </div></section><section><div class="content"><h1 id="links">Links</h1><p>Community links to discover third-party middleware for Koa, full runnable examples,

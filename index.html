@@ -397,12 +397,11 @@ this.is(&#39;html&#39;); // =&gt; false</code></pre>
 <li><code>request.accepts(types)</code></li>
 <li><code>request.acceptsEncodings(types)</code></li>
 <li><code>request.acceptsCharsets(charsets)</code></li>
-<li><p><code>request.acceptsLanguages(langs)</code></p>
+<li><code>request.acceptsLanguages(langs)</code></li>
+</ul>
 <p>If no types are supplied, <strong>all</strong> acceptable types are returned.</p>
 <p>If multiple types are supplied, the best match will be returned. If no matches are found, a <code>false</code> is returned, and you should send a <code>406 &quot;Not Acceptable&quot;</code> response to the client.</p>
 <p>In the case of missing accept headers where any type is acceptable, the first type will be returned. Thus, the order of types you supply is important.</p>
-</li>
-</ul>
 <h3 id="request-accepts-types-">request.accepts(types)</h3>
 <p>  Check if the given <code>type(s)</code> is acceptable, returning the best match when true, otherwise <code>false</code>. The <code>type</code> value may be one or more mime type string
   such as &quot;application/json&quot;, the extension name

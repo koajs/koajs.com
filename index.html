@@ -6,7 +6,132 @@ for web applications and APIs. Through leveraging generators Koa allows you
 to ditch callbacks and greatly increase error-handling. Koa does not bundle any
 middleware within core, and provides an elegant suite of methods that make
 writing servers fast and enjoyable.
-</p></div></section><section><div class="content"></div></section><section><div class="content"><h1 id="context">Context</h1>
+</p></div></section><section><div class="content"><h1 id="installation">Installation</h1>
+<p> Koa currently requires node 0.11.x for the --harmony flag which exposes generators to your script. If you&#39;re running an earlier version of node you may install <a href="https://github.com/visionmedia/n">n</a>, a node version manager to quickly install 0.11.x:</p>
+<pre><code>$ npm install -g n
+$ n 0.11.12
+$ node --harmony my-koa-app.js</code></pre>
+<h1 id="application">Application</h1>
+<p>  A Koa application is an object containing an array of middleware generator functions
+  which are composed and executed in a stack-like manner upon request. Koa is similar to many
+  other middleware systems that you may have encountered such as Ruby&#39;s Rack, Connect, and so on -
+  however a key design decision was made to provide high level &quot;sugar&quot; at the otherwise low-level
+  middleware layer. This improves interoperability, robustness, and makes writing middleware much
+  more enjoyable.</p>
+<p>  This includes methods for common tasks like content-negotiation, cache freshness, proxy support, and redirection
+  among others. Despite supplying a reasonably large number of helpful methods Koa maintains a small footprint, as
+  no middleware are bundled.</p>
+<p>  The obligatory hello world application:</p>
+<pre><code class="lang-js">var koa = require(&#39;koa&#39;);
+var app = koa();
+
+app.use(function *(){
+  this.body = &#39;Hello World&#39;;
+});
+
+app.listen(3000);</code></pre>
+<h2 id="cascading">Cascading</h2>
+<p>  Koa middleware cascade in a more traditional way as you may be used to with similar tools -
+  this was previously difficult to make user friendly with node&#39;s use of callbacks.
+  However with generators we can achieve &quot;true&quot; middleware. Contrasting Connect&#39;s implementation which
+  simply passes control through series of functions until one returns, Koa yields &quot;downstream&quot;, then
+  control flows back &quot;upstream&quot;.</p>
+<p>  The following example responds with &quot;Hello World&quot;, however first the request flows through
+  the <code>x-response-time</code> and <code>logging</code> middleware to mark when the request started, then continue
+  to yield control through the response middleware. When a middleware invokes <code>yield next</code>
+  the function suspends and passes control to the next middleware defined. After there are no more
+  middleware to execute downstream, the stack will unwind and each middleware is resumed to perform
+  its upstream behaviour.</p>
+<pre><code class="lang-js">var koa = require(&#39;koa&#39;);
+var app = koa();
+
+// x-response-time
+
+app.use(function *(next){
+  var start = new Date;
+  yield next;
+  var ms = new Date - start;
+  this.set(&#39;X-Response-Time&#39;, ms + &#39;ms&#39;);
+});
+
+// logger
+
+app.use(function *(next){
+  var start = new Date;
+  yield next;
+  var ms = new Date - start;
+  console.log(&#39;%s %s - %s&#39;, this.method, this.url, ms);
+});
+
+// response
+
+app.use(function *(){
+  this.body = &#39;Hello World&#39;;
+});
+
+app.listen(3000);</code></pre>
+<h2 id="settings">Settings</h2>
+<p>  Application settings are properties on the <code>app</code> instance, currently
+  the following are supported:</p>
+<ul>
+<li><code>app.name</code> optionally give your application a name</li>
+<li><code>app.env</code> defaulting to the <strong>NODE_ENV</strong> or &quot;development&quot;</li>
+<li><code>app.proxy</code> when true proxy header fields will be trusted</li>
+<li><code>app.subdomainOffset</code> offset of <code>.subdomains</code> to ignore [2]</li>
+</ul>
+<h2 id="app-listen-">app.listen(...)</h2>
+<p>  A Koa application is not a 1-to-1 representation of a HTTP server.
+  One or more Koa applications may be mounted together to form larger
+  applications with a single HTTP server.</p>
+<p>  Create and return an HTTP server, passing the given arguments to
+  <code>Server#listen()</code>. These arguments are documented on <a href="http://nodejs.org/api/http.html#http_server_listen_port_hostname_backlog_callback">nodejs.org</a>. The following is a useless Koa application bound to port <code>3000</code>:</p>
+<pre><code class="lang-js">var koa = require(&#39;koa&#39;);
+var app = koa();
+app.listen(3000);</code></pre>
+<p>  The <code>app.listen(...)</code> method is simply sugar for the following:</p>
+<pre><code class="lang-js">var http = require(&#39;http&#39;);
+var koa = require(&#39;koa&#39;);
+var app = koa();
+http.createServer(app.callback()).listen(3000);</code></pre>
+<p>  This means you can spin up the same application as both HTTP and HTTPS
+  or on multiple addresses:</p>
+<pre><code class="lang-js">var http = require(&#39;http&#39;);
+var koa = require(&#39;koa&#39;);
+var app = koa();
+http.createServer(app.callback()).listen(3000);
+http.createServer(app.callback()).listen(3001);</code></pre>
+<h2 id="app-callback-">app.callback()</h2>
+<p>  Return a callback function suitable for the <code>http.createServer()</code>
+  method to handle a request.
+  You may also use this callback function to mount your koa app in a
+  Connect/Express app.</p>
+<h2 id="app-use-function-">app.use(function)</h2>
+<p>  Add the given middleware function to this application. See <a href="https://github.com/koajs/koa/wiki#middleware">Middleware</a> for
+  more information.</p>
+<h2 id="app-keys-">app.keys=</h2>
+<p> Set signed cookie keys.</p>
+<p> These are passed to <a href="https://github.com/jed/keygrip">KeyGrip</a>,
+ however you may also pass your own <code>KeyGrip</code> instance. For
+ example the following are acceptable:</p>
+<pre><code class="lang-js">app.keys = [&#39;im a newer secret&#39;, &#39;i like turtle&#39;];
+app.keys = new KeyGrip([&#39;im a newer secret&#39;, &#39;i like turtle&#39;], &#39;sha256&#39;);</code></pre>
+<p>  These keys may be rotated and are used when signing cookies
+  with the <code>{ signed: true }</code> option:</p>
+<pre><code class="lang-js">this.cookies.set(&#39;name&#39;, &#39;tobi&#39;, { signed: true });</code></pre>
+<h2 id="error-handling">Error Handling</h2>
+<p>  By default outputs all errors to stderr unless <strong>NODE_ENV</strong> is &quot;test&quot;. To perform custom error-handling logic such as centralized logging you
+  can add an &quot;error&quot; event listener:</p>
+<pre><code class="lang-js">app.on(&#39;error&#39;, function(err){
+  log.error(&#39;server error&#39;, err);
+});</code></pre>
+<p>  If an error in the req/res cycle and it is <em>not</em> possible to respond to the client, the <code>Context</code> instance is also passed:</p>
+<pre><code class="lang-js">app.on(&#39;error&#39;, function(err, ctx){
+  log.error(&#39;server error&#39;, err, ctx);
+});</code></pre>
+<p>  When an error occurs <em>and</em> it is still possible to respond to the client, aka no data has been written to the socket, Koa will respond
+  appropriately with a 500 &quot;Internal Server Error&quot;. In either case
+  an app-level &quot;error&quot; is emitted for logging purposes.</p>
+</div></section><section><div class="content"><h1 id="context">Context</h1>
 <p>  A Koa Context encapsulates node&#39;s <code>request</code> and <code>response</code> objects
   into a single object which provides many helpful methods for writing
   web applications and APIs.
@@ -130,6 +255,8 @@ this.throw(&#39;access_denied&#39;, { user: user });</code></pre>
 <li><code>ctx.body=</code></li>
 <li><code>ctx.status</code></li>
 <li><code>ctx.status=</code></li>
+<li><code>ctx.message</code></li>
+<li><code>ctx.message=</code></li>
 <li><code>ctx.length=</code></li>
 <li><code>ctx.length</code></li>
 <li><code>ctx.type=</code></li>
@@ -439,6 +566,11 @@ this.acceptsLanguages();
 <p><strong>NOTE</strong>: don&#39;t worry too much about memorizing these strings,
 if you have a typo an error will be thrown, displaying this list
 so you can make a correction.</p>
+<h3 id="response-message">response.message</h3>
+<p>  Get response status message. By default, <code>response.message</code> is
+  associated with <code>response.status</code>.</p>
+<h3 id="response-message-">response.message=</h3>
+<p>  Set response status message to the given value.</p>
 <h3 id="response-length-">response.length=</h3>
 <p>  Set response Content-Length to the given value.</p>
 <h3 id="response-length">response.length</h3>
@@ -453,10 +585,9 @@ so you can make a correction.</p>
 <li><code>Buffer</code> written</li>
 <li><code>Stream</code> piped</li>
 <li><code>Object</code> json-stringified</li>
-<li><p><code>null</code> no content response</p>
-<p>If <code>response.status</code> has not been set, Koa will automatically set the status to <code>200</code> or <code>204</code>.</p>
-</li>
+<li><code>null</code> no content response</li>
 </ul>
+<p>If <code>response.status</code> has not been set, Koa will automatically set the status to <code>200</code> or <code>204</code>.</p>
 <h4 id="string">String</h4>
 <p>  The Content-Type is defaulted to text/html or text/plain, both with
   a default charset of utf-8. The Content-Length field is also set.</p>

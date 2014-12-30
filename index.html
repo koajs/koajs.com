@@ -9,7 +9,7 @@ writing servers fast and enjoyable.
 </p></div></section><section><div class="content"><h1 id="installation">Installation</h1>
 <p> Koa currently requires node 0.11.x for the --harmony flag which exposes generators to your script. If you&#39;re running an earlier version of node you may install <a href="https://github.com/visionmedia/n">n</a>, a node version manager to quickly install 0.11.x:</p>
 <pre><code>$ npm install -g n
-$ n 0.11.12
+$ n 0.11
 $ node --harmony my-koa-app.js</code></pre>
 <h1 id="application">Application</h1>
 <p>  A Koa application is an object containing an array of middleware generator functions
@@ -166,6 +166,9 @@ app.keys = new KeyGrip([&#39;im a newer secret&#39;, &#39;i like turtle&#39;], &
 <p>  A koa <code>Request</code> object.</p>
 <h3 id="ctx-response">ctx.response</h3>
 <p>  A koa <code>Response</code> object.</p>
+<h3 id="ctx-state">ctx.state</h3>
+<p>  The recommended namespace for passing information through middleware and to your frontend views.</p>
+<pre><code class="lang-js">this.state.user = yield User.find(id);</code></pre>
 <h3 id="ctx-app">ctx.app</h3>
 <p>  Application instance reference.</p>
 <h3 id="ctx-cookies-get-name-options-">ctx.cookies.get(name, [options])</h3>
@@ -225,6 +228,7 @@ this.throw(&#39;access_denied&#39;, { user: user });</code></pre>
 <li><code>ctx.url</code></li>
 <li><code>ctx.url=</code></li>
 <li><code>ctx.originalUrl</code></li>
+<li><code>ctx.href</code></li>
 <li><code>ctx.path</code></li>
 <li><code>ctx.path=</code></li>
 <li><code>ctx.query</code></li>
@@ -291,6 +295,10 @@ this.throw(&#39;access_denied&#39;, { user: user });</code></pre>
 <p>  Set request URL, useful for url rewrites.</p>
 <h3 id="request-originalurl">request.originalUrl</h3>
 <p>  Get request original URL.</p>
+<h3 id="request-href">request.href</h3>
+<p>  Get full request URL, include <code>protocol</code>, <code>host</code> and <code>url</code>.</p>
+<pre><code class="lang-js">this.request.href
+// =&gt; http://example.com/foo/bar?q=1</code></pre>
 <h3 id="request-path">request.path</h3>
 <p>  Get request pathname.</p>
 <h3 id="request-path-">request.path=</h3>
@@ -609,7 +617,7 @@ so you can make a correction.</p>
   &#39;Etag&#39;: &#39;1234&#39;,
   &#39;Last-Modified&#39;: date
 });</code></pre>
-<h3 id="res-remove-field-">res.remove(field)</h3>
+<h3 id="response-remove-field-">response.remove(field)</h3>
 <p>  Remove header <code>field</code>.</p>
 <h3 id="response-type">response.type</h3>
 <p>  Get response <code>Content-Type</code> void of parameters such as &quot;charset&quot;.</p>

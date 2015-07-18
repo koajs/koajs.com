@@ -25,10 +25,15 @@ html
 
       #heading
         #logo Koa
-        #tagline next generation web framework for node.js
+        #tagline Next generation web framework for Node.js
+      
+      #slack
+        script(src='http://slack.koajs.in/slackin.js', async, defer)
 
     section
       .content
+        a(href="https://npmjs.org/package/koa") 
+          img(src="https://img.shields.io/npm/v/koa.svg?style=flat-square",style="width:100px")
         h1#introduction Introduction
         p.
           Koa is a new web framework designed by the team behind Express,
@@ -59,7 +64,7 @@ html
         h1#links Links
         p.
           Community links to discover third-party middleware for Koa, full runnable examples,
-          thorough guides and more! If you have questions join us in IRC!
+          thorough guides and more! If you have questions join us in Slack or IRC!
 
         ul
           li: a(href='https://github.com/koajs/koa') GitHub repository
@@ -71,3 +76,5 @@ html
           li: a(href='https://github.com/koajs/koa/blob/master/docs/guide.md') Guide
           li: a(href='https://github.com/koajs/koa/blob/master/docs/faq.md') FAQ
           li: <strong>#koajs</strong> on freenode
+          li: a(href='http://slack.koajs.in') koajs.slack.com
+

@@ -2,6 +2,8 @@
 
   The Koa website.
 
+[![Slack](http://slack.koajs.in/badge.svg)](http://slack.koajs.in/)
+
 ## Contributing
 
  __We store documentation in the koajs/koa repo__ so that they are versioned along with the changes, if you'd like to contribute to the documentation please

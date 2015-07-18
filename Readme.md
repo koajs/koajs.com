@@ -1,4 +1,4 @@
-# Koajs.com
+# Koajs.com [![Slack](http://slack.koajs.in/badge.svg)](http://slack.koajs.in/)
 
   The Koa website.
 

@@ -1,16 +1,19 @@
 <!DOCTYPE html><html><head><title>Koa - next generation web framework for node.js</title><link rel="stylesheet" href="public/style.css"><link rel="stylesheet" href="public/icons/css/slate.css"><link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Italiana&amp;subset=latin"><meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1.0, maximum-scale=1.0"><script>window.analytics=window.analytics||[],window.analytics.methods=["identify","group","track","page","pageview","alias","ready","on","once","off","trackLink","trackForm","trackClick","trackSubmit"],window.analytics.factory=function(t){return function(){var a=Array.prototype.slice.call(arguments);return a.unshift(t),window.analytics.push(a),window.analytics}};for(var i=0;i<window.analytics.methods.length;i++){var key=window.analytics.methods[i];window.analytics[key]=window.analytics.factory(key)}window.analytics.load=function(t){if(!document.getElementById("analytics-js")){var a=document.createElement("script");a.type="text/javascript",a.id="analytics-js",a.async=!0,a.src=("https:"===document.location.protocol?"https://":"http://")+"cdn.segment.io/analytics.js/v1/"+t+"/analytics.min.js";var n=document.getElementsByTagName("script")[0];n.parentNode.insertBefore(a,n)}},window.analytics.SNIPPET_VERSION="2.0.9",
 window.analytics.load("9u0xff0b3k");
-window.analytics.page();</script><script src="stats.js"></script></head><body><section id="top"><div id="menu"><a id="toggle" href="#"><i class="icon-menu"></i></a><ul><li><a href="#introduction">Introduction</a></li><li><a href="#application">Application</a></li><li><a href="#context">Context</a></li><li><a href="#request">Request</a></li><li><a href="#response">Response</a></li><li><a href="#links">Links</a></li></ul></div><div id="heading"><div id="logo">Koa</div><div id="tagline">next generation web framework for node.js</div></div></section><section><div class="content"><h1 id="introduction">Introduction</h1><p>Koa is a new web framework designed by the team behind Express,
+window.analytics.page();</script><script src="stats.js"></script></head><body><section id="top"><div id="menu"><a id="toggle" href="#"><i class="icon-menu"></i></a><ul><li><a href="#introduction">Introduction</a></li><li><a href="#application">Application</a></li><li><a href="#context">Context</a></li><li><a href="#request">Request</a></li><li><a href="#response">Response</a></li><li><a href="#links">Links</a></li></ul></div><div id="heading"><div id="logo">Koa</div><div id="tagline">Next generation web framework for Node.js</div></div><div id="slack"><script src="http://slack.koajs.in/slackin.js" async defer></script></div></section><section><div class="content"><a href="https://npmjs.org/package/koa"> <img src="https://img.shields.io/npm/v/koa.svg?style=flat-square" style="width:100px"></a><h1 id="introduction">Introduction</h1><p>Koa is a new web framework designed by the team behind Express,
 which aims to be a smaller, more expressive, and more robust foundation
 for web applications and APIs. Through leveraging generators Koa allows you
 to ditch callbacks and greatly increase error-handling. Koa does not bundle any
 middleware within core, and provides an elegant suite of methods that make
 writing servers fast and enjoyable.
 </p></div></section><section><div class="content"><h1 id="installation">Installation</h1>
-<p> Koa currently requires node 0.11.x for the --harmony flag which exposes generators to your script. If you&#39;re running an earlier version of node you may install <a href="https://github.com/visionmedia/n">n</a>, a node version manager to quickly install 0.11.x:</p>
-<pre><code>$ npm install -g n
-$ n 0.11
-$ node --harmony my-koa-app.js</code></pre>
+<p>  Koa is supported in all versions of <a href="https://iojs.org">iojs</a> without any flags.</p>
+<p>  To use Koa with node, you must be running <strong>node 0.11.16</strong> or higher for generator and promise support, and must run node(1)
+  with the <code>--harmony-generators</code> or <code>--harmony</code> flag.</p>
+<p>  You can quickly install a supposed version of node/iojs with your favorite version manager:</p>
+<pre><code class="lang-bash">$ nvm install iojs
+$ npm i koa
+$ node my-koa-app.js</code></pre>
 <h1 id="application">Application</h1>
 <p>  A Koa application is an object containing an array of middleware generator functions
   which are composed and executed in a stack-like manner upon request. Koa is similar to many
@@ -213,7 +216,7 @@ this.throw(&#39;access_denied&#39;, { user: user });</code></pre>
 <p>  Helper method to throw an error similar to <code>.throw()</code>
   when <code>!value</code>. Similar to node&#39;s <a href="http://nodejs.org/api/assert.html">assert()</a>
   method.</p>
-<pre><code class="lang-js">this.assert(this.user, 401, &#39;User not found. Please login!&#39;);</code></pre>
+<pre><code class="lang-js">this.assert(this.state.user, 401, &#39;User not found. Please login!&#39;);</code></pre>
 <p>koa uses <a href="https://github.com/jshttp/http-assert">http-assert</a> for assertions.</p>
 <h3 id="ctx-respond">ctx.respond</h3>
 <p>  To bypass Koa&#39;s built-in response handling, you may explicitly set <code>this.respond = false;</code>. Use this if you want to write to the raw <code>res</code> object instead of letting Koa handle the response for you.</p>
@@ -269,6 +272,7 @@ this.throw(&#39;access_denied&#39;, { user: user });</code></pre>
 <li><code>ctx.redirect()</code></li>
 <li><code>ctx.attachment()</code></li>
 <li><code>ctx.set()</code></li>
+<li><code>ctx.append()</code></li>
 <li><code>ctx.remove()</code></li>
 <li><code>ctx.lastModified=</code></li>
 <li><code>ctx.etag=</code></li>
@@ -341,7 +345,9 @@ this.throw(&#39;access_denied&#39;, { user: user });</code></pre>
 <h3 id="request-fresh">request.fresh</h3>
 <p>  Check if a request cache is &quot;fresh&quot;, aka the contents have not changed. This
   method is for cache negotiation between <code>If-None-Match</code> / <code>ETag</code>, and <code>If-Modified-Since</code> and <code>Last-Modified</code>. It should be referenced after setting one or more of these response headers.</p>
-<pre><code class="lang-js">this.set(&#39;ETag&#39;, &#39;123&#39;);
+<pre><code class="lang-js">// freshness check requires status 20x or 304
+this.status = 200;
+this.set(&#39;ETag&#39;, &#39;123&#39;);
 
 // cache is ok
 if (this.fresh) {
@@ -506,6 +512,8 @@ this.acceptsLanguages();
 <h2 id="api">API</h2>
 <h3 id="response-header">response.header</h3>
 <p>  Response header object.</p>
+<h3 id="response-headers">response.headers</h3>
+<p>  Response header object. Alias as <code>response.header</code>.</p>
 <h3 id="response-socket">response.socket</h3>
 <p>  Request socket.</p>
 <h3 id="response-status">response.status</h3>
@@ -611,6 +619,9 @@ so you can make a correction.</p>
 <h3 id="response-set-field-value-">response.set(field, value)</h3>
 <p>  Set response header <code>field</code> to <code>value</code>:</p>
 <pre><code class="lang-js">this.set(&#39;Cache-Control&#39;, &#39;no-cache&#39;);</code></pre>
+<h3 id="response-append-field-value-">response.append(field, value)</h3>
+<p>  Append additional header <code>field</code> with value <code>val</code>.</p>
+<pre><code class="lang-js">this.append(&#39;Link&#39;, &#39;&lt;http://127.0.0.1/&gt;&#39;);</code></pre>
 <h3 id="response-set-fields-">response.set(fields)</h3>
 <p>  Set several response header <code>fields</code> with an object:</p>
 <pre><code class="lang-js">this.set({
@@ -687,5 +698,5 @@ this.body = &#39;Redirecting to shopping cart&#39;;</code></pre>
 <h3 id="response-vary-field-">response.vary(field)</h3>
 <p>  Vary on <code>field</code>.</p>
 </div></section><section><div class="content"><h1 id="links">Links</h1><p>Community links to discover third-party middleware for Koa, full runnable examples,
-thorough guides and more! If you have questions join us in IRC!
-</p><ul><li><a href="https://github.com/koajs/koa">GitHub repository</a></li><li><a href="https://github.com/koajs/examples">Examples</a></li><li><a href="https://github.com/koajs/koa/wiki">Middleware</a></li><li><a href="https://github.com/koajs/koa/wiki">Wiki</a></li><li><a href="https://plus.google.com/communities/101845768320796750641">G+ Community</a></li><li><a href="https://groups.google.com/forum/#!forum/koajs">Mailing list</a></li><li><a href="https://github.com/koajs/koa/blob/master/docs/guide.md">Guide</a></li><li><a href="https://github.com/koajs/koa/blob/master/docs/faq.md">FAQ</a></li><li><strong>#koajs</strong> on freenode</li></ul></div></section></body></html>
+thorough guides and more! If you have questions join us in Slack or IRC!
+</p><ul><li><a href="https://github.com/koajs/koa">GitHub repository</a></li><li><a href="https://github.com/koajs/examples">Examples</a></li><li><a href="https://github.com/koajs/koa/wiki">Middleware</a></li><li><a href="https://github.com/koajs/koa/wiki">Wiki</a></li><li><a href="https://plus.google.com/communities/101845768320796750641">G+ Community</a></li><li><a href="https://groups.google.com/forum/#!forum/koajs">Mailing list</a></li><li><a href="https://github.com/koajs/koa/blob/master/docs/guide.md">Guide</a></li><li><a href="https://github.com/koajs/koa/blob/master/docs/faq.md">FAQ</a></li><li><strong>#koajs</strong> on freenode</li><li><a href="http://slack.koajs.in">koajs.slack.com</a></li></ul></div></section></body></html>

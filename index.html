@@ -7,10 +7,9 @@ to ditch callbacks and greatly increase error-handling. Koa does not bundle any
 middleware within core, and provides an elegant suite of methods that make
 writing servers fast and enjoyable.
 </p></div></section><section><div class="content"><h1 id="installation">Installation</h1>
-<p> Koa currently requires node 0.11.x for the --harmony flag which exposes generators to your script. If you&#39;re running an earlier version of node you may install <a href="https://github.com/visionmedia/n">n</a>, a node version manager to quickly install 0.11.x:</p>
-<pre><code>$ npm install -g n
-$ n 0.11
-$ node --harmony my-koa-app.js</code></pre>
+<p>Koa works out of the box with recent versions of Node. To use Koa with 0.11.x you must use the <code>--harmony</code> or <code>--harmony-generators</code> flag.</p>
+<pre><code class="lang-bash">$ npm install koa
+$ node app.js</code></pre>
 <h1 id="application">Application</h1>
 <p>  A Koa application is an object containing an array of middleware generator functions
   which are composed and executed in a stack-like manner upon request. Koa is similar to many
@@ -118,6 +117,10 @@ app.keys = new KeyGrip([&#39;im a newer secret&#39;, &#39;i like turtle&#39;], &
 <p>  These keys may be rotated and are used when signing cookies
   with the <code>{ signed: true }</code> option:</p>
 <pre><code class="lang-js">this.cookies.set(&#39;name&#39;, &#39;tobi&#39;, { signed: true });</code></pre>
+<h2 id="app-context">app.context</h2>
+<p>  The recommended namespace to extend with information that&#39;s useful
+  throughout the lifetime of your application, as opposed to a per request basis.</p>
+<pre><code class="lang-js">app.context.db = db();</code></pre>
 <h2 id="error-handling">Error Handling</h2>
 <p>  By default outputs all errors to stderr unless <strong>NODE_ENV</strong> is &quot;test&quot;. To perform custom error-handling logic such as centralized logging you
   can add an &quot;error&quot; event listener:</p>
@@ -213,7 +216,7 @@ this.throw(&#39;access_denied&#39;, { user: user });</code></pre>
 <p>  Helper method to throw an error similar to <code>.throw()</code>
   when <code>!value</code>. Similar to node&#39;s <a href="http://nodejs.org/api/assert.html">assert()</a>
   method.</p>
-<pre><code class="lang-js">this.assert(this.user, 401, &#39;User not found. Please login!&#39;);</code></pre>
+<pre><code class="lang-js">this.assert(this.state.user, 401, &#39;User not found. Please login!&#39;);</code></pre>
 <p>koa uses <a href="https://github.com/jshttp/http-assert">http-assert</a> for assertions.</p>
 <h3 id="ctx-respond">ctx.respond</h3>
 <p>  To bypass Koa&#39;s built-in response handling, you may explicitly set <code>this.respond = false;</code>. Use this if you want to write to the raw <code>res</code> object instead of letting Koa handle the response for you.</p>
@@ -228,6 +231,7 @@ this.throw(&#39;access_denied&#39;, { user: user });</code></pre>
 <li><code>ctx.url</code></li>
 <li><code>ctx.url=</code></li>
 <li><code>ctx.originalUrl</code></li>
+<li><code>ctx.origin</code></li>
 <li><code>ctx.href</code></li>
 <li><code>ctx.path</code></li>
 <li><code>ctx.path=</code></li>
@@ -269,6 +273,7 @@ this.throw(&#39;access_denied&#39;, { user: user });</code></pre>
 <li><code>ctx.redirect()</code></li>
 <li><code>ctx.attachment()</code></li>
 <li><code>ctx.set()</code></li>
+<li><code>ctx.append()</code></li>
 <li><code>ctx.remove()</code></li>
 <li><code>ctx.lastModified=</code></li>
 <li><code>ctx.etag=</code></li>
@@ -295,6 +300,10 @@ this.throw(&#39;access_denied&#39;, { user: user });</code></pre>
 <p>  Set request URL, useful for url rewrites.</p>
 <h3 id="request-originalurl">request.originalUrl</h3>
 <p>  Get request original URL.</p>
+<h3 id="request-origin">request.origin</h3>
+<p>  Get origin of URL, include <code>protocol</code> and <code>host</code>.</p>
+<pre><code class="lang-js">this.request.origin
+// =&gt; http://example.com</code></pre>
 <h3 id="request-href">request.href</h3>
 <p>  Get full request URL, include <code>protocol</code>, <code>host</code> and <code>url</code>.</p>
 <pre><code class="lang-js">this.request.href
@@ -341,7 +350,9 @@ this.throw(&#39;access_denied&#39;, { user: user });</code></pre>
 <h3 id="request-fresh">request.fresh</h3>
 <p>  Check if a request cache is &quot;fresh&quot;, aka the contents have not changed. This
   method is for cache negotiation between <code>If-None-Match</code> / <code>ETag</code>, and <code>If-Modified-Since</code> and <code>Last-Modified</code>. It should be referenced after setting one or more of these response headers.</p>
-<pre><code class="lang-js">this.set(&#39;ETag&#39;, &#39;123&#39;);
+<pre><code class="lang-js">// freshness check requires status 20x or 304
+this.status = 200;
+this.set(&#39;ETag&#39;, &#39;123&#39;);
 
 // cache is ok
 if (this.fresh) {
@@ -506,6 +517,8 @@ this.acceptsLanguages();
 <h2 id="api">API</h2>
 <h3 id="response-header">response.header</h3>
 <p>  Response header object.</p>
+<h3 id="response-headers">response.headers</h3>
+<p>  Response header object. Alias as <code>response.header</code>.</p>
 <h3 id="response-socket">response.socket</h3>
 <p>  Request socket.</p>
 <h3 id="response-status">response.status</h3>
@@ -611,6 +624,9 @@ so you can make a correction.</p>
 <h3 id="response-set-field-value-">response.set(field, value)</h3>
 <p>  Set response header <code>field</code> to <code>value</code>:</p>
 <pre><code class="lang-js">this.set(&#39;Cache-Control&#39;, &#39;no-cache&#39;);</code></pre>
+<h3 id="response-append-field-value-">response.append(field, value)</h3>
+<p>  Append additional header <code>field</code> with value <code>val</code>.</p>
+<pre><code class="lang-js">this.append(&#39;Link&#39;, &#39;&lt;http://127.0.0.1/&gt;&#39;);</code></pre>
 <h3 id="response-set-fields-">response.set(fields)</h3>
 <p>  Set several response header <code>fields</code> with an object:</p>
 <pre><code class="lang-js">this.set({

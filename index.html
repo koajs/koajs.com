@@ -7,9 +7,10 @@ to ditch callbacks and greatly increase error-handling. Koa does not bundle any
 middleware within core, and provides an elegant suite of methods that make
 writing servers fast and enjoyable.
 </p></div></section><section><div class="content"><h1 id="installation">Installation</h1>
-<p>Koa works out of the box with recent versions of Node. To use Koa with 0.11.x you must use the <code>--harmony</code> or <code>--harmony-generators</code> flag.</p>
+<p>Koa works out of the box with recent versions of Node.</p>
 <pre><code class="lang-bash">$ npm install koa
 $ node app.js</code></pre>
+<p>To use Koa with 0.12.x you must use the <code>--harmony</code> or <code>--harmony-generators</code> flag.</p>
 <h1 id="application">Application</h1>
 <p>  A Koa application is an object containing an array of middleware generator functions
   which are composed and executed in a stack-like manner upon request. Koa is similar to many
@@ -98,7 +99,8 @@ http.createServer(app.callback()).listen(3000);</code></pre>
 var koa = require(&#39;koa&#39;);
 var app = koa();
 http.createServer(app.callback()).listen(3000);
-http.createServer(app.callback()).listen(3001);</code></pre>
+https.createServer(options, app.callback()).listen(3001);</code></pre>
+<p>Here, <code>options</code> is a required argument for Node <code>https.createServer</code> containing certificate information. See the <a href="https://nodejs.org/api/https.html#https_https_createserver_options_requestlistener">Node documentation</a> for more details.</p>
 <h2 id="app-callback-">app.callback()</h2>
 <p>  Return a callback function suitable for the <code>http.createServer()</code>
   method to handle a request.
@@ -122,12 +124,13 @@ app.keys = new KeyGrip([&#39;im a newer secret&#39;, &#39;i like turtle&#39;], &
   throughout the lifetime of your application, as opposed to a per request basis.</p>
 <pre><code class="lang-js">app.context.db = db();</code></pre>
 <h2 id="error-handling">Error Handling</h2>
-<p>  By default outputs all errors to stderr unless <strong>NODE_ENV</strong> is &quot;test&quot;. To perform custom error-handling logic such as centralized logging you
-  can add an &quot;error&quot; event listener:</p>
+<p>  By default outputs all errors to stderr unless <strong>NODE_ENV</strong> is &quot;test&quot; or <code>app.silent</code> is <code>true</code>.
+  The default error handler also won&#39;t output errors when <code>err.status</code> is <code>404</code> or <code>err.expose</code> is <code>true</code>.
+  To perform custom error-handling logic such as centralized logging you can add an &quot;error&quot; event listener:</p>
 <pre><code class="lang-js">app.on(&#39;error&#39;, function(err){
   log.error(&#39;server error&#39;, err);
 });</code></pre>
-<p>  If an error in the req/res cycle and it is <em>not</em> possible to respond to the client, the <code>Context</code> instance is also passed:</p>
+<p>  If an error is in the req/res cycle and it is <em>not</em> possible to respond to the client, the <code>Context</code> instance is also passed:</p>
 <pre><code class="lang-js">app.on(&#39;error&#39;, function(err, ctx){
   log.error(&#39;server error&#39;, err, ctx);
 });</code></pre>
@@ -183,12 +186,14 @@ app.keys = new KeyGrip([&#39;im a newer secret&#39;, &#39;i like turtle&#39;], &
 <h3 id="ctx-cookies-set-name-value-options-">ctx.cookies.set(name, value, [options])</h3>
 <p>  Set cookie <code>name</code> to <code>value</code> with <code>options</code>:</p>
 <ul>
+<li><code>maxAge</code> a number representing the milliseconds from Date.now() for expiry</li>
 <li><code>signed</code> sign the cookie value</li>
 <li><code>expires</code> a <code>Date</code> for cookie expiration</li>
 <li><code>path</code> cookie path, <code>/&#39;</code> by default</li>
 <li><code>domain</code> cookie domain</li>
 <li><code>secure</code> secure cookie</li>
 <li><code>httpOnly</code> server-accessible cookie, <strong>true</strong> by default</li>
+<li><code>overwrite</code> a boolean indicating whether to overwrite previously set cookies of the same name (<strong>false</strong> by default). If this is true, all cookies set during the same request with the same name (regardless of path or domain) are filtered out of the Set-Cookie header when setting this cookie</li>
 </ul>
 <p>koa uses the <a href="https://github.com/jed/cookies">cookies</a> module where options are simply passed.</p>
 <h3 id="ctx-throw-msg-status-properties-">ctx.throw([msg], [status], [properties])</h3>
@@ -212,7 +217,7 @@ throw err;</code></pre>
 <pre><code class="lang-js">this.throw(401, &#39;access_denied&#39;, { user: user });
 this.throw(&#39;access_denied&#39;, { user: user });</code></pre>
 <p>koa uses <a href="https://github.com/jshttp/http-errors">http-errors</a> to create errors.</p>
-<h3 id="ctx-assert-value-msg-status-properties-">ctx.assert(value, [msg], [status], [properties])</h3>
+<h3 id="ctx-assert-value-status-msg-properties-">ctx.assert(value, [status], [msg], [properties])</h3>
 <p>  Helper method to throw an error similar to <code>.throw()</code>
   when <code>!value</code>. Similar to node&#39;s <a href="http://nodejs.org/api/assert.html">assert()</a>
   method.</p>
@@ -389,7 +394,7 @@ this.body = yield db.find(&#39;something&#39;);</code></pre>
 <h3 id="request-is-types-">request.is(types...)</h3>
 <p>  Check if the incoming request contains the &quot;Content-Type&quot;
   header field, and it contains any of the give mime <code>type</code>s.
-  If there is no request body, <code>undefined</code> is returned.
+  If there is no request body, <code>null</code> is returned.
   If there is no content type, or the match fails <code>false</code> is returned.
   Otherwise, it returns the matching content-type.</p>
 <pre><code class="lang-js">// With Content-Type: text/html; charset=utf-8
@@ -616,6 +621,17 @@ so you can make a correction.</p>
   is also set.</p>
 <h4 id="stream">Stream</h4>
 <p>  The Content-Type is defaulted to application/octet-stream.</p>
+<p>  Whenever a stream is set as the response body, <code>.onerror</code> is automatically added as a listener to the <code>error</code> event to catch any errors.
+  In addition, whenever the request is closed (even prematurely), the stream is destroyed.
+  If you do not want these two features, do not set the stream as the body directly.
+  For example, you may not want this when setting the body as an HTTP stream in a proxy as it would destroy the underlying connection.</p>
+<p>  See: <a href="https://github.com/koajs/koa/pull/612">https://github.com/koajs/koa/pull/612</a> for more information.</p>
+<p>  Here&#39;s an example of stream error handling without automatically destroying the stream:</p>
+<pre><code class="lang-js">const PassThrough = require(&#39;stream&#39;).PassThrough
+
+app.use(function * (next) {
+  this.body = someHTTPStream.on(&#39;error&#39;, this.onerror).pipe(PassThrough())
+})</code></pre>
 <h4 id="object">Object</h4>
 <p>  The Content-Type is defaulted to application/json.</p>
 <h3 id="response-get-field-">response.get(field)</h3>

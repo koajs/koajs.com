@@ -5,12 +5,14 @@ html
     link(rel='stylesheet', href='public/style.css')
     link(rel='stylesheet', href='public/icons/css/slate.css')
     link(rel='stylesheet', href='http://fonts.googleapis.com/css?family=Italiana&subset=latin')
+    link(rel='stylesheet' href='http://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.10.0/styles/github.min.css')
     meta(name='viewport', content='user-scalable=no, width=device-width, initial-scale=1.0, maximum-scale=1.0')
     script.
       window.analytics=window.analytics||[],window.analytics.methods=["identify","group","track","page","pageview","alias","ready","on","once","off","trackLink","trackForm","trackClick","trackSubmit"],window.analytics.factory=function(t){return function(){var a=Array.prototype.slice.call(arguments);return a.unshift(t),window.analytics.push(a),window.analytics}};for(var i=0;i<window.analytics.methods.length;i++){var key=window.analytics.methods[i];window.analytics[key]=window.analytics.factory(key)}window.analytics.load=function(t){if(!document.getElementById("analytics-js")){var a=document.createElement("script");a.type="text/javascript",a.id="analytics-js",a.async=!0,a.src=("https:"===document.location.protocol?"https://":"http://")+"cdn.segment.io/analytics.js/v1/"+t+"/analytics.min.js";var n=document.getElementsByTagName("script")[0];n.parentNode.insertBefore(a,n)}},window.analytics.SNIPPET_VERSION="2.0.9",
       window.analytics.load("9u0xff0b3k");
       window.analytics.page();
     script(src='stats.js')
+    script(src='http://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.10.0/highlight.min.js')
   body
     section#top
       #menu
@@ -71,3 +73,5 @@ html
           li: a(href='https://github.com/koajs/koa/blob/master/docs/guide.md') Guide
           li: a(href='https://github.com/koajs/koa/blob/master/docs/faq.md') FAQ
           li: <strong>#koajs</strong> on freenode
+    script.
+      hljs.initHighlightingOnLoad();  

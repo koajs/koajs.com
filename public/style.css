@@ -45,6 +45,10 @@ pre {
   overflow-x: auto;
 }
 
+pre .hljs {
+  background-color: transparent;
+}
+
 .content img {
   width: 100%;
 }

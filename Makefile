@@ -7,7 +7,8 @@ DOCS = public/index.md \
   public/response.md \
   public/guide.md
 
-index.html: views/index.jade $(DOCS)
+index.html: views/index.jade
+	@$(MAKE) -j5 $(DOCS)
 	@./node_modules/.bin/jade $< -o .
 
 public/index.md:

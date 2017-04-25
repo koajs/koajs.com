@@ -261,7 +261,7 @@ this.body = yield db.find(&#39;something&#39;);</code></pre>
 <h3 id="request-is-types-">request.is(types...)</h3>
 <p>  Check if the incoming request contains the &quot;Content-Type&quot;
   header field, and it contains any of the give mime <code>type</code>s.
-  If there is no request body, <code>undefined</code> is returned.
+  If there is no request body, <code>null</code> is returned.
   If there is no content type, or the match fails <code>false</code> is returned.
   Otherwise, it returns the matching content-type.</p>
 <pre><code class="lang-js">// With Content-Type: text/html; charset=utf-8

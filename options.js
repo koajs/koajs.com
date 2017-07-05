@@ -38,8 +38,7 @@
                 RunKit.createNotebook({
                     element: parent,
                     source: source,
-                    mode: "endpoint",
-                    onLoad: function () { alert() }
+                    mode: "endpoint"
                 });
             }
             

@@ -8,7 +8,7 @@ DOCS = public/index.md \
   public/guide.md
 
 index.html: views/index.jade $(DOCS)
-	@./node_modules/.bin/pug --obj options.js $< -o .
+	@./node_modules/.bin/pug --obj pug-options.js $< -o .
 
 public/index.md:
 	curl -s $(RAW)/koajs/koa/master/docs/api/index.md \

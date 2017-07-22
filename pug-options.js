@@ -5,27 +5,42 @@
         {
             var marked = require("marked");
             var renderer = new marked.Renderer();
-            var prism = require('prismjs');
+            var highlight = require('highlight.js').highlight;
+            var runkitRegExp = /^<!--\s*runkit:endpoint((.|\n)*)-->(.|\n)*$/;
+            var runkitContext = { options: '{}', activated: false };
 
             renderer.code = function(code, lang, escaped) {
 
                 if (!global.exampleCount)
                     global.exampleCount = 0;
 
-                var out = prism.highlight(code, prism.languages.javascript) || code;
+                var out = highlight(lang, code).value || code;
                 var escaped = out !== code ? out : escapeCode(out, true);
                 var id = "example-" + (global.exampleCount++);
-                var script = lang === "runkit-endpoint" ?
-                "<script>(" + endpoint + ")(\"" + id + "\")</script>" : "";
+
+                var script = runkitContext.activated ? "<script>(" + endpoint + ")(\"" + id + "\")</script>" : "";
+
+                runkitContext.activated = false;
 
                 return "<div id = \"" + id + "\"><pre><code>" + escaped + "</code></pre></div>" + script;
             };
 
+            renderer.html = function(text) {
+                var result = runkitRegExp.exec(text);
+
+                if (!result) return text;
+
+                runkitContext.activated = true;
+
+                return text;
+            };
+
             return marked(text, { renderer: renderer });
-            
+
             function endpoint(id, count) {
+            
                 if (!window.RunKit)
-                    if (count || 0 < 20)
+                    if (typeof count === "undefined" || count < 20)
                         return setTimeout(endpoint, 500, id, count || 0 + 1);
                     else
                         return;
@@ -37,6 +52,7 @@
 
                 RunKit.createNotebook({
                     element: parent,
+                    nodeVersion: "8.x.x",
                     source: source,
                     mode: "endpoint"
                 });

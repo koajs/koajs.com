@@ -1,6 +1,6 @@
-<!DOCTYPE html><html><head><title>Koa - next generation web framework for node.js</title><link rel="stylesheet" href="public/style.css"><link rel="stylesheet" href="public/icons/css/slate.css"><link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Italiana&amp;subset=latin"><meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1.0, maximum-scale=1.0"><script>window.analytics=window.analytics||[],window.analytics.methods=["identify","group","track","page","pageview","alias","ready","on","once","off","trackLink","trackForm","trackClick","trackSubmit"],window.analytics.factory=function(t){return function(){var a=Array.prototype.slice.call(arguments);return a.unshift(t),window.analytics.push(a),window.analytics}};for(var i=0;i<window.analytics.methods.length;i++){var key=window.analytics.methods[i];window.analytics[key]=window.analytics.factory(key)}window.analytics.load=function(t){if(!document.getElementById("analytics-js")){var a=document.createElement("script");a.type="text/javascript",a.id="analytics-js",a.async=!0,a.src=("https:"===document.location.protocol?"https://":"http://")+"cdn.segment.io/analytics.js/v1/"+t+"/analytics.min.js";var n=document.getElementsByTagName("script")[0];n.parentNode.insertBefore(a,n)}},window.analytics.SNIPPET_VERSION="2.0.9",
+<!DOCTYPE html><html><head><title>Koa - next generation web framework for node.js</title><link rel="stylesheet" href="public/style.css"><link rel="stylesheet" href="public/icons/css/slate.css"><link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Italiana&amp;subset=latin"><link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.10.0/styles/github.min.css"><meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1.0, maximum-scale=1.0"><script>window.analytics=window.analytics||[],window.analytics.methods=["identify","group","track","page","pageview","alias","ready","on","once","off","trackLink","trackForm","trackClick","trackSubmit"],window.analytics.factory=function(t){return function(){var a=Array.prototype.slice.call(arguments);return a.unshift(t),window.analytics.push(a),window.analytics}};for(var i=0;i<window.analytics.methods.length;i++){var key=window.analytics.methods[i];window.analytics[key]=window.analytics.factory(key)}window.analytics.load=function(t){if(!document.getElementById("analytics-js")){var a=document.createElement("script");a.type="text/javascript",a.id="analytics-js",a.async=!0,a.src=("https:"===document.location.protocol?"https://":"http://")+"cdn.segment.io/analytics.js/v1/"+t+"/analytics.min.js";var n=document.getElementsByTagName("script")[0];n.parentNode.insertBefore(a,n)}},window.analytics.SNIPPET_VERSION="2.0.9",
 window.analytics.load("9u0xff0b3k");
-window.analytics.page();</script><script src="stats.js"></script></head><body><section id="top"><div id="menu"><a id="toggle" href="#"><i class="icon-menu"></i></a><ul><li><a href="#introduction">Introduction</a></li><li><a href="#application">Application</a></li><li><a href="#context">Context</a></li><li><a href="#request">Request</a></li><li><a href="#response">Response</a></li><li><a href="#links">Links</a></li></ul></div><div id="heading"><div id="logo">Koa</div><div id="tagline">next generation web framework for node.js</div></div></section><section><div class="content"><h1 id="introduction">Introduction</h1><p>Koa is a new web framework designed by the team behind Express,
+window.analytics.page();</script><script src="stats.js"></script><script src="http://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.10.0/highlight.min.js"></script></head><body><section id="top"><div id="menu"><a id="toggle" href="#"><i class="icon-menu"></i></a><ul><li><a href="#introduction">Introduction</a></li><li><a href="#application">Application</a></li><li><a href="#context">Context</a></li><li><a href="#request">Request</a></li><li><a href="#response">Response</a></li><li><a href="#links">Links</a></li></ul></div><div id="heading"><div id="logo">Koa</div><div id="tagline">next generation web framework for node.js</div></div></section><section><div class="content"><h1 id="introduction">Introduction</h1><p>Koa is a new web framework designed by the team behind Express,
 which aims to be a smaller, more expressive, and more robust foundation
 for web applications and APIs. Through leveraging generators Koa allows you
 to ditch callbacks and greatly increase error-handling. Koa does not bundle any
@@ -39,7 +39,7 @@ For example, in your <code>.babelrc</code> file, you should have:</p>
 <pre><code class="lang-js">const Koa = require(&#39;koa&#39;);
 const app = new Koa();
 
-app.use(ctx =&gt; {
+app.use(async ctx =&gt; {
   ctx.body = &#39;Hello World&#39;;
 });
 
@@ -61,25 +61,25 @@ const app = new Koa();
 
 // x-response-time
 
-app.use(async function (ctx, next) {
-  const start = new Date();
+app.use(async (ctx, next) =&gt; {
+  const start = Date.now();
   await next();
-  const ms = new Date() - start;
+  const ms = Date.now() - start;
   ctx.set(&#39;X-Response-Time&#39;, `${ms}ms`);
 });
 
 // logger
 
-app.use(async function (ctx, next) {
-  const start = new Date();
+app.use(async (ctx, next) =&gt; {
+  const start = Date.now();
   await next();
-  const ms = new Date() - start;
+  const ms = Date.now() - start;
   console.log(`${ctx.method} ${ctx.url} - ${ms}`);
 });
 
 // response
 
-app.use(ctx =&gt; {
+app.use(async ctx =&gt; {
   ctx.body = &#39;Hello World&#39;;
 });
 
@@ -109,10 +109,11 @@ http.createServer(app.callback()).listen(3000);</code></pre>
 <p>  This means you can spin up the same application as both HTTP and HTTPS
   or on multiple addresses:</p>
 <pre><code class="lang-js">const http = require(&#39;http&#39;);
+const https = require(&#39;https&#39;);
 const Koa = require(&#39;koa&#39;);
 const app = new Koa();
 http.createServer(app.callback()).listen(3000);
-http.createServer(app.callback()).listen(3001);</code></pre>
+https.createServer(app.callback()).listen(3001);</code></pre>
 <h2 id="app-callback-">app.callback()</h2>
 <p>  Return a callback function suitable for the <code>http.createServer()</code>
   method to handle a request.
@@ -140,7 +141,7 @@ app.keys = new KeyGrip([&#39;im a newer secret&#39;, &#39;i like turtle&#39;], &
 <p>  For example, to add a reference to your database from <code>ctx</code>:</p>
 <pre><code class="lang-js">app.context.db = db();
 
-app.use(async (ctx) =&gt; {
+app.use(async ctx =&gt; {
   console.log(ctx.db);
 });</code></pre>
 <p>Note:</p>
@@ -152,13 +153,13 @@ app.use(async (ctx) =&gt; {
 <p>  By default outputs all errors to stderr unless <code>app.silent</code> is <code>true</code>.
   The default error handler also won&#39;t outputs errors when <code>err.status</code> is <code>404</code> or <code>err.expose</code> is <code>true</code>.
   To perform custom error-handling logic such as centralized logging you can add an &quot;error&quot; event listener:</p>
-<pre><code class="lang-js">app.on(&#39;error&#39;, err =&gt;
+<pre><code class="lang-js">app.on(&#39;error&#39;, err =&gt; {
   log.error(&#39;server error&#39;, err)
-);</code></pre>
+});</code></pre>
 <p>  If an error is in the req/res cycle and it is <em>not</em> possible to respond to the client, the <code>Context</code> instance is also passed:</p>
-<pre><code class="lang-js">app.on(&#39;error&#39;, (err, ctx) =&gt;
+<pre><code class="lang-js">app.on(&#39;error&#39;, (err, ctx) =&gt; {
   log.error(&#39;server error&#39;, err, ctx)
-);</code></pre>
+});</code></pre>
 <p>  When an error occurs <em>and</em> it is still possible to respond to the client, aka no data has been written to the socket, Koa will respond
   appropriately with a 500 &quot;Internal Server Error&quot;. In either case
   an app-level &quot;error&quot; is emitted for logging purposes.</p>
@@ -172,7 +173,7 @@ app.use(async (ctx) =&gt; {
 <p>  A <code>Context</code> is created <em>per</em> request, and is referenced in middleware
   as the receiver, or the <code>ctx</code> identifier, as shown in the following
   snippet:</p>
-<pre><code class="lang-js">app.use(async (ctx, next) =&gt; {
+<pre><code class="lang-js">app.use(async ctx =&gt; {
   ctx; // is the Context
   ctx.request; // is a koa Request
   ctx.response; // is a koa Response
@@ -314,8 +315,12 @@ throw err;</code></pre>
 <h2 id="api">API</h2>
 <h3 id="request-header">request.header</h3>
 <p> Request header object.</p>
+<h3 id="request-header-">request.header=</h3>
+<p> Set request header object.</p>
 <h3 id="request-headers">request.headers</h3>
 <p> Request header object. Alias as <code>request.header</code>.</p>
+<h3 id="request-headers-">request.headers=</h3>
+<p>  Set request header object. Alias as <code>request.header=</code>.</p>
 <h3 id="request-method">request.method</h3>
 <p>  Request method.</p>
 <h3 id="request-method-">request.method=</h3>
@@ -335,7 +340,7 @@ throw err;</code></pre>
 // =&gt; http://example.com</code></pre>
 <h3 id="request-href">request.href</h3>
 <p>  Get full request URL, include <code>protocol</code>, <code>host</code> and <code>url</code>.</p>
-<pre><code class="lang-js">ctx.request.href
+<pre><code class="lang-js">ctx.request.href;
 // =&gt; http://example.com/foo/bar?q=1</code></pre>
 <h3 id="request-path">request.path</h3>
 <p>  Get request pathname.</p>
@@ -355,13 +360,18 @@ throw err;</code></pre>
 <h3 id="request-hostname">request.hostname</h3>
 <p>  Get hostname when present. Supports <code>X-Forwarded-Host</code>
   when <code>app.proxy</code> is <strong>true</strong>, otherwise <code>Host</code> is used.</p>
+<p>  If host is IPv6, Koa delegates parsing to
+  <a href="https://nodejs.org/dist/latest-v8.x/docs/api/url.html#url_the_whatwg_url_api">WHATWG URL API</a>,
+  <em>Note</em> This may impact performance.</p>
+<h3 id="request-url">request.URL</h3>
+<p>  Get WHATWG parsed URL object.</p>
 <h3 id="request-type">request.type</h3>
 <p>  Get request <code>Content-Type</code> void of parameters such as &quot;charset&quot;.</p>
-<pre><code class="lang-js">const ct = ctx.request.type
+<pre><code class="lang-js">const ct = ctx.request.type;
 // =&gt; &quot;image/png&quot;</code></pre>
 <h3 id="request-charset">request.charset</h3>
 <p>  Get request charset when present, or <code>undefined</code>:</p>
-<pre><code class="lang-js">ctx.request.charset
+<pre><code class="lang-js">ctx.request.charset;
 // =&gt; &quot;utf-8&quot;</code></pre>
 <h3 id="request-query">request.query</h3>
 <p>  Get parsed query-string, returning an empty object when no
@@ -375,7 +385,7 @@ throw err;</code></pre>
 <h3 id="request-query-">request.query=</h3>
 <p>  Set query-string to the given object. Note that this
   setter does <em>not</em> support nested objects.</p>
-<pre><code class="lang-js">ctx.query = { next: &#39;/login&#39; }</code></pre>
+<pre><code class="lang-js">ctx.query = { next: &#39;/login&#39; };</code></pre>
 <h3 id="request-fresh">request.fresh</h3>
 <p>  Check if a request cache is &quot;fresh&quot;, aka the contents have not changed. This
   method is for cache negotiation between <code>If-None-Match</code> / <code>ETag</code>, and <code>If-Modified-Since</code> and <code>Last-Modified</code>. It should be referenced after setting one or more of these response headers.</p>
@@ -391,7 +401,7 @@ if (ctx.fresh) {
 
 // cache is stale
 // fetch new data
-ctx.body = yield db.find(&#39;something&#39;);</code></pre>
+ctx.body = await db.find(&#39;something&#39;);</code></pre>
 <h3 id="request-stale">request.stale</h3>
 <p>  Inverse of <code>request.fresh</code>.</p>
 <h3 id="request-protocol">request.protocol</h3>
@@ -594,6 +604,7 @@ ctx.acceptsLanguages();
 <li>415 &quot;unsupported media type&quot;</li>
 <li>416 &quot;range not satisfiable&quot;</li>
 <li>417 &quot;expectation failed&quot;</li>
+<li>418 &quot;I&#39;m a teapot&quot;</li>
 <li>422 &quot;unprocessable entity&quot;</li>
 <li>423 &quot;locked&quot;</li>
 <li>424 &quot;failed dependency&quot;</li>
@@ -654,14 +665,14 @@ so you can make a correction.</p>
 <p>  Here&#39;s an example of stream error handling without automatically destroying the stream:</p>
 <pre><code class="lang-js">const PassThrough = require(&#39;stream&#39;).PassThrough;
 
-app.use(function * (next) {
+app.use(async ctx =&gt; {
   ctx.body = someHTTPStream.on(&#39;error&#39;, ctx.onerror).pipe(PassThrough());
 });</code></pre>
 <h4 id="object">Object</h4>
 <p>  The Content-Type is defaulted to application/json. This includes plain objects <code>{ foo: &#39;bar&#39; }</code> and arrays <code>[&#39;foo&#39;, &#39;bar&#39;]</code>.</p>
 <h3 id="response-get-field-">response.get(field)</h3>
 <p>  Get a response header field value with case-insensitive <code>field</code>.</p>
-<pre><code class="lang-js">const etag = ctx.get(&#39;ETag&#39;);</code></pre>
+<pre><code class="lang-js">const etag = ctx.response.get(&#39;ETag&#39;);</code></pre>
 <h3 id="response-set-field-value-">response.set(field, value)</h3>
 <p>  Set response header <code>field</code> to <code>value</code>:</p>
 <pre><code class="lang-js">ctx.set(&#39;Cache-Control&#39;, &#39;no-cache&#39;);</code></pre>
@@ -687,9 +698,8 @@ ctx.type = &#39;image/png&#39;;
 ctx.type = &#39;.png&#39;;
 ctx.type = &#39;png&#39;;</code></pre>
 <p>  Note: when appropriate a <code>charset</code> is selected for you, for
-  example <code>response.type = &#39;html&#39;</code> will default to &quot;utf-8&quot;, however
-  when explicitly defined in full as <code>response.type = &#39;text/html&#39;</code>
-  no charset is assigned.</p>
+  example <code>response.type = &#39;html&#39;</code> will default to &quot;utf-8&quot;. If you need to overwrite <code>charset</code>,
+  use <code>ctx.set(&#39;Content-Type&#39;, &#39;text/html&#39;)</code> to set response header field to value directly.</p>
 <h3 id="response-is-types-">response.is(types...)</h3>
 <p>  Very similar to <code>ctx.request.is()</code>.
   Check whether the response type is one of the supplied types.
@@ -699,8 +709,8 @@ ctx.type = &#39;png&#39;;</code></pre>
   all HTML responses except for streams.</p>
 <pre><code class="lang-js">const minify = require(&#39;html-minifier&#39;);
 
-app.use(function * minifyHTML(next) {
-  yield next;
+app.use(async (ctx, next) =&gt; {
+  await next();
 
   if (!ctx.response.is(&#39;html&#39;)) return;
 
@@ -748,4 +758,4 @@ ctx.body = &#39;Redirecting to shopping cart&#39;;</code></pre>
 </div></section><section><div class="content"><h1 id="jobs">Jobs</h1><p>Looking for work with an amazing tech company? Check out these positions.
 </p><a href="https://astro.netlify.com/automattic"><img src="https://astro.netlify.com/static/automattic.png"></a><a href="https://astro.netlify.com/segment"><img src="https://astro.netlify.com/static/segment.png"></a><a href="https://astro.netlify.com/auth0"><img src="https://astro.netlify.com/static/auth0.png"></a></div></section><section><div class="content"><h1 id="links">Links</h1><p>Community links to discover third-party middleware for Koa, full runnable examples,
 thorough guides and more! If you have questions join us in IRC!
-</p><ul><li><a href="https://github.com/koajs/koa">GitHub repository</a></li><li><a href="https://github.com/koajs/examples">Examples</a></li><li><a href="https://github.com/koajs/koa/wiki">Middleware</a></li><li><a href="https://github.com/koajs/koa/wiki">Wiki</a></li><li><a href="https://plus.google.com/communities/101845768320796750641">G+ Community</a></li><li><a href="https://groups.google.com/forum/#!forum/koajs">Mailing list</a></li><li><a href="https://github.com/koajs/koa/blob/master/docs/guide.md">Guide</a></li><li><a href="https://github.com/koajs/koa/blob/master/docs/faq.md">FAQ</a></li><li><strong>#koajs</strong> on freenode</li></ul></div></section></body></html>
+</p><ul><li><a href="https://github.com/koajs/koa">GitHub repository</a></li><li><a href="https://github.com/koajs/examples">Examples</a></li><li><a href="https://github.com/koajs/koa/wiki">Middleware</a></li><li><a href="https://github.com/koajs/koa/wiki">Wiki</a></li><li><a href="https://plus.google.com/communities/101845768320796750641">G+ Community</a></li><li><a href="https://groups.google.com/forum/#!forum/koajs">Mailing list</a></li><li><a href="https://github.com/koajs/koa/blob/master/docs/guide.md">Guide</a></li><li><a href="https://github.com/koajs/koa/blob/master/docs/faq.md">FAQ</a></li><li><strong>#koajs</strong> on freenode</li></ul></div></section><script>hljs.initHighlightingOnLoad();  </script></body></html>

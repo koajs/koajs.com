@@ -22,7 +22,7 @@
 
                 runkitContext.activated = false;
 
-                return "<div id = \"" + id + "\"><pre><code>" + escaped + "</code></pre></div>" + script;
+                return "<div id = \"" + id + "\"><pre><code class = \"lang-" + lang + "\">" + escaped + "</code></pre></div>" + script;
             };
 
             renderer.html = function(text) {

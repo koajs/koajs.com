@@ -9,17 +9,17 @@ writing servers fast and enjoyable.
 </p></div></section><section><div class="content"><h1 id="installation">Installation</h1>
 <p>  Koa requires <strong>node v7.6.0</strong> or higher for ES2015 and async function support.</p>
 <p>  You can quickly install a supported version of node with your favorite version manager:</p>
-<div id = "example-0"><pre><code>$ nvm install 7
+<div id = "example-0"><pre><code class = "lang-bash">$ nvm install 7
 $ npm i koa
 $ node my-koa-app.js</code></pre></div><h2 id="async-functions-with-babel">Async Functions with Babel</h2>
 <p>To use <code>async</code> functions in Koa in versions of node &lt; 7.6, we recommend using <a href="http://babeljs.io/docs/usage/require/">babel&#39;s require hook</a>.</p>
-<div id = "example-1"><pre><code><span class="hljs-built_in">require</span>(<span class="hljs-string">'babel-core/register'</span>);
+<div id = "example-1"><pre><code class = "lang-js"><span class="hljs-built_in">require</span>(<span class="hljs-string">'babel-core/register'</span>);
 <span class="hljs-comment">// require the rest of the app that needs to be transpiled after the hook</span>
 <span class="hljs-keyword">const</span> app = <span class="hljs-built_in">require</span>(<span class="hljs-string">'./app'</span>);</code></pre></div><p>To parse and transpile async functions,
 you should at a minimum have the <a href="http://babeljs.io/docs/plugins/transform-async-to-generator/">transform-async-to-generator</a>
 or <a href="http://babeljs.io/docs/plugins/transform-async-to-module-method/">transform-async-to-module-method</a> plugins.
 For example, in your <code>.babelrc</code> file, you should have:</p>
-<div id = "example-2"><pre><code>{
+<div id = "example-2"><pre><code class = "lang-json">{
   <span class="hljs-attr">"plugins"</span>: [<span class="hljs-string">"transform-async-to-generator"</span>]
 }</code></pre></div><p>You can also use the <a href="http://babeljs.io/docs/plugins/preset-env/">env preset</a> with a target option <code>&quot;node&quot;: &quot;current&quot;</code> instead.</p>
 <h1 id="application">Application</h1>
@@ -34,7 +34,7 @@ For example, in your <code>.babelrc</code> file, you should have:</p>
   no middleware are bundled.</p>
 <p>  The obligatory hello world application:</p>
 <!-- runkit:endpoint -->
-<div id = "example-3"><pre><code><span class="hljs-keyword">const</span> Koa = <span class="hljs-built_in">require</span>(<span class="hljs-string">'koa'</span>);
+<div id = "example-3"><pre><code class = "lang-js"><span class="hljs-keyword">const</span> Koa = <span class="hljs-built_in">require</span>(<span class="hljs-string">'koa'</span>);
 <span class="hljs-keyword">const</span> app = <span class="hljs-keyword">new</span> Koa();
 
 app.use(<span class="hljs-keyword">async</span> ctx =&gt; {
@@ -73,7 +73,7 @@ app.listen(<span class="hljs-number">3000</span>);</code></pre></div><script>(fu
   middleware to execute downstream, the stack will unwind and each middleware is resumed to perform
   its upstream behaviour.</p>
 <!-- runkit:endpoint -->
-<div id = "example-4"><pre><code><span class="hljs-keyword">const</span> Koa = <span class="hljs-built_in">require</span>(<span class="hljs-string">'koa'</span>);
+<div id = "example-4"><pre><code class = "lang-js"><span class="hljs-keyword">const</span> Koa = <span class="hljs-built_in">require</span>(<span class="hljs-string">'koa'</span>);
 <span class="hljs-keyword">const</span> app = <span class="hljs-keyword">new</span> Koa();
 
 <span class="hljs-comment">// x-response-time</span>
@@ -133,15 +133,15 @@ app.listen(<span class="hljs-number">3000</span>);</code></pre></div><script>(fu
   applications with a single HTTP server.</p>
 <p>  Create and return an HTTP server, passing the given arguments to
   <code>Server#listen()</code>. These arguments are documented on <a href="http://nodejs.org/api/http.html#http_server_listen_port_hostname_backlog_callback">nodejs.org</a>. The following is a useless Koa application bound to port <code>3000</code>:</p>
-<div id = "example-5"><pre><code><span class="hljs-keyword">const</span> Koa = <span class="hljs-built_in">require</span>(<span class="hljs-string">'koa'</span>);
+<div id = "example-5"><pre><code class = "lang-js"><span class="hljs-keyword">const</span> Koa = <span class="hljs-built_in">require</span>(<span class="hljs-string">'koa'</span>);
 <span class="hljs-keyword">const</span> app = <span class="hljs-keyword">new</span> Koa();
 app.listen(<span class="hljs-number">3000</span>);</code></pre></div><p>  The <code>app.listen(...)</code> method is simply sugar for the following:</p>
-<div id = "example-6"><pre><code><span class="hljs-keyword">const</span> http = <span class="hljs-built_in">require</span>(<span class="hljs-string">'http'</span>);
+<div id = "example-6"><pre><code class = "lang-js"><span class="hljs-keyword">const</span> http = <span class="hljs-built_in">require</span>(<span class="hljs-string">'http'</span>);
 <span class="hljs-keyword">const</span> Koa = <span class="hljs-built_in">require</span>(<span class="hljs-string">'koa'</span>);
 <span class="hljs-keyword">const</span> app = <span class="hljs-keyword">new</span> Koa();
 http.createServer(app.callback()).listen(<span class="hljs-number">3000</span>);</code></pre></div><p>  This means you can spin up the same application as both HTTP and HTTPS
   or on multiple addresses:</p>
-<div id = "example-7"><pre><code><span class="hljs-keyword">const</span> http = <span class="hljs-built_in">require</span>(<span class="hljs-string">'http'</span>);
+<div id = "example-7"><pre><code class = "lang-js"><span class="hljs-keyword">const</span> http = <span class="hljs-built_in">require</span>(<span class="hljs-string">'http'</span>);
 <span class="hljs-keyword">const</span> https = <span class="hljs-built_in">require</span>(<span class="hljs-string">'https'</span>);
 <span class="hljs-keyword">const</span> Koa = <span class="hljs-built_in">require</span>(<span class="hljs-string">'koa'</span>);
 <span class="hljs-keyword">const</span> app = <span class="hljs-keyword">new</span> Koa();
@@ -159,17 +159,17 @@ https.createServer(app.callback()).listen(<span class="hljs-number">3001</span>)
 <p> These are passed to <a href="https://github.com/jed/keygrip">KeyGrip</a>,
  however you may also pass your own <code>KeyGrip</code> instance. For
  example the following are acceptable:</p>
-<div id = "example-8"><pre><code>app.keys = [<span class="hljs-string">'im a newer secret'</span>, <span class="hljs-string">'i like turtle'</span>];
+<div id = "example-8"><pre><code class = "lang-js">app.keys = [<span class="hljs-string">'im a newer secret'</span>, <span class="hljs-string">'i like turtle'</span>];
 app.keys = <span class="hljs-keyword">new</span> KeyGrip([<span class="hljs-string">'im a newer secret'</span>, <span class="hljs-string">'i like turtle'</span>], <span class="hljs-string">'sha256'</span>);</code></pre></div><p>  These keys may be rotated and are used when signing cookies
   with the <code>{ signed: true }</code> option:</p>
-<div id = "example-9"><pre><code>ctx.cookies.set(<span class="hljs-string">'name'</span>, <span class="hljs-string">'tobi'</span>, { <span class="hljs-attr">signed</span>: <span class="hljs-literal">true</span> });</code></pre></div><h2 id="app-context">app.context</h2>
+<div id = "example-9"><pre><code class = "lang-js">ctx.cookies.set(<span class="hljs-string">'name'</span>, <span class="hljs-string">'tobi'</span>, { <span class="hljs-attr">signed</span>: <span class="hljs-literal">true</span> });</code></pre></div><h2 id="app-context">app.context</h2>
 <p>  <code>app.context</code> is the prototype from which <code>ctx</code> is created from.
   You may add additional properties to <code>ctx</code> by editing <code>app.context</code>.
   This is useful for adding properties or methods to <code>ctx</code> to be used across your entire app,
   which may be more performant (no middleware) and/or easier (fewer <code>require()</code>s)
   at the expense of relying more on <code>ctx</code>, which could be considered an anti-pattern.</p>
 <p>  For example, to add a reference to your database from <code>ctx</code>:</p>
-<div id = "example-10"><pre><code>app.context.db = db();
+<div id = "example-10"><pre><code class = "lang-js">app.context.db = db();
 
 app.use(<span class="hljs-keyword">async</span> ctx =&gt; {
   <span class="hljs-built_in">console</span>.log(ctx.db);
@@ -182,10 +182,10 @@ app.use(<span class="hljs-keyword">async</span> ctx =&gt; {
 <p>  By default outputs all errors to stderr unless <code>app.silent</code> is <code>true</code>.
   The default error handler also won&#39;t outputs errors when <code>err.status</code> is <code>404</code> or <code>err.expose</code> is <code>true</code>.
   To perform custom error-handling logic such as centralized logging you can add an &quot;error&quot; event listener:</p>
-<div id = "example-11"><pre><code>app.on(<span class="hljs-string">'error'</span>, err =&gt; {
+<div id = "example-11"><pre><code class = "lang-js">app.on(<span class="hljs-string">'error'</span>, err =&gt; {
   log.error(<span class="hljs-string">'server error'</span>, err)
 });</code></pre></div><p>  If an error is in the req/res cycle and it is <em>not</em> possible to respond to the client, the <code>Context</code> instance is also passed:</p>
-<div id = "example-12"><pre><code>app.on(<span class="hljs-string">'error'</span>, (err, ctx) =&gt; {
+<div id = "example-12"><pre><code class = "lang-js">app.on(<span class="hljs-string">'error'</span>, (err, ctx) =&gt; {
   log.error(<span class="hljs-string">'server error'</span>, err, ctx)
 });</code></pre></div><p>  When an error occurs <em>and</em> it is still possible to respond to the client, aka no data has been written to the socket, Koa will respond
   appropriately with a 500 &quot;Internal Server Error&quot;. In either case
@@ -200,7 +200,7 @@ app.use(<span class="hljs-keyword">async</span> ctx =&gt; {
 <p>  A <code>Context</code> is created <em>per</em> request, and is referenced in middleware
   as the receiver, or the <code>ctx</code> identifier, as shown in the following
   snippet:</p>
-<div id = "example-13"><pre><code>app.use(<span class="hljs-keyword">async</span> ctx =&gt; {
+<div id = "example-13"><pre><code class = "lang-js">app.use(<span class="hljs-keyword">async</span> ctx =&gt; {
   ctx; <span class="hljs-comment">// is the Context</span>
   ctx.request; <span class="hljs-comment">// is a koa Request</span>
   ctx.response; <span class="hljs-comment">// is a koa Response</span>
@@ -226,7 +226,7 @@ app.use(<span class="hljs-keyword">async</span> ctx =&gt; {
 <p>  A koa <code>Response</code> object.</p>
 <h3 id="ctx-state">ctx.state</h3>
 <p>  The recommended namespace for passing information through middleware and to your frontend views.</p>
-<div id = "example-14"><pre><code>ctx.state.user = <span class="hljs-keyword">await</span> User.find(id);</code></pre></div><h3 id="ctx-app">ctx.app</h3>
+<div id = "example-14"><pre><code class = "lang-js">ctx.state.user = <span class="hljs-keyword">await</span> User.find(id);</code></pre></div><h3 id="ctx-app">ctx.app</h3>
 <p>  Application instance reference.</p>
 <h3 id="ctx-cookies-get-name-options-">ctx.cookies.get(name, [options])</h3>
 <p>  Get cookie <code>name</code> with <code>options</code>:</p>
@@ -251,10 +251,10 @@ app.use(<span class="hljs-keyword">async</span> ctx =&gt; {
 <p>  Helper method to throw an error with a <code>.status</code> property
   defaulting to <code>500</code> that will allow Koa to respond appropriately.
   The following combinations are allowed:</p>
-<div id = "example-15"><pre><code>ctx.throw(<span class="hljs-number">400</span>);
+<div id = "example-15"><pre><code class = "lang-js">ctx.throw(<span class="hljs-number">400</span>);
 ctx.throw(<span class="hljs-number">400</span>, <span class="hljs-string">'name required'</span>);
 ctx.throw(<span class="hljs-number">400</span>, <span class="hljs-string">'name required'</span>, { <span class="hljs-attr">user</span>: user });</code></pre></div><p>  For example <code>ctx.throw(400, &#39;name required&#39;)</code> is equivalent to:</p>
-<div id = "example-16"><pre><code><span class="hljs-keyword">const</span> err = <span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(<span class="hljs-string">'name required'</span>);
+<div id = "example-16"><pre><code class = "lang-js"><span class="hljs-keyword">const</span> err = <span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(<span class="hljs-string">'name required'</span>);
 err.status = <span class="hljs-number">400</span>;
 err.expose = <span class="hljs-literal">true</span>;
 <span class="hljs-keyword">throw</span> err;</code></pre></div><p>  Note that these are user-level errors and are flagged with
@@ -263,12 +263,12 @@ err.expose = <span class="hljs-literal">true</span>;
   error messages since you do not want to leak failure
   details.</p>
 <p>  You may optionally pass a <code>properties</code> object which is merged into the error as-is, useful for decorating machine-friendly errors which are reported to the requester upstream.</p>
-<div id = "example-17"><pre><code>ctx.throw(<span class="hljs-number">401</span>, <span class="hljs-string">'access_denied'</span>, { <span class="hljs-attr">user</span>: user });</code></pre></div><p>koa uses <a href="https://github.com/jshttp/http-errors">http-errors</a> to create errors.</p>
+<div id = "example-17"><pre><code class = "lang-js">ctx.throw(<span class="hljs-number">401</span>, <span class="hljs-string">'access_denied'</span>, { <span class="hljs-attr">user</span>: user });</code></pre></div><p>koa uses <a href="https://github.com/jshttp/http-errors">http-errors</a> to create errors.</p>
 <h3 id="ctx-assert-value-status-msg-properties-">ctx.assert(value, [status], [msg], [properties])</h3>
 <p>  Helper method to throw an error similar to <code>.throw()</code>
   when <code>!value</code>. Similar to node&#39;s <a href="http://nodejs.org/api/assert.html">assert()</a>
   method.</p>
-<div id = "example-18"><pre><code>ctx.assert(ctx.state.user, <span class="hljs-number">401</span>, <span class="hljs-string">'User not found. Please login!'</span>);</code></pre></div><p>koa uses <a href="https://github.com/jshttp/http-assert">http-assert</a> for assertions.</p>
+<div id = "example-18"><pre><code class = "lang-js">ctx.assert(ctx.state.user, <span class="hljs-number">401</span>, <span class="hljs-string">'User not found. Please login!'</span>);</code></pre></div><p>koa uses <a href="https://github.com/jshttp/http-assert">http-assert</a> for assertions.</p>
 <h3 id="ctx-respond">ctx.respond</h3>
 <p>  To bypass Koa&#39;s built-in response handling, you may explicitly set <code>ctx.respond = false;</code>. Use this if you want to write to the raw <code>res</code> object instead of letting Koa handle the response for you.</p>
 <p>  Note that using this is <strong>not</strong> supported by Koa. This may break intended functionality of Koa middleware and Koa itself. Using this property is considered a hack and is only a convenience to those wishing to use traditional <code>fn(req, res)</code> functions and middleware within Koa.</p>
@@ -357,10 +357,10 @@ err.expose = <span class="hljs-literal">true</span>;
 <p>  Get request original URL.</p>
 <h3 id="request-origin">request.origin</h3>
 <p>  Get origin of URL, include <code>protocol</code> and <code>host</code>.</p>
-<div id = "example-19"><pre><code>ctx.request.origin
+<div id = "example-19"><pre><code class = "lang-js">ctx.request.origin
 <span class="hljs-comment">// =&gt; http://example.com</span></code></pre></div><h3 id="request-href">request.href</h3>
 <p>  Get full request URL, include <code>protocol</code>, <code>host</code> and <code>url</code>.</p>
-<div id = "example-20"><pre><code>ctx.request.href;
+<div id = "example-20"><pre><code class = "lang-js">ctx.request.href;
 <span class="hljs-comment">// =&gt; http://example.com/foo/bar?q=1</span></code></pre></div><h3 id="request-path">request.path</h3>
 <p>  Get request pathname.</p>
 <h3 id="request-path-">request.path=</h3>
@@ -386,25 +386,25 @@ err.expose = <span class="hljs-literal">true</span>;
 <p>  Get WHATWG parsed URL object.</p>
 <h3 id="request-type">request.type</h3>
 <p>  Get request <code>Content-Type</code> void of parameters such as &quot;charset&quot;.</p>
-<div id = "example-21"><pre><code><span class="hljs-keyword">const</span> ct = ctx.request.type;
+<div id = "example-21"><pre><code class = "lang-js"><span class="hljs-keyword">const</span> ct = ctx.request.type;
 <span class="hljs-comment">// =&gt; "image/png"</span></code></pre></div><h3 id="request-charset">request.charset</h3>
 <p>  Get request charset when present, or <code>undefined</code>:</p>
-<div id = "example-22"><pre><code>ctx.request.charset;
+<div id = "example-22"><pre><code class = "lang-js">ctx.request.charset;
 <span class="hljs-comment">// =&gt; "utf-8"</span></code></pre></div><h3 id="request-query">request.query</h3>
 <p>  Get parsed query-string, returning an empty object when no
   query-string is present. Note that this getter does <em>not</em>
   support nested parsing.</p>
 <p>  For example &quot;color=blue&amp;size=small&quot;:</p>
-<div id = "example-23"><pre><code>{
+<div id = "example-23"><pre><code class = "lang-js">{
   <span class="hljs-attr">color</span>: <span class="hljs-string">'blue'</span>,
   <span class="hljs-attr">size</span>: <span class="hljs-string">'small'</span>
 }</code></pre></div><h3 id="request-query-">request.query=</h3>
 <p>  Set query-string to the given object. Note that this
   setter does <em>not</em> support nested objects.</p>
-<div id = "example-24"><pre><code>ctx.query = { <span class="hljs-attr">next</span>: <span class="hljs-string">'/login'</span> };</code></pre></div><h3 id="request-fresh">request.fresh</h3>
+<div id = "example-24"><pre><code class = "lang-js">ctx.query = { <span class="hljs-attr">next</span>: <span class="hljs-string">'/login'</span> };</code></pre></div><h3 id="request-fresh">request.fresh</h3>
 <p>  Check if a request cache is &quot;fresh&quot;, aka the contents have not changed. This
   method is for cache negotiation between <code>If-None-Match</code> / <code>ETag</code>, and <code>If-Modified-Since</code> and <code>Last-Modified</code>. It should be referenced after setting one or more of these response headers.</p>
-<div id = "example-25"><pre><code><span class="hljs-comment">// freshness check requires status 20x or 304</span>
+<div id = "example-25"><pre><code class = "lang-js"><span class="hljs-comment">// freshness check requires status 20x or 304</span>
 ctx.status = <span class="hljs-number">200</span>;
 ctx.set(<span class="hljs-string">'ETag'</span>, <span class="hljs-string">'123'</span>);
 
@@ -445,7 +445,7 @@ ctx.body = <span class="hljs-keyword">await</span> db.find(<span class="hljs-str
   If there is no request body, <code>null</code> is returned.
   If there is no content type, or the match fails <code>false</code> is returned.
   Otherwise, it returns the matching content-type.</p>
-<div id = "example-26"><pre><code><span class="hljs-comment">// With Content-Type: text/html; charset=utf-8</span>
+<div id = "example-26"><pre><code class = "lang-js"><span class="hljs-comment">// With Content-Type: text/html; charset=utf-8</span>
 ctx.is(<span class="hljs-string">'html'</span>); <span class="hljs-comment">// =&gt; 'html'</span>
 ctx.is(<span class="hljs-string">'text/html'</span>); <span class="hljs-comment">// =&gt; 'text/html'</span>
 ctx.is(<span class="hljs-string">'text/*'</span>, <span class="hljs-string">'text/html'</span>); <span class="hljs-comment">// =&gt; 'text/html'</span>
@@ -457,7 +457,7 @@ ctx.is(<span class="hljs-string">'html'</span>, <span class="hljs-string">'appli
 
 ctx.is(<span class="hljs-string">'html'</span>); <span class="hljs-comment">// =&gt; false</span></code></pre></div><p>  For example if you want to ensure that
   only images are sent to a given route:</p>
-<div id = "example-27"><pre><code><span class="hljs-keyword">if</span> (ctx.is(<span class="hljs-string">'image/*'</span>)) {
+<div id = "example-27"><pre><code class = "lang-js"><span class="hljs-keyword">if</span> (ctx.is(<span class="hljs-string">'image/*'</span>)) {
   <span class="hljs-comment">// process</span>
 } <span class="hljs-keyword">else</span> {
   ctx.throw(<span class="hljs-number">415</span>, <span class="hljs-string">'images only!'</span>);
@@ -476,7 +476,7 @@ ctx.is(<span class="hljs-string">'html'</span>); <span class="hljs-comment">// =
 <p>  Check if the given <code>type(s)</code> is acceptable, returning the best match when true, otherwise <code>false</code>. The <code>type</code> value may be one or more mime type string
   such as &quot;application/json&quot;, the extension name
   such as &quot;json&quot;, or an array <code>[&quot;json&quot;, &quot;html&quot;, &quot;text/plain&quot;]</code>.</p>
-<div id = "example-28"><pre><code><span class="hljs-comment">// Accept: text/html</span>
+<div id = "example-28"><pre><code class = "lang-js"><span class="hljs-comment">// Accept: text/html</span>
 ctx.accepts(<span class="hljs-string">'html'</span>);
 <span class="hljs-comment">// =&gt; "html"</span>
 
@@ -506,46 +506,46 @@ ctx.accepts(<span class="hljs-string">'html'</span>, <span class="hljs-string">'
 ctx.accepts(<span class="hljs-string">'json'</span>, <span class="hljs-string">'html'</span>);
 <span class="hljs-comment">// =&gt; "json"</span></code></pre></div><p>  You may call <code>ctx.accepts()</code> as many times as you like,
   or use a switch:</p>
-<div id = "example-29"><pre><code><span class="hljs-keyword">switch</span> (ctx.accepts(<span class="hljs-string">'json'</span>, <span class="hljs-string">'html'</span>, <span class="hljs-string">'text'</span>)) {
+<div id = "example-29"><pre><code class = "lang-js"><span class="hljs-keyword">switch</span> (ctx.accepts(<span class="hljs-string">'json'</span>, <span class="hljs-string">'html'</span>, <span class="hljs-string">'text'</span>)) {
   <span class="hljs-keyword">case</span> <span class="hljs-string">'json'</span>: <span class="hljs-keyword">break</span>;
   <span class="hljs-keyword">case</span> <span class="hljs-string">'html'</span>: <span class="hljs-keyword">break</span>;
   <span class="hljs-keyword">case</span> <span class="hljs-string">'text'</span>: <span class="hljs-keyword">break</span>;
   <span class="hljs-keyword">default</span>: ctx.throw(<span class="hljs-number">406</span>, <span class="hljs-string">'json, html, or text only'</span>);
 }</code></pre></div><h3 id="request-acceptsencodings-encodings-">request.acceptsEncodings(encodings)</h3>
 <p>  Check if <code>encodings</code> are acceptable, returning the best match when true, otherwise <code>false</code>. Note that you should include <code>identity</code> as one of the encodings!</p>
-<div id = "example-30"><pre><code><span class="hljs-comment">// Accept-Encoding: gzip</span>
+<div id = "example-30"><pre><code class = "lang-js"><span class="hljs-comment">// Accept-Encoding: gzip</span>
 ctx.acceptsEncodings(<span class="hljs-string">'gzip'</span>, <span class="hljs-string">'deflate'</span>, <span class="hljs-string">'identity'</span>);
 <span class="hljs-comment">// =&gt; "gzip"</span>
 
 ctx.acceptsEncodings([<span class="hljs-string">'gzip'</span>, <span class="hljs-string">'deflate'</span>, <span class="hljs-string">'identity'</span>]);
 <span class="hljs-comment">// =&gt; "gzip"</span></code></pre></div><p>  When no arguments are given all accepted encodings
   are returned as an array:</p>
-<div id = "example-31"><pre><code><span class="hljs-comment">// Accept-Encoding: gzip, deflate</span>
+<div id = "example-31"><pre><code class = "lang-js"><span class="hljs-comment">// Accept-Encoding: gzip, deflate</span>
 ctx.acceptsEncodings();
 <span class="hljs-comment">// =&gt; ["gzip", "deflate", "identity"]</span></code></pre></div><p>  Note that the <code>identity</code> encoding (which means no encoding) could be unacceptable if the client explicitly sends <code>identity;q=0</code>. Although this is an edge case, you should still handle the case where this method returns <code>false</code>.</p>
 <h3 id="request-acceptscharsets-charsets-">request.acceptsCharsets(charsets)</h3>
 <p>  Check if <code>charsets</code> are acceptable, returning
   the best match when true, otherwise <code>false</code>.</p>
-<div id = "example-32"><pre><code><span class="hljs-comment">// Accept-Charset: utf-8, iso-8859-1;q=0.2, utf-7;q=0.5</span>
+<div id = "example-32"><pre><code class = "lang-js"><span class="hljs-comment">// Accept-Charset: utf-8, iso-8859-1;q=0.2, utf-7;q=0.5</span>
 ctx.acceptsCharsets(<span class="hljs-string">'utf-8'</span>, <span class="hljs-string">'utf-7'</span>);
 <span class="hljs-comment">// =&gt; "utf-8"</span>
 
 ctx.acceptsCharsets([<span class="hljs-string">'utf-7'</span>, <span class="hljs-string">'utf-8'</span>]);
 <span class="hljs-comment">// =&gt; "utf-8"</span></code></pre></div><p>  When no arguments are given all accepted charsets
   are returned as an array:</p>
-<div id = "example-33"><pre><code><span class="hljs-comment">// Accept-Charset: utf-8, iso-8859-1;q=0.2, utf-7;q=0.5</span>
+<div id = "example-33"><pre><code class = "lang-js"><span class="hljs-comment">// Accept-Charset: utf-8, iso-8859-1;q=0.2, utf-7;q=0.5</span>
 ctx.acceptsCharsets();
 <span class="hljs-comment">// =&gt; ["utf-8", "utf-7", "iso-8859-1"]</span></code></pre></div><h3 id="request-acceptslanguages-langs-">request.acceptsLanguages(langs)</h3>
 <p>  Check if <code>langs</code> are acceptable, returning
   the best match when true, otherwise <code>false</code>.</p>
-<div id = "example-34"><pre><code><span class="hljs-comment">// Accept-Language: en;q=0.8, es, pt</span>
+<div id = "example-34"><pre><code class = "lang-js"><span class="hljs-comment">// Accept-Language: en;q=0.8, es, pt</span>
 ctx.acceptsLanguages(<span class="hljs-string">'es'</span>, <span class="hljs-string">'en'</span>);
 <span class="hljs-comment">// =&gt; "es"</span>
 
 ctx.acceptsLanguages([<span class="hljs-string">'en'</span>, <span class="hljs-string">'es'</span>]);
 <span class="hljs-comment">// =&gt; "es"</span></code></pre></div><p>  When no arguments are given all accepted languages
   are returned as an array:</p>
-<div id = "example-35"><pre><code><span class="hljs-comment">// Accept-Language: en;q=0.8, es, pt</span>
+<div id = "example-35"><pre><code class = "lang-js"><span class="hljs-comment">// Accept-Language: en;q=0.8, es, pt</span>
 ctx.acceptsLanguages();
 <span class="hljs-comment">// =&gt; ["es", "pt", "en"]</span></code></pre></div><h3 id="request-idempotent">request.idempotent</h3>
 <p>  Check if the request is idempotent.</p>
@@ -667,7 +667,7 @@ so you can make a correction.</p>
   For example, you may not want this when setting the body as an HTTP stream in a proxy as it would destroy the underlying connection.</p>
 <p>  See: <a href="https://github.com/koajs/koa/pull/612">https://github.com/koajs/koa/pull/612</a> for more information.</p>
 <p>  Here&#39;s an example of stream error handling without automatically destroying the stream:</p>
-<div id = "example-36"><pre><code><span class="hljs-keyword">const</span> PassThrough = <span class="hljs-built_in">require</span>(<span class="hljs-string">'stream'</span>).PassThrough;
+<div id = "example-36"><pre><code class = "lang-js"><span class="hljs-keyword">const</span> PassThrough = <span class="hljs-built_in">require</span>(<span class="hljs-string">'stream'</span>).PassThrough;
 
 app.use(<span class="hljs-keyword">async</span> ctx =&gt; {
   ctx.body = someHTTPStream.on(<span class="hljs-string">'error'</span>, ctx.onerror).pipe(PassThrough());
@@ -675,23 +675,23 @@ app.use(<span class="hljs-keyword">async</span> ctx =&gt; {
 <p>  The Content-Type is defaulted to application/json. This includes plain objects <code>{ foo: &#39;bar&#39; }</code> and arrays <code>[&#39;foo&#39;, &#39;bar&#39;]</code>.</p>
 <h3 id="response-get-field-">response.get(field)</h3>
 <p>  Get a response header field value with case-insensitive <code>field</code>.</p>
-<div id = "example-37"><pre><code><span class="hljs-keyword">const</span> etag = ctx.response.get(<span class="hljs-string">'ETag'</span>);</code></pre></div><h3 id="response-set-field-value-">response.set(field, value)</h3>
+<div id = "example-37"><pre><code class = "lang-js"><span class="hljs-keyword">const</span> etag = ctx.response.get(<span class="hljs-string">'ETag'</span>);</code></pre></div><h3 id="response-set-field-value-">response.set(field, value)</h3>
 <p>  Set response header <code>field</code> to <code>value</code>:</p>
-<div id = "example-38"><pre><code>ctx.set(<span class="hljs-string">'Cache-Control'</span>, <span class="hljs-string">'no-cache'</span>);</code></pre></div><h3 id="response-append-field-value-">response.append(field, value)</h3>
+<div id = "example-38"><pre><code class = "lang-js">ctx.set(<span class="hljs-string">'Cache-Control'</span>, <span class="hljs-string">'no-cache'</span>);</code></pre></div><h3 id="response-append-field-value-">response.append(field, value)</h3>
 <p>  Append additional header <code>field</code> with value <code>val</code>.</p>
-<div id = "example-39"><pre><code>ctx.append(<span class="hljs-string">'Link'</span>, <span class="hljs-string">'&lt;http://127.0.0.1/&gt;'</span>);</code></pre></div><h3 id="response-set-fields-">response.set(fields)</h3>
+<div id = "example-39"><pre><code class = "lang-js">ctx.append(<span class="hljs-string">'Link'</span>, <span class="hljs-string">'&lt;http://127.0.0.1/&gt;'</span>);</code></pre></div><h3 id="response-set-fields-">response.set(fields)</h3>
 <p>  Set several response header <code>fields</code> with an object:</p>
-<div id = "example-40"><pre><code>ctx.set({
+<div id = "example-40"><pre><code class = "lang-js">ctx.set({
   <span class="hljs-string">'Etag'</span>: <span class="hljs-string">'1234'</span>,
   <span class="hljs-string">'Last-Modified'</span>: date
 });</code></pre></div><h3 id="response-remove-field-">response.remove(field)</h3>
 <p>  Remove header <code>field</code>.</p>
 <h3 id="response-type">response.type</h3>
 <p>  Get response <code>Content-Type</code> void of parameters such as &quot;charset&quot;.</p>
-<div id = "example-41"><pre><code><span class="hljs-keyword">const</span> ct = ctx.type;
+<div id = "example-41"><pre><code class = "lang-js"><span class="hljs-keyword">const</span> ct = ctx.type;
 <span class="hljs-comment">// =&gt; "image/png"</span></code></pre></div><h3 id="response-type-">response.type=</h3>
 <p>  Set response <code>Content-Type</code> via mime string or file extension.</p>
-<div id = "example-42"><pre><code>ctx.type = <span class="hljs-string">'text/plain; charset=utf-8'</span>;
+<div id = "example-42"><pre><code class = "lang-js">ctx.type = <span class="hljs-string">'text/plain; charset=utf-8'</span>;
 ctx.type = <span class="hljs-string">'image/png'</span>;
 ctx.type = <span class="hljs-string">'.png'</span>;
 ctx.type = <span class="hljs-string">'png'</span>;</code></pre></div><p>  Note: when appropriate a <code>charset</code> is selected for you, for
@@ -704,7 +704,7 @@ ctx.type = <span class="hljs-string">'png'</span>;</code></pre></div><p>  Note: 
   manipulate responses.</p>
 <p>  For example, this is a middleware that minifies
   all HTML responses except for streams.</p>
-<div id = "example-43"><pre><code><span class="hljs-keyword">const</span> minify = <span class="hljs-built_in">require</span>(<span class="hljs-string">'html-minifier'</span>);
+<div id = "example-43"><pre><code class = "lang-js"><span class="hljs-keyword">const</span> minify = <span class="hljs-built_in">require</span>(<span class="hljs-string">'html-minifier'</span>);
 
 app.use(<span class="hljs-keyword">async</span> (ctx, next) =&gt; {
   <span class="hljs-keyword">await</span> next();
@@ -721,12 +721,12 @@ app.use(<span class="hljs-keyword">async</span> (ctx, next) =&gt; {
 <p>  The string &quot;back&quot; is special-cased
   to provide Referrer support, when Referrer
   is not present <code>alt</code> or &quot;/&quot; is used.</p>
-<div id = "example-44"><pre><code>ctx.redirect(<span class="hljs-string">'back'</span>);
+<div id = "example-44"><pre><code class = "lang-js">ctx.redirect(<span class="hljs-string">'back'</span>);
 ctx.redirect(<span class="hljs-string">'back'</span>, <span class="hljs-string">'/index.html'</span>);
 ctx.redirect(<span class="hljs-string">'/login'</span>);
 ctx.redirect(<span class="hljs-string">'http://google.com'</span>);</code></pre></div><p>  To alter the default status of <code>302</code>, simply assign the status
   before or after this call. To alter the body, assign it after this call:</p>
-<div id = "example-45"><pre><code>ctx.status = <span class="hljs-number">301</span>;
+<div id = "example-45"><pre><code class = "lang-js">ctx.status = <span class="hljs-number">301</span>;
 ctx.redirect(<span class="hljs-string">'/cart'</span>);
 ctx.body = <span class="hljs-string">'Redirecting to shopping cart'</span>;</code></pre></div><h3 id="response-attachment-filename-">response.attachment([filename])</h3>
 <p>  Set <code>Content-Disposition</code> to &quot;attachment&quot; to signal the client
@@ -740,10 +740,10 @@ ctx.body = <span class="hljs-string">'Redirecting to shopping cart'</span>;</cod
 <h3 id="response-lastmodified-">response.lastModified=</h3>
 <p>  Set the <code>Last-Modified</code> header as an appropriate UTC string.
   You can either set it as a <code>Date</code> or date string.</p>
-<div id = "example-46"><pre><code>ctx.response.lastModified = <span class="hljs-keyword">new</span> <span class="hljs-built_in">Date</span>();</code></pre></div><h3 id="response-etag-">response.etag=</h3>
+<div id = "example-46"><pre><code class = "lang-js">ctx.response.lastModified = <span class="hljs-keyword">new</span> <span class="hljs-built_in">Date</span>();</code></pre></div><h3 id="response-etag-">response.etag=</h3>
 <p>  Set the ETag of a response including the wrapped <code>&quot;</code>s.
   Note that there is no corresponding <code>response.etag</code> getter.</p>
-<div id = "example-47"><pre><code>ctx.response.etag = crypto.createHash(<span class="hljs-string">'md5'</span>).update(ctx.body).digest(<span class="hljs-string">'hex'</span>);</code></pre></div><h3 id="response-vary-field-">response.vary(field)</h3>
+<div id = "example-47"><pre><code class = "lang-js">ctx.response.etag = crypto.createHash(<span class="hljs-string">'md5'</span>).update(ctx.body).digest(<span class="hljs-string">'hex'</span>);</code></pre></div><h3 id="response-vary-field-">response.vary(field)</h3>
 <p>  Vary on <code>field</code>.</p>
 <h3 id="response-flushheaders-">response.flushHeaders()</h3>
 <p>  Flush any set headers, and begin the body.</p>

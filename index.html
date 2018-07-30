@@ -1,6 +1,6 @@
 <!DOCTYPE html><html><head><title>Koa - next generation web framework for node.js</title><link rel="stylesheet" href="public/style.css"><link rel="stylesheet" href="public/icons/css/slate.css"><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Italiana&amp;subset=latin"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.10.0/styles/github.min.css"><meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1.0, maximum-scale=1.0"><script>window.analytics=window.analytics||[],window.analytics.methods=["identify","group","track","page","pageview","alias","ready","on","once","off","trackLink","trackForm","trackClick","trackSubmit"],window.analytics.factory=function(t){return function(){var a=Array.prototype.slice.call(arguments);return a.unshift(t),window.analytics.push(a),window.analytics}};for(var i=0;i<window.analytics.methods.length;i++){var key=window.analytics.methods[i];window.analytics[key]=window.analytics.factory(key)}window.analytics.load=function(t){if(!document.getElementById("analytics-js")){var a=document.createElement("script");a.type="text/javascript",a.id="analytics-js",a.async=!0,a.src=("https:"===document.location.protocol?"https://":"http://")+"cdn.segment.io/analytics.js/v1/"+t+"/analytics.min.js";var n=document.getElementsByTagName("script")[0];n.parentNode.insertBefore(a,n)}},window.analytics.SNIPPET_VERSION="2.0.9",
 window.analytics.load("9u0xff0b3k");
-window.analytics.page();</script><script src="stats.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.10.0/highlight.min.js"></script><script src="https://embed.runkit.com" async defer></script></head><body><section id="top"><div id="menu"><a id="toggle" href="#"><i class="icon-menu"></i></a><ul><li><a href="#introduction">Introduction</a></li><li><a href="#application">Application</a></li><li><a href="#context">Context</a></li><li><a href="#request">Request</a></li><li><a href="#response">Response</a></li><li><a href="#links">Links</a></li></ul></div><div id="heading"><div id="logo">Koa</div><div id="tagline">next generation web framework for node.js</div></div></section><section><div class="content"><h1 id="introduction">Introduction</h1><p>Koa is a new web framework designed by the team behind Express,
+window.analytics.page();</script><script src="stats.js"></script><script src="https://embed.runkit.com" async defer></script></head><body><section id="top"><div id="menu"><a id="toggle" href="#"><i class="icon-menu"></i></a><ul><li><a href="#introduction">Introduction</a></li><li><a href="#application">Application</a></li><li><a href="#context">Context</a></li><li><a href="#request">Request</a></li><li><a href="#response">Response</a></li><li><a href="#links">Links</a></li></ul></div><div id="heading"><div id="logo">Koa</div><div id="tagline">next generation web framework for node.js</div></div></section><section><div class="content"><h1 id="introduction">Introduction</h1><p>Koa is a new web framework designed by the team behind Express,
 which aims to be a smaller, more expressive, and more robust foundation
 for web applications and APIs. By leveraging async functions, Koa allows you
 to ditch callbacks and greatly increase error-handling. Koa does not bundle any
@@ -12,8 +12,8 @@ writing servers fast and enjoyable.
 <div id = "example-0"><pre><code class = "lang-bash">$ nvm install 7
 $ npm i koa
 $ node my-koa-app.js</code></pre></div><h2 id="async-functions-with-babel">Async Functions with Babel</h2>
-<p>To use <code>async</code> functions in Koa in versions of node &lt; 7.6, we recommend using <a href="http://babeljs.io/docs/usage/require/">babel&#39;s require hook</a>.</p>
-<div id = "example-1"><pre><code class = "lang-js"><span class="hljs-built_in">require</span>(<span class="hljs-string">'babel-core/register'</span>);
+<p>To use <code>async</code> functions in Koa in versions of node &lt; 7.6, we recommend using <a href="http://babeljs.io/docs/usage/babel-register/">babel&#39;s require hook</a>.</p>
+<div id = "example-1"><pre><code class = "lang-js"><span class="hljs-built_in">require</span>(<span class="hljs-string">'babel-register'</span>);
 <span class="hljs-comment">// require the rest of the app that needs to be transpiled after the hook</span>
 <span class="hljs-keyword">const</span> app = <span class="hljs-built_in">require</span>(<span class="hljs-string">'./app'</span>);</code></pre></div><p>To parse and transpile async functions,
 you should at a minimum have the <a href="http://babeljs.io/docs/plugins/transform-async-to-generator/">transform-async-to-generator</a>
@@ -76,6 +76,14 @@ app.listen(<span class="hljs-number">3000</span>);</code></pre></div><script>(fu
 <div id = "example-4"><pre><code class = "lang-js"><span class="hljs-keyword">const</span> Koa = <span class="hljs-built_in">require</span>(<span class="hljs-string">'koa'</span>);
 <span class="hljs-keyword">const</span> app = <span class="hljs-keyword">new</span> Koa();
 
+<span class="hljs-comment">// logger</span>
+
+app.use(<span class="hljs-keyword">async</span> (ctx, next) =&gt; {
+  <span class="hljs-keyword">await</span> next();
+  <span class="hljs-keyword">const</span> rt = ctx.response.get(<span class="hljs-string">'X-Response-Time'</span>);
+  <span class="hljs-built_in">console</span>.log(<span class="hljs-string">`<span class="hljs-subst">${ctx.method}</span> <span class="hljs-subst">${ctx.url}</span> - <span class="hljs-subst">${rt}</span>`</span>);
+});
+
 <span class="hljs-comment">// x-response-time</span>
 
 app.use(<span class="hljs-keyword">async</span> (ctx, next) =&gt; {
@@ -83,15 +91,6 @@ app.use(<span class="hljs-keyword">async</span> (ctx, next) =&gt; {
   <span class="hljs-keyword">await</span> next();
   <span class="hljs-keyword">const</span> ms = <span class="hljs-built_in">Date</span>.now() - start;
   ctx.set(<span class="hljs-string">'X-Response-Time'</span>, <span class="hljs-string">`<span class="hljs-subst">${ms}</span>ms`</span>);
-});
-
-<span class="hljs-comment">// logger</span>
-
-app.use(<span class="hljs-keyword">async</span> (ctx, next) =&gt; {
-  <span class="hljs-keyword">const</span> start = <span class="hljs-built_in">Date</span>.now();
-  <span class="hljs-keyword">await</span> next();
-  <span class="hljs-keyword">const</span> ms = <span class="hljs-built_in">Date</span>.now() - start;
-  <span class="hljs-built_in">console</span>.log(<span class="hljs-string">`<span class="hljs-subst">${ctx.method}</span> <span class="hljs-subst">${ctx.url}</span> - <span class="hljs-subst">${ms}</span>`</span>);
 });
 
 <span class="hljs-comment">// response</span>
@@ -128,7 +127,7 @@ app.listen(<span class="hljs-number">3000</span>);</code></pre></div><script>(fu
 <li><code>app.subdomainOffset</code> offset of <code>.subdomains</code> to ignore [2]</li>
 </ul>
 <h2 id="app-listen-">app.listen(...)</h2>
-<p>  A Koa application is not a 1-to-1 representation of a HTTP server.
+<p>  A Koa application is not a 1-to-1 representation of an HTTP server.
   One or more Koa applications may be mounted together to form larger
   applications with a single HTTP server.</p>
 <p>  Create and return an HTTP server, passing the given arguments to
@@ -149,7 +148,7 @@ http.createServer(app.callback()).listen(<span class="hljs-number">3000</span>);
 https.createServer(app.callback()).listen(<span class="hljs-number">3001</span>);</code></pre></div><h2 id="app-callback-">app.callback()</h2>
 <p>  Return a callback function suitable for the <code>http.createServer()</code>
   method to handle a request.
-  You may also use this callback function to mount your koa app in a
+  You may also use this callback function to mount your Koa app in a
   Connect/Express app.</p>
 <h2 id="app-use-function-">app.use(function)</h2>
 <p>  Add the given middleware function to this application. See <a href="https://github.com/koajs/koa/wiki#middleware">Middleware</a> for
@@ -163,7 +162,7 @@ https.createServer(app.callback()).listen(<span class="hljs-number">3001</span>)
 app.keys = <span class="hljs-keyword">new</span> KeyGrip([<span class="hljs-string">'im a newer secret'</span>, <span class="hljs-string">'i like turtle'</span>], <span class="hljs-string">'sha256'</span>);</code></pre></div><p>  These keys may be rotated and are used when signing cookies
   with the <code>{ signed: true }</code> option:</p>
 <div id = "example-9"><pre><code class = "lang-js">ctx.cookies.set(<span class="hljs-string">'name'</span>, <span class="hljs-string">'tobi'</span>, { <span class="hljs-attr">signed</span>: <span class="hljs-literal">true</span> });</code></pre></div><h2 id="app-context">app.context</h2>
-<p>  <code>app.context</code> is the prototype from which <code>ctx</code> is created from.
+<p>  <code>app.context</code> is the prototype from which <code>ctx</code> is created.
   You may add additional properties to <code>ctx</code> by editing <code>app.context</code>.
   This is useful for adding properties or methods to <code>ctx</code> to be used across your entire app,
   which may be more performant (no middleware) and/or easier (fewer <code>require()</code>s)
@@ -176,11 +175,11 @@ app.use(<span class="hljs-keyword">async</span> ctx =&gt; {
 });</code></pre></div><p>Note:</p>
 <ul>
 <li>Many properties on <code>ctx</code> are defined using getters, setters, and <code>Object.defineProperty()</code>. You can only edit these properties (not recommended) by using <code>Object.defineProperty()</code> on <code>app.context</code>. See <a href="https://github.com/koajs/koa/issues/652">https://github.com/koajs/koa/issues/652</a>.</li>
-<li>Mounted apps currently use its parent&#39;s <code>ctx</code> and settings. Thus, mounted apps are really just groups of middleware.</li>
+<li>Mounted apps currently use their parent&#39;s <code>ctx</code> and settings. Thus, mounted apps are really just groups of middleware.</li>
 </ul>
 <h2 id="error-handling">Error Handling</h2>
 <p>  By default outputs all errors to stderr unless <code>app.silent</code> is <code>true</code>.
-  The default error handler also won&#39;t outputs errors when <code>err.status</code> is <code>404</code> or <code>err.expose</code> is <code>true</code>.
+  The default error handler also won&#39;t output errors when <code>err.status</code> is <code>404</code> or <code>err.expose</code> is <code>true</code>.
   To perform custom error-handling logic such as centralized logging you can add an &quot;error&quot; event listener:</p>
 <div id = "example-11"><pre><code class = "lang-js">app.on(<span class="hljs-string">'error'</span>, err =&gt; {
   log.error(<span class="hljs-string">'server error'</span>, err)

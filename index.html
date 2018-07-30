@@ -1,10 +1,10 @@
-<!DOCTYPE html><html><head><title>Koa - next generation web framework for node.js</title><link rel="stylesheet" href="public/style.css"><link rel="stylesheet" href="public/icons/css/slate.css"><link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Italiana&amp;subset=latin"><link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.10.0/styles/github.min.css"><meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1.0, maximum-scale=1.0"><script>window.analytics=window.analytics||[],window.analytics.methods=["identify","group","track","page","pageview","alias","ready","on","once","off","trackLink","trackForm","trackClick","trackSubmit"],window.analytics.factory=function(t){return function(){var a=Array.prototype.slice.call(arguments);return a.unshift(t),window.analytics.push(a),window.analytics}};for(var i=0;i<window.analytics.methods.length;i++){var key=window.analytics.methods[i];window.analytics[key]=window.analytics.factory(key)}window.analytics.load=function(t){if(!document.getElementById("analytics-js")){var a=document.createElement("script");a.type="text/javascript",a.id="analytics-js",a.async=!0,a.src=("https:"===document.location.protocol?"https://":"http://")+"cdn.segment.io/analytics.js/v1/"+t+"/analytics.min.js";var n=document.getElementsByTagName("script")[0];n.parentNode.insertBefore(a,n)}},window.analytics.SNIPPET_VERSION="2.0.9",
+<!DOCTYPE html><html><head><title>Koa - next generation web framework for node.js</title><link rel="stylesheet" href="public/style.css"><link rel="stylesheet" href="public/icons/css/slate.css"><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Italiana&amp;subset=latin"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.10.0/styles/github.min.css"><meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1.0, maximum-scale=1.0"><script>window.analytics=window.analytics||[],window.analytics.methods=["identify","group","track","page","pageview","alias","ready","on","once","off","trackLink","trackForm","trackClick","trackSubmit"],window.analytics.factory=function(t){return function(){var a=Array.prototype.slice.call(arguments);return a.unshift(t),window.analytics.push(a),window.analytics}};for(var i=0;i<window.analytics.methods.length;i++){var key=window.analytics.methods[i];window.analytics[key]=window.analytics.factory(key)}window.analytics.load=function(t){if(!document.getElementById("analytics-js")){var a=document.createElement("script");a.type="text/javascript",a.id="analytics-js",a.async=!0,a.src=("https:"===document.location.protocol?"https://":"http://")+"cdn.segment.io/analytics.js/v1/"+t+"/analytics.min.js";var n=document.getElementsByTagName("script")[0];n.parentNode.insertBefore(a,n)}},window.analytics.SNIPPET_VERSION="2.0.9",
 window.analytics.load("9u0xff0b3k");
-window.analytics.page();</script><script src="stats.js"></script><script src="https://embed.runkit.com" async defer></script></head><body><section id="top"><div id="menu"><a id="toggle" href="#"><i class="icon-menu"></i></a><ul><li><a href="#introduction">Introduction</a></li><li><a href="#application">Application</a></li><li><a href="#context">Context</a></li><li><a href="#request">Request</a></li><li><a href="#response">Response</a></li><li><a href="#links">Links</a></li></ul></div><div id="heading"><div id="logo">Koa</div><div id="tagline">next generation web framework for node.js</div></div></section><section><div class="content"><h1 id="introduction">Introduction</h1><p>Koa is a new web framework designed by the team behind Express,
+window.analytics.page();</script><script src="stats.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.10.0/highlight.min.js"></script><script src="https://embed.runkit.com" async defer></script></head><body><section id="top"><div id="menu"><a id="toggle" href="#"><i class="icon-menu"></i></a><ul><li><a href="#introduction">Introduction</a></li><li><a href="#application">Application</a></li><li><a href="#context">Context</a></li><li><a href="#request">Request</a></li><li><a href="#response">Response</a></li><li><a href="#links">Links</a></li></ul></div><div id="heading"><div id="logo">Koa</div><div id="tagline">next generation web framework for node.js</div></div></section><section><div class="content"><h1 id="introduction">Introduction</h1><p>Koa is a new web framework designed by the team behind Express,
 which aims to be a smaller, more expressive, and more robust foundation
-for web applications and APIs. Through leveraging generators Koa allows you
+for web applications and APIs. By leveraging async functions, Koa allows you
 to ditch callbacks and greatly increase error-handling. Koa does not bundle any
-middleware within core, and provides an elegant suite of methods that make
+middleware within its core, and it provides an elegant suite of methods that make
 writing servers fast and enjoyable.
 </p></div></section><section><div class="content"><h1 id="installation">Installation</h1>
 <p>  Koa requires <strong>node v7.6.0</strong> or higher for ES2015 and async function support.</p>
@@ -202,8 +202,8 @@ app.use(<span class="hljs-keyword">async</span> ctx =&gt; {
   snippet:</p>
 <div id = "example-13"><pre><code class = "lang-js">app.use(<span class="hljs-keyword">async</span> ctx =&gt; {
   ctx; <span class="hljs-comment">// is the Context</span>
-  ctx.request; <span class="hljs-comment">// is a koa Request</span>
-  ctx.response; <span class="hljs-comment">// is a koa Response</span>
+  ctx.request; <span class="hljs-comment">// is a Koa Request</span>
+  ctx.response; <span class="hljs-comment">// is a Koa Response</span>
 });</code></pre></div><p>  Many of the context&#39;s accessors and methods simply delegate to their <code>ctx.request</code> or <code>ctx.response</code>
   equivalents for convenience, and are otherwise identical. For example <code>ctx.type</code> and <code>ctx.length</code>
   delegate to the <code>response</code> object, and <code>ctx.path</code> and <code>ctx.method</code> delegate to the <code>request</code>.</p>
@@ -221,9 +221,9 @@ app.use(<span class="hljs-keyword">async</span> ctx =&gt; {
 <li><code>res.end()</code></li>
 </ul>
 <h3 id="ctx-request">ctx.request</h3>
-<p>  A koa <code>Request</code> object.</p>
+<p>  A Koa <code>Request</code> object.</p>
 <h3 id="ctx-response">ctx.response</h3>
-<p>  A koa <code>Response</code> object.</p>
+<p>  A Koa <code>Response</code> object.</p>
 <h3 id="ctx-state">ctx.state</h3>
 <p>  The recommended namespace for passing information through middleware and to your frontend views.</p>
 <div id = "example-14"><pre><code class = "lang-js">ctx.state.user = <span class="hljs-keyword">await</span> User.find(id);</code></pre></div><h3 id="ctx-app">ctx.app</h3>
@@ -233,7 +233,7 @@ app.use(<span class="hljs-keyword">async</span> ctx =&gt; {
 <ul>
 <li><code>signed</code> the cookie requested should be signed</li>
 </ul>
-<p>koa uses the <a href="https://github.com/jed/cookies">cookies</a> module where options are simply passed.</p>
+<p>Koa uses the <a href="https://github.com/jed/cookies">cookies</a> module where options are simply passed.</p>
 <h3 id="ctx-cookies-set-name-value-options-">ctx.cookies.set(name, value, [options])</h3>
 <p>  Set cookie <code>name</code> to <code>value</code> with <code>options</code>:</p>
 <ul>
@@ -246,7 +246,7 @@ app.use(<span class="hljs-keyword">async</span> ctx =&gt; {
 <li><code>httpOnly</code> server-accessible cookie, <strong>true</strong> by default</li>
 <li><code>overwrite</code> a boolean indicating whether to overwrite previously set cookies of the same name (<strong>false</strong> by default). If this is true, all cookies set during the same request with the same name (regardless of path or domain) are filtered out of the Set-Cookie header when setting this cookie.</li>
 </ul>
-<p>koa uses the <a href="https://github.com/jed/cookies">cookies</a> module where options are simply passed.</p>
+<p>Koa uses the <a href="https://github.com/jed/cookies">cookies</a> module where options are simply passed.</p>
 <h3 id="ctx-throw-status-msg-properties-">ctx.throw([status], [msg], [properties])</h3>
 <p>  Helper method to throw an error with a <code>.status</code> property
   defaulting to <code>500</code> that will allow Koa to respond appropriately.
@@ -263,12 +263,12 @@ err.expose = <span class="hljs-literal">true</span>;
   error messages since you do not want to leak failure
   details.</p>
 <p>  You may optionally pass a <code>properties</code> object which is merged into the error as-is, useful for decorating machine-friendly errors which are reported to the requester upstream.</p>
-<div id = "example-17"><pre><code class = "lang-js">ctx.throw(<span class="hljs-number">401</span>, <span class="hljs-string">'access_denied'</span>, { <span class="hljs-attr">user</span>: user });</code></pre></div><p>koa uses <a href="https://github.com/jshttp/http-errors">http-errors</a> to create errors.</p>
+<div id = "example-17"><pre><code class = "lang-js">ctx.throw(<span class="hljs-number">401</span>, <span class="hljs-string">'access_denied'</span>, { <span class="hljs-attr">user</span>: user });</code></pre></div><p>Koa uses <a href="https://github.com/jshttp/http-errors">http-errors</a> to create errors.</p>
 <h3 id="ctx-assert-value-status-msg-properties-">ctx.assert(value, [status], [msg], [properties])</h3>
 <p>  Helper method to throw an error similar to <code>.throw()</code>
   when <code>!value</code>. Similar to node&#39;s <a href="http://nodejs.org/api/assert.html">assert()</a>
   method.</p>
-<div id = "example-18"><pre><code class = "lang-js">ctx.assert(ctx.state.user, <span class="hljs-number">401</span>, <span class="hljs-string">'User not found. Please login!'</span>);</code></pre></div><p>koa uses <a href="https://github.com/jshttp/http-assert">http-assert</a> for assertions.</p>
+<div id = "example-18"><pre><code class = "lang-js">ctx.assert(ctx.state.user, <span class="hljs-number">401</span>, <span class="hljs-string">'User not found. Please login!'</span>);</code></pre></div><p>Koa uses <a href="https://github.com/jshttp/http-assert">http-assert</a> for assertions.</p>
 <h3 id="ctx-respond">ctx.respond</h3>
 <p>  To bypass Koa&#39;s built-in response handling, you may explicitly set <code>ctx.respond = false;</code>. Use this if you want to write to the raw <code>res</code> object instead of letting Koa handle the response for you.</p>
 <p>  Note that using this is <strong>not</strong> supported by Koa. This may break intended functionality of Koa middleware and Koa itself. Using this property is considered a hack and is only a convenience to those wishing to use traditional <code>fn(req, res)</code> functions and middleware within Koa.</p>

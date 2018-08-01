@@ -12,7 +12,7 @@ html
       window.analytics.load("9u0xff0b3k");
       window.analytics.page();
     script(src='stats.js')
-    script(src='https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.10.0/highlight.min.js')
+    script(src="https://embed.runkit.com", async, defer)
   body
     section#top
       #menu
@@ -42,19 +42,19 @@ html
 
     section
       .content
-        include ../public/index.md
+        include:markdown ../public/index.md
 
     section
       .content
-        include ../public/context.md
+        include:markdown ../public/context.md
 
     section
       .content
-        include ../public/request.md
+        include:markdown ../public/request.md
 
     section
       .content
-        include ../public/response.md
+        include:markdown ../public/response.md
 
     section
       .content
@@ -86,5 +86,4 @@ html
           li: a(href='https://github.com/koajs/koa/blob/master/docs/guide.md') Guide
           li: a(href='https://github.com/koajs/koa/blob/master/docs/faq.md') FAQ
           li: <strong>#koajs</strong> on freenode
-    script.
-      hljs.initHighlightingOnLoad();  
+

@@ -6,6 +6,185 @@ for web applications and APIs. By leveraging async functions, Koa allows you
 to ditch callbacks and greatly increase error-handling. Koa does not bundle any
 middleware within its core, and it provides an elegant suite of methods that make
 writing servers fast and enjoyable.
+</p></div></section><section><div class="content"><h1 id="installation">Installation</h1>
+<p>  Koa requires <strong>node v7.6.0</strong> or higher for ES2015 and async function support.</p>
+<p>  You can quickly install a supported version of node with your favorite version manager:</p>
+<div id = "example-0"><pre><code class = "lang-bash">$ nvm install 7
+$ npm i koa
+$ node my-koa-app.js</code></pre></div><h2 id="async-functions-with-babel">Async Functions with Babel</h2>
+<p>To use <code>async</code> functions in Koa in versions of node &lt; 7.6, we recommend using <a href="http://babeljs.io/docs/usage/babel-register/">babel&#39;s require hook</a>.</p>
+<div id = "example-1"><pre><code class = "lang-js"><span class="hljs-built_in">require</span>(<span class="hljs-string">'babel-register'</span>);
+<span class="hljs-comment">// require the rest of the app that needs to be transpiled after the hook</span>
+<span class="hljs-keyword">const</span> app = <span class="hljs-built_in">require</span>(<span class="hljs-string">'./app'</span>);</code></pre></div><p>To parse and transpile async functions,
+you should at a minimum have the <a href="http://babeljs.io/docs/plugins/transform-async-to-generator/">transform-async-to-generator</a>
+or <a href="http://babeljs.io/docs/plugins/transform-async-to-module-method/">transform-async-to-module-method</a> plugins.
+For example, in your <code>.babelrc</code> file, you should have:</p>
+<div id = "example-2"><pre><code class = "lang-json">{
+  <span class="hljs-attr">"plugins"</span>: [<span class="hljs-string">"transform-async-to-generator"</span>]
+}</code></pre></div><p>You can also use the <a href="http://babeljs.io/docs/plugins/preset-env/">env preset</a> with a target option <code>&quot;node&quot;: &quot;current&quot;</code> instead.</p>
+<h1 id="application">Application</h1>
+<p>  A Koa application is an object containing an array of middleware functions
+  which are composed and executed in a stack-like manner upon request. Koa is similar to many
+  other middleware systems that you may have encountered such as Ruby&#39;s Rack, Connect, and so on -
+  however a key design decision was made to provide high level &quot;sugar&quot; at the otherwise low-level
+  middleware layer. This improves interoperability, robustness, and makes writing middleware much
+  more enjoyable.</p>
+<p>  This includes methods for common tasks like content-negotiation, cache freshness, proxy support, and redirection
+  among others. Despite supplying a reasonably large number of helpful methods Koa maintains a small footprint, as
+  no middleware are bundled.</p>
+<p>  The obligatory hello world application:</p>
+<!-- runkit:endpoint -->
+<div id = "example-3"><pre><code class = "lang-js"><span class="hljs-keyword">const</span> Koa = <span class="hljs-built_in">require</span>(<span class="hljs-string">'koa'</span>);
+<span class="hljs-keyword">const</span> app = <span class="hljs-keyword">new</span> Koa();
+
+app.use(<span class="hljs-keyword">async</span> ctx =&gt; {
+  ctx.body = <span class="hljs-string">'Hello World'</span>;
+});
+
+app.listen(<span class="hljs-number">3000</span>);</code></pre></div><script>(function endpoint(id, count) {
+            
+                if (!window.RunKit)
+                    if (typeof count === "undefined" || count < 20)
+                        return setTimeout(endpoint, 500, id, count || 0 + 1);
+                    else
+                        return;
+                var parent = document.getElementById(id);
+                var source = parent.textContent;
+                
+                parent.innerHTML = "";
+                RunKit.createNotebook({
+                    element: parent,
+                    nodeVersion: "8.x.x",
+                    source: source,
+                    mode: "endpoint"
+                });
+            })("example-3")</script><h2 id="cascading">Cascading</h2>
+<p>  Koa middleware cascade in a more traditional way as you may be used to with similar tools -
+  this was previously difficult to make user friendly with node&#39;s use of callbacks.
+  However with async functions we can achieve &quot;true&quot; middleware. Contrasting Connect&#39;s implementation which
+  simply passes control through series of functions until one returns, Koa invoke &quot;downstream&quot;, then
+  control flows back &quot;upstream&quot;.</p>
+<p>  The following example responds with &quot;Hello World&quot;, however first the request flows through
+  the <code>x-response-time</code> and <code>logging</code> middleware to mark when the request started, then continue
+  to yield control through the response middleware. When a middleware invokes <code>next()</code>
+  the function suspends and passes control to the next middleware defined. After there are no more
+  middleware to execute downstream, the stack will unwind and each middleware is resumed to perform
+  its upstream behaviour.</p>
+<!-- runkit:endpoint -->
+<div id = "example-4"><pre><code class = "lang-js"><span class="hljs-keyword">const</span> Koa = <span class="hljs-built_in">require</span>(<span class="hljs-string">'koa'</span>);
+<span class="hljs-keyword">const</span> app = <span class="hljs-keyword">new</span> Koa();
+
+<span class="hljs-comment">// logger</span>
+
+app.use(<span class="hljs-keyword">async</span> (ctx, next) =&gt; {
+  <span class="hljs-keyword">await</span> next();
+  <span class="hljs-keyword">const</span> rt = ctx.response.get(<span class="hljs-string">'X-Response-Time'</span>);
+  <span class="hljs-built_in">console</span>.log(<span class="hljs-string">`<span class="hljs-subst">${ctx.method}</span> <span class="hljs-subst">${ctx.url}</span> - <span class="hljs-subst">${rt}</span>`</span>);
+});
+
+<span class="hljs-comment">// x-response-time</span>
+
+app.use(<span class="hljs-keyword">async</span> (ctx, next) =&gt; {
+  <span class="hljs-keyword">const</span> start = <span class="hljs-built_in">Date</span>.now();
+  <span class="hljs-keyword">await</span> next();
+  <span class="hljs-keyword">const</span> ms = <span class="hljs-built_in">Date</span>.now() - start;
+  ctx.set(<span class="hljs-string">'X-Response-Time'</span>, <span class="hljs-string">`<span class="hljs-subst">${ms}</span>ms`</span>);
+});
+
+<span class="hljs-comment">// response</span>
+
+app.use(<span class="hljs-keyword">async</span> ctx =&gt; {
+  ctx.body = <span class="hljs-string">'Hello World'</span>;
+});
+
+app.listen(<span class="hljs-number">3000</span>);</code></pre></div><script>(function endpoint(id, count) {
+            
+                if (!window.RunKit)
+                    if (typeof count === "undefined" || count < 20)
+                        return setTimeout(endpoint, 500, id, count || 0 + 1);
+                    else
+                        return;
+                var parent = document.getElementById(id);
+                var source = parent.textContent;
+                
+                parent.innerHTML = "";
+                RunKit.createNotebook({
+                    element: parent,
+                    nodeVersion: "8.x.x",
+                    source: source,
+                    mode: "endpoint"
+                });
+            })("example-4")</script><h2 id="settings">Settings</h2>
+<p>  Application settings are properties on the <code>app</code> instance, currently
+  the following are supported:</p>
+<ul>
+<li><code>app.env</code> defaulting to the <strong>NODE_ENV</strong> or &quot;development&quot;</li>
+<li><code>app.proxy</code> when true proxy header fields will be trusted</li>
+<li><code>app.subdomainOffset</code> offset of <code>.subdomains</code> to ignore [2]</li>
+</ul>
+<h2 id="app-listen-">app.listen(...)</h2>
+<p>  A Koa application is not a 1-to-1 representation of an HTTP server.
+  One or more Koa applications may be mounted together to form larger
+  applications with a single HTTP server.</p>
+<p>  Create and return an HTTP server, passing the given arguments to
+  <code>Server#listen()</code>. These arguments are documented on <a href="http://nodejs.org/api/http.html#http_server_listen_port_hostname_backlog_callback">nodejs.org</a>. The following is a useless Koa application bound to port <code>3000</code>:</p>
+<div id = "example-5"><pre><code class = "lang-js"><span class="hljs-keyword">const</span> Koa = <span class="hljs-built_in">require</span>(<span class="hljs-string">'koa'</span>);
+<span class="hljs-keyword">const</span> app = <span class="hljs-keyword">new</span> Koa();
+app.listen(<span class="hljs-number">3000</span>);</code></pre></div><p>  The <code>app.listen(...)</code> method is simply sugar for the following:</p>
+<div id = "example-6"><pre><code class = "lang-js"><span class="hljs-keyword">const</span> http = <span class="hljs-built_in">require</span>(<span class="hljs-string">'http'</span>);
+<span class="hljs-keyword">const</span> Koa = <span class="hljs-built_in">require</span>(<span class="hljs-string">'koa'</span>);
+<span class="hljs-keyword">const</span> app = <span class="hljs-keyword">new</span> Koa();
+http.createServer(app.callback()).listen(<span class="hljs-number">3000</span>);</code></pre></div><p>  This means you can spin up the same application as both HTTP and HTTPS
+  or on multiple addresses:</p>
+<div id = "example-7"><pre><code class = "lang-js"><span class="hljs-keyword">const</span> http = <span class="hljs-built_in">require</span>(<span class="hljs-string">'http'</span>);
+<span class="hljs-keyword">const</span> https = <span class="hljs-built_in">require</span>(<span class="hljs-string">'https'</span>);
+<span class="hljs-keyword">const</span> Koa = <span class="hljs-built_in">require</span>(<span class="hljs-string">'koa'</span>);
+<span class="hljs-keyword">const</span> app = <span class="hljs-keyword">new</span> Koa();
+http.createServer(app.callback()).listen(<span class="hljs-number">3000</span>);
+https.createServer(app.callback()).listen(<span class="hljs-number">3001</span>);</code></pre></div><h2 id="app-callback-">app.callback()</h2>
+<p>  Return a callback function suitable for the <code>http.createServer()</code>
+  method to handle a request.
+  You may also use this callback function to mount your Koa app in a
+  Connect/Express app.</p>
+<h2 id="app-use-function-">app.use(function)</h2>
+<p>  Add the given middleware function to this application. See <a href="https://github.com/koajs/koa/wiki#middleware">Middleware</a> for
+  more information.</p>
+<h2 id="app-keys-">app.keys=</h2>
+<p> Set signed cookie keys.</p>
+<p> These are passed to <a href="https://github.com/jed/keygrip">KeyGrip</a>,
+ however you may also pass your own <code>KeyGrip</code> instance. For
+ example the following are acceptable:</p>
+<div id = "example-8"><pre><code class = "lang-js">app.keys = [<span class="hljs-string">'im a newer secret'</span>, <span class="hljs-string">'i like turtle'</span>];
+app.keys = <span class="hljs-keyword">new</span> KeyGrip([<span class="hljs-string">'im a newer secret'</span>, <span class="hljs-string">'i like turtle'</span>], <span class="hljs-string">'sha256'</span>);</code></pre></div><p>  These keys may be rotated and are used when signing cookies
+  with the <code>{ signed: true }</code> option:</p>
+<div id = "example-9"><pre><code class = "lang-js">ctx.cookies.set(<span class="hljs-string">'name'</span>, <span class="hljs-string">'tobi'</span>, { <span class="hljs-attr">signed</span>: <span class="hljs-literal">true</span> });</code></pre></div><h2 id="app-context">app.context</h2>
+<p>  <code>app.context</code> is the prototype from which <code>ctx</code> is created.
+  You may add additional properties to <code>ctx</code> by editing <code>app.context</code>.
+  This is useful for adding properties or methods to <code>ctx</code> to be used across your entire app,
+  which may be more performant (no middleware) and/or easier (fewer <code>require()</code>s)
+  at the expense of relying more on <code>ctx</code>, which could be considered an anti-pattern.</p>
+<p>  For example, to add a reference to your database from <code>ctx</code>:</p>
+<div id = "example-10"><pre><code class = "lang-js">app.context.db = db();
+
+app.use(<span class="hljs-keyword">async</span> ctx =&gt; {
+  <span class="hljs-built_in">console</span>.log(ctx.db);
+});</code></pre></div><p>Note:</p>
+<ul>
+<li>Many properties on <code>ctx</code> are defined using getters, setters, and <code>Object.defineProperty()</code>. You can only edit these properties (not recommended) by using <code>Object.defineProperty()</code> on <code>app.context</code>. See <a href="https://github.com/koajs/koa/issues/652">https://github.com/koajs/koa/issues/652</a>.</li>
+<li>Mounted apps currently use their parent&#39;s <code>ctx</code> and settings. Thus, mounted apps are really just groups of middleware.</li>
+</ul>
+<h2 id="error-handling">Error Handling</h2>
+<p>  By default outputs all errors to stderr unless <code>app.silent</code> is <code>true</code>.
+  The default error handler also won&#39;t output errors when <code>err.status</code> is <code>404</code> or <code>err.expose</code> is <code>true</code>.
+  To perform custom error-handling logic such as centralized logging you can add an &quot;error&quot; event listener:</p>
+<div id = "example-11"><pre><code class = "lang-js">app.on(<span class="hljs-string">'error'</span>, err =&gt; {
+  log.error(<span class="hljs-string">'server error'</span>, err)
+});</code></pre></div><p>  If an error is in the req/res cycle and it is <em>not</em> possible to respond to the client, the <code>Context</code> instance is also passed:</p>
+<div id = "example-12"><pre><code class = "lang-js">app.on(<span class="hljs-string">'error'</span>, (err, ctx) =&gt; {
+  log.error(<span class="hljs-string">'server error'</span>, err, ctx)
+});</code></pre></div><p>  When an error occurs <em>and</em> it is still possible to respond to the client, aka no data has been written to the socket, Koa will respond
+  appropriately with a 500 &quot;Internal Server Error&quot;. In either case
+  an app-level &quot;error&quot; is emitted for logging purposes.
 </p></div></section><section><div class="content"></div></section><section><div class="content"><h1 id="context">Context</h1>
 <p>  A Koa Context encapsulates node&#39;s <code>request</code> and <code>response</code> objects
   into a single object which provides many helpful methods for writing

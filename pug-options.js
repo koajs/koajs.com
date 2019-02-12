@@ -5,7 +5,7 @@
         {
             var marked = require("marked");
             var renderer = new marked.Renderer();
-            var highlight = require('highlight.js').highlight;
+            // var highlight = require('highlight.js').highlight;
             var runkitRegExp = /^<!--\s*runkit:endpoint((.|\n)*)-->(.|\n)*$/;
             var runkitContext = { options: '{}', activated: false };
 
@@ -14,7 +14,8 @@
                 if (!global.exampleCount)
                     global.exampleCount = 0;
 
-                var out = highlight(lang, code).value || code;
+                // var out = highlight(lang, code).value || code;
+                var out = code
                 var escaped = out !== code ? out : escapeCode(out, true);
                 var id = "example-" + (global.exampleCount++);
 

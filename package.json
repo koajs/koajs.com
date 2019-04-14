@@ -5,7 +5,7 @@
   "description": "the koa website",
   "dependencies": {
     "highlight.js": "^9.14.2",
-    "marked": "~0.3.17",
+    "marked": "~0.6.2",
     "pug": "^2.0.0-rc.2",
     "pug-cli": "^1.0.0-alpha6",
     "stdin": "0.0.1"

@@ -8,6 +8,12 @@
     "marked": "~0.3.17",
     "pug": "^2.0.0-rc.2",
     "pug-cli": "^1.0.0-alpha6",
-    "stdin": "0.0.1"
-  }
+    "stdin": "0.0.1",
+    "snyk": "^1.316.1"
+  },
+  "scripts": {
+    "snyk-protect": "snyk protect",
+    "prepare": "npm run snyk-protect"
+  },
+  "snyk": true
 }

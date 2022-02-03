@@ -1,0 +1,60 @@
+name: Update Site
+
+on:
+  schedule:
+  - cron: '0 1 * * *'
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2.4.0
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: 16.x
+
+      - name: restore node_modules
+        uses: actions/cache@v2.1.7
+        id: node-cache
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-node-${{ hashFiles('package-lock.json') }}
+
+      - name: Get npm cache directory path
+        if: steps.node-cache.outputs.cache-hit != 'true'
+        id: npm-cache-dir-path
+        run: echo "::set-output name=dir::$(npm config get cache)"
+
+      - name: npm-cache
+        if: steps.node-cache.outputs.cache-hit != 'true'
+        uses: actions/cache@v2.1.7
+        id: npm-cache
+        with:
+          path: ${{ steps.npm-cache-dir-path.outputs.dir }}
+          key: ${{ runner.os }}-npm-${{ hashFiles('package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-npm-
+
+      - name: Install Deps
+        if: steps.node-cache.outputs.cache-hit != 'true'
+        run: npm ci
+
+      - name: Build
+        id: build
+        run: |
+          make -j4
+          if `git status -s | grep -q "index.html"`; then
+            echo "::set-output name=updated::true";
+          else
+            echo "::set-output name=updated::false";
+          fi
+
+      - name: Commit
+        if: steps.build.outputs.updated == 'true'
+        uses: EndBug/add-and-commit@v8
+        with:
+          message: 'chore: generate index.html with cronjob'
+          add: index.html

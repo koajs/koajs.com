@@ -17,7 +17,7 @@ writing servers fast and enjoyable.
 <div id = "example-0"><pre><code class = "lang-bash">$ nvm install 7
 $ npm i koa
 $ node my-koa-app.js</code></pre></div><h2 id="async-functions-with-babel">Async Functions with Babel</h2>
-<p>To use <code>async</code> functions in Koa in versions of node &lt; 7.6, we recommend using <a href="http://babeljs.io/docs/usage/babel-register/">babel&#39;s require hook</a>.</p>
+<p>To use <code>async</code> functions in Koa in versions of node &gt; 7.6, we recommend using <a href="http://babeljs.io/docs/usage/babel-register/">babel&#39;s require hook</a>.</p>
 <div id = "example-1"><pre><code class = "lang-js">require(&#39;babel-register&#39;);
 // require the rest of the app that needs to be transpiled after the hook
 const app = require(&#39;./app&#39;);</code></pre></div><p>To parse and transpile async functions,

@@ -1,11 +1,6 @@
 <!DOCTYPE html><html><head><title>Koa - next generation web framework for node.js</title><link rel="stylesheet" href="public/style.css"><link rel="stylesheet" href="public/icons/css/slate.css"><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Italiana&amp;subset=latin"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.10.0/styles/github.min.css"><meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1.0, maximum-scale=1.0"><script>window.analytics=window.analytics||[],window.analytics.methods=["identify","group","track","page","pageview","alias","ready","on","once","off","trackLink","trackForm","trackClick","trackSubmit"],window.analytics.factory=function(t){return function(){var a=Array.prototype.slice.call(arguments);return a.unshift(t),window.analytics.push(a),window.analytics}};for(var i=0;i<window.analytics.methods.length;i++){var key=window.analytics.methods[i];window.analytics[key]=window.analytics.factory(key)}window.analytics.load=function(t){if(!document.getElementById("analytics-js")){var a=document.createElement("script");a.type="text/javascript",a.id="analytics-js",a.async=!0,a.src=("https:"===document.location.protocol?"https://":"http://")+"cdn.segment.io/analytics.js/v1/"+t+"/analytics.min.js";var n=document.getElementsByTagName("script")[0];n.parentNode.insertBefore(a,n)}},window.analytics.SNIPPET_VERSION="2.0.9",
 window.analytics.load("9u0xff0b3k");
-window.analytics.page();</script><script src="stats.js"></script><script src="https://embed.runkit.com" async defer></script></head>
-
-<div style="text-align: center; background: #010101; color: #f1f1f1; padding: 16px; font-size: 16px; z-index: 50; position: fixed; top: 0; left: 0; width: 100%">
-  Black Lives Matter. <a style="color: #5E80F7; text-decoration: none;" href="https://support.eji.org/give/153413/#!/donation/checkout">Support the Equal Justice Initiative</a>.
-</div>
-<section id="top"><div id="menu"><a id="toggle" href="#"><i class="icon-menu"></i></a><ul><li><a href="#introduction">Introduction</a></li><li><a href="#application">Application</a></li><li><a href="#context">Context</a></li><li><a href="#request">Request</a></li><li><a href="#response">Response</a></li><li><a href="#links">Links</a></li></ul></div><div id="heading"><div id="logo">Koa</div><div id="tagline">next generation web framework for node.js</div></div></section><section><div class="content"><h1 id="introduction">Introduction</h1><p>Koa is a new web framework designed by the team behind Express,
+window.analytics.page();</script><script src="stats.js"></script><script src="https://embed.runkit.com" async defer></script></head><body><section id="top"><div id="menu"><a id="toggle" href="#"><i class="icon-menu"></i></a><ul><li><a href="#introduction">Introduction</a></li><li><a href="#application">Application</a></li><li><a href="#context">Context</a></li><li><a href="#request">Request</a></li><li><a href="#response">Response</a></li><li><a href="#links">Links</a></li></ul></div><div id="heading"><div id="logo">Koa</div><div id="tagline">next generation web framework for node.js</div><div id="tagline"><a href="http://koajs.cn">中文文档</a></div></div></section><section><div class="content"><h1 id="introduction">Introduction</h1><p>Koa is a new web framework designed by the team behind Express,
 which aims to be a smaller, more expressive, and more robust foundation
 for web applications and APIs. By leveraging async functions, Koa allows you
 to ditch callbacks and greatly increase error-handling. Koa does not bundle any
@@ -16,18 +11,7 @@ writing servers fast and enjoyable.
 <p>  You can quickly install a supported version of node with your favorite version manager:</p>
 <div id = "example-0"><pre><code class = "lang-bash">$ nvm install 7
 $ npm i koa
-$ node my-koa-app.js</code></pre></div><h2 id="async-functions-with-babel">Async Functions with Babel</h2>
-<p>To use <code>async</code> functions in Koa in versions of node &lt; 7.6, we recommend using <a href="http://babeljs.io/docs/usage/babel-register/">babel&#39;s require hook</a>.</p>
-<div id = "example-1"><pre><code class = "lang-js">require(&#39;babel-register&#39;);
-// require the rest of the app that needs to be transpiled after the hook
-const app = require(&#39;./app&#39;);</code></pre></div><p>To parse and transpile async functions,
-you should at a minimum have the <a href="http://babeljs.io/docs/plugins/transform-async-to-generator/">transform-async-to-generator</a>
-or <a href="http://babeljs.io/docs/plugins/transform-async-to-module-method/">transform-async-to-module-method</a> plugins.
-For example, in your <code>.babelrc</code> file, you should have:</p>
-<div id = "example-2"><pre><code class = "lang-json">{
-  &quot;plugins&quot;: [&quot;transform-async-to-generator&quot;]
-}</code></pre></div><p>You can also use the <a href="http://babeljs.io/docs/plugins/preset-env/">env preset</a> with a target option <code>&quot;node&quot;: &quot;current&quot;</code> instead.</p>
-<h1 id="application">Application</h1>
+$ node my-koa-app.js</code></pre></div><h1 id="application">Application</h1>
 <p>  A Koa application is an object containing an array of middleware functions
   which are composed and executed in a stack-like manner upon request. Koa is similar to many
   other middleware systems that you may have encountered such as Ruby&#39;s Rack, Connect, and so on -
@@ -38,26 +22,46 @@ For example, in your <code>.babelrc</code> file, you should have:</p>
   among others. Despite supplying a reasonably large number of helpful methods Koa maintains a small footprint, as
   no middleware are bundled.</p>
 <p>  The obligatory hello world application:</p>
-<div id = "example-3"><pre><code class = "lang-js">const Koa = require(&#39;koa&#39;);
+<!-- runkit:endpoint -->
+<div id = "example-1"><pre><code class = "lang-js">const Koa = require(&#39;koa&#39;);
 const app = new Koa();
 
 app.use(async ctx =&gt; {
   ctx.body = &#39;Hello World&#39;;
 });
 
-app.listen(3000);</code></pre></div><h2 id="cascading">Cascading</h2>
+app.listen(3000);</code></pre></div><script>(function endpoint(id, count) {
+            
+                if (!window.RunKit)
+                    if (typeof count === "undefined" || count < 20)
+                        return setTimeout(endpoint, 500, id, count || 0 + 1);
+                    else
+                        return;
+
+                var parent = document.getElementById(id);
+                var source = parent.textContent;
+                
+                parent.innerHTML = "";
+
+                RunKit.createNotebook({
+                    element: parent,
+                    nodeVersion: "8.x.x",
+                    source: source,
+                    mode: "endpoint"
+                });
+            })("example-1")</script><h2 id="cascading">Cascading</h2>
 <p>  Koa middleware cascade in a more traditional way as you may be used to with similar tools -
   this was previously difficult to make user friendly with node&#39;s use of callbacks.
   However with async functions we can achieve &quot;true&quot; middleware. Contrasting Connect&#39;s implementation which
   simply passes control through series of functions until one returns, Koa invoke &quot;downstream&quot;, then
   control flows back &quot;upstream&quot;.</p>
 <p>  The following example responds with &quot;Hello World&quot;, however first the request flows through
-  the <code>x-response-time</code> and <code>logging</code> middleware to mark when the request started, then continue
-  to yield control through the response middleware. When a middleware invokes <code>next()</code>
+  the <code>x-response-time</code> and <code>logging</code> middleware to mark when the request started, then yields control through the response middleware. When a middleware invokes <code>next()</code>
   the function suspends and passes control to the next middleware defined. After there are no more
   middleware to execute downstream, the stack will unwind and each middleware is resumed to perform
   its upstream behaviour.</p>
-<div id = "example-4"><pre><code class = "lang-js">const Koa = require(&#39;koa&#39;);
+<!-- runkit:endpoint -->
+<div id = "example-2"><pre><code class = "lang-js">const Koa = require(&#39;koa&#39;);
 const app = new Koa();
 
 // logger
@@ -83,13 +87,41 @@ app.use(async ctx =&gt; {
   ctx.body = &#39;Hello World&#39;;
 });
 
-app.listen(3000);</code></pre></div><h2 id="settings">Settings</h2>
+app.listen(3000);</code></pre></div><script>(function endpoint(id, count) {
+            
+                if (!window.RunKit)
+                    if (typeof count === "undefined" || count < 20)
+                        return setTimeout(endpoint, 500, id, count || 0 + 1);
+                    else
+                        return;
+
+                var parent = document.getElementById(id);
+                var source = parent.textContent;
+                
+                parent.innerHTML = "";
+
+                RunKit.createNotebook({
+                    element: parent,
+                    nodeVersion: "8.x.x",
+                    source: source,
+                    mode: "endpoint"
+                });
+            })("example-2")</script><h2 id="settings">Settings</h2>
 <p>  Application settings are properties on the <code>app</code> instance, currently
   the following are supported:</p>
 <ul>
 <li><code>app.env</code> defaulting to the <strong>NODE_ENV</strong> or &quot;development&quot;</li>
+<li><code>app.keys</code> array of signed cookie keys</li>
 <li><code>app.proxy</code> when true proxy header fields will be trusted</li>
-<li><code>app.subdomainOffset</code> offset of <code>.subdomains</code> to ignore [2]</li>
+<li><code>app.subdomainOffset</code> offset of <code>.subdomains</code> to ignore, default to 2</li>
+<li><code>app.proxyIpHeader</code> proxy ip header, default to <code>X-Forwarded-For</code></li>
+<li><p><code>app.maxIpsCount</code> max ips read from proxy ip header, default to 0 (means infinity)</p>
+<p>You can pass the settings to the constructor:</p>
+<div id = "example-3"><pre><code class = "lang-js">const Koa = require(&#39;koa&#39;);
+const app = new Koa({ proxy: true });</code></pre></div><p>or dynamically:</p>
+<div id = "example-4"><pre><code class = "lang-js">const Koa = require(&#39;koa&#39;);
+const app = new Koa();
+app.proxy = true;</code></pre></div></li>
 </ul>
 <h2 id="app-listen-">app.listen(...)</h2>
 <p>  A Koa application is not a 1-to-1 representation of an HTTP server.
@@ -116,24 +148,32 @@ https.createServer(app.callback()).listen(3001);</code></pre></div><h2 id="app-c
   You may also use this callback function to mount your Koa app in a
   Connect/Express app.</p>
 <h2 id="app-use-function-">app.use(function)</h2>
-<p>  Add the given middleware function to this application. See <a href="https://github.com/koajs/koa/wiki#middleware">Middleware</a> for
+<p>  Add the given middleware function to this application.
+  <code>app.use()</code> returns <code>this</code>, so is chainable.</p>
+<div id = "example-8"><pre><code class = "lang-js">app.use(someMiddleware)
+app.use(someOtherMiddleware)
+app.listen(3000)</code></pre></div><p>  Is the same as</p>
+<div id = "example-9"><pre><code class = "lang-js">app.use(someMiddleware)
+  .use(someOtherMiddleware)
+  .listen(3000)</code></pre></div><p>  See <a href="https://github.com/koajs/koa/wiki#middleware">Middleware</a> for
   more information.</p>
 <h2 id="app-keys-">app.keys=</h2>
-<p> Set signed cookie keys.</p>
-<p> These are passed to <a href="https://github.com/jed/keygrip">KeyGrip</a>,
- however you may also pass your own <code>KeyGrip</code> instance. For
- example the following are acceptable:</p>
-<div id = "example-8"><pre><code class = "lang-js">app.keys = [&#39;im a newer secret&#39;, &#39;i like turtle&#39;];
-app.keys = new KeyGrip([&#39;im a newer secret&#39;, &#39;i like turtle&#39;], &#39;sha256&#39;);</code></pre></div><p>  These keys may be rotated and are used when signing cookies
+<p>  Set signed cookie keys.</p>
+<p>  These are passed to <a href="https://github.com/crypto-utils/keygrip">KeyGrip</a>,
+  however you may also pass your own <code>KeyGrip</code> instance. For
+  example the following are acceptable:</p>
+<div id = "example-10"><pre><code class = "lang-js">app.keys = [&#39;OEK5zjaAMPc3L6iK7PyUjCOziUH3rsrMKB9u8H07La1SkfwtuBoDnHaaPCkG5Brg&#39;, &#39;MNKeIebviQnCPo38ufHcSfw3FFv8EtnAe1xE02xkN1wkCV1B2z126U44yk2BQVK7&#39;];
+app.keys = new KeyGrip([&#39;OEK5zjaAMPc3L6iK7PyUjCOziUH3rsrMKB9u8H07La1SkfwtuBoDnHaaPCkG5Brg&#39;, &#39;MNKeIebviQnCPo38ufHcSfw3FFv8EtnAe1xE02xkN1wkCV1B2z126U44yk2BQVK7&#39;], &#39;sha256&#39;);</code></pre></div><p>  For security reasons, please ensure that the key is long enough and random.</p>
+<p>  These keys may be rotated and are used when signing cookies
   with the <code>{ signed: true }</code> option:</p>
-<div id = "example-9"><pre><code class = "lang-js">ctx.cookies.set(&#39;name&#39;, &#39;tobi&#39;, { signed: true });</code></pre></div><h2 id="app-context">app.context</h2>
+<div id = "example-11"><pre><code class = "lang-js">ctx.cookies.set(&#39;name&#39;, &#39;tobi&#39;, { signed: true });</code></pre></div><h2 id="app-context">app.context</h2>
 <p>  <code>app.context</code> is the prototype from which <code>ctx</code> is created.
   You may add additional properties to <code>ctx</code> by editing <code>app.context</code>.
   This is useful for adding properties or methods to <code>ctx</code> to be used across your entire app,
   which may be more performant (no middleware) and/or easier (fewer <code>require()</code>s)
   at the expense of relying more on <code>ctx</code>, which could be considered an anti-pattern.</p>
 <p>  For example, to add a reference to your database from <code>ctx</code>:</p>
-<div id = "example-10"><pre><code class = "lang-js">app.context.db = db();
+<div id = "example-12"><pre><code class = "lang-js">app.context.db = db();
 
 app.use(async ctx =&gt; {
   console.log(ctx.db);
@@ -146,10 +186,10 @@ app.use(async ctx =&gt; {
 <p>  By default outputs all errors to stderr unless <code>app.silent</code> is <code>true</code>.
   The default error handler also won&#39;t output errors when <code>err.status</code> is <code>404</code> or <code>err.expose</code> is <code>true</code>.
   To perform custom error-handling logic such as centralized logging you can add an &quot;error&quot; event listener:</p>
-<div id = "example-11"><pre><code class = "lang-js">app.on(&#39;error&#39;, err =&gt; {
+<div id = "example-13"><pre><code class = "lang-js">app.on(&#39;error&#39;, err =&gt; {
   log.error(&#39;server error&#39;, err)
 });</code></pre></div><p>  If an error is in the req/res cycle and it is <em>not</em> possible to respond to the client, the <code>Context</code> instance is also passed:</p>
-<div id = "example-12"><pre><code class = "lang-js">app.on(&#39;error&#39;, (err, ctx) =&gt; {
+<div id = "example-14"><pre><code class = "lang-js">app.on(&#39;error&#39;, (err, ctx) =&gt; {
   log.error(&#39;server error&#39;, err, ctx)
 });</code></pre></div><p>  When an error occurs <em>and</em> it is still possible to respond to the client, aka no data has been written to the socket, Koa will respond
   appropriately with a 500 &quot;Internal Server Error&quot;. In either case
@@ -164,7 +204,7 @@ app.use(async ctx =&gt; {
 <p>  A <code>Context</code> is created <em>per</em> request, and is referenced in middleware
   as the receiver, or the <code>ctx</code> identifier, as shown in the following
   snippet:</p>
-<div id = "example-13"><pre><code class = "lang-js">app.use(async ctx =&gt; {
+<div id = "example-15"><pre><code class = "lang-js">app.use(async ctx =&gt; {
   ctx; // is the Context
   ctx.request; // is a Koa Request
   ctx.response; // is a Koa Response
@@ -190,35 +230,38 @@ app.use(async ctx =&gt; {
 <p>  A Koa <code>Response</code> object.</p>
 <h3 id="ctx-state">ctx.state</h3>
 <p>  The recommended namespace for passing information through middleware and to your frontend views.</p>
-<div id = "example-14"><pre><code class = "lang-js">ctx.state.user = await User.find(id);</code></pre></div><h3 id="ctx-app">ctx.app</h3>
+<div id = "example-16"><pre><code class = "lang-js">ctx.state.user = await User.find(id);</code></pre></div><h3 id="ctx-app">ctx.app</h3>
 <p>  Application instance reference.</p>
+<h3 id="ctx-app-emit">ctx.app.emit</h3>
+<p>  Koa applications extend an internal <a href="https://nodejs.org/dist/latest-v11.x/docs/api/events.html">EventEmitter</a>. <code>ctx.app.emit</code> emits an event with a type, defined by the first argument. For each event you can hook up &quot;listeners&quot;, which is a function that is called when the event is emitted. Consult the <a href="https://koajs.com/#error-handling">error handling docs</a> for more information.</p>
 <h3 id="ctx-cookies-get-name-options-">ctx.cookies.get(name, [options])</h3>
 <p>  Get cookie <code>name</code> with <code>options</code>:</p>
 <ul>
 <li><code>signed</code> the cookie requested should be signed</li>
 </ul>
-<p>Koa uses the <a href="https://github.com/jed/cookies">cookies</a> module where options are simply passed.</p>
+<p>Koa uses the <a href="https://github.com/pillarjs/cookies">cookies</a> module where options are simply passed.</p>
 <h3 id="ctx-cookies-set-name-value-options-">ctx.cookies.set(name, value, [options])</h3>
 <p>  Set cookie <code>name</code> to <code>value</code> with <code>options</code>:</p>
 <ul>
-<li><code>maxAge</code> a number representing the milliseconds from Date.now() for expiry</li>
-<li><code>signed</code> sign the cookie value</li>
-<li><code>expires</code> a <code>Date</code> for cookie expiration</li>
-<li><code>path</code> cookie path, <code>/&#39;</code> by default</li>
-<li><code>domain</code> cookie domain</li>
-<li><code>secure</code> secure cookie</li>
-<li><code>httpOnly</code> server-accessible cookie, <strong>true</strong> by default</li>
-<li><code>overwrite</code> a boolean indicating whether to overwrite previously set cookies of the same name (<strong>false</strong> by default). If this is true, all cookies set during the same request with the same name (regardless of path or domain) are filtered out of the Set-Cookie header when setting this cookie.</li>
+<li><code>maxAge</code>: a number representing the milliseconds from <code>Date.now()</code> for expiry.</li>
+<li><code>expires</code>: a <code>Date</code> object indicating the cookie&#39;s expiration date (expires at the end of session by default).</li>
+<li><code>path</code>: a string indicating the path of the cookie (<code>/</code> by default).</li>
+<li><code>domain</code>: a string indicating the domain of the cookie (no default).</li>
+<li><code>secure</code>: a boolean indicating whether the cookie is only to be sent over HTTPS (<code>false</code> by default for HTTP, <code>true</code> by default for HTTPS). <a href="https://github.com/pillarjs/cookies#secure-cookies">Read more about this option</a>.</li>
+<li><code>httpOnly</code>: a boolean indicating whether the cookie is only to be sent over HTTP(S), and not made available to client JavaScript (<code>true</code> by default).</li>
+<li><code>sameSite</code>: a boolean or string indicating whether the cookie is a &quot;same site&quot; cookie (<code>false</code> by default). This can be set to <code>&#39;strict&#39;</code>, <code>&#39;lax&#39;</code>, <code>&#39;none&#39;</code>, or <code>true</code> (which maps to <code>&#39;strict&#39;</code>).</li>
+<li><code>signed</code>: a boolean indicating whether the cookie is to be signed (<code>false</code> by default). If this is true, another cookie of the same name with the <code>.sig</code> suffix appended will also be sent, with a 27-byte url-safe base64 SHA1 value representing the hash of <em>cookie-name</em>=<em>cookie-value</em> against the first <a href="https://www.npmjs.com/package/keygrip">Keygrip</a> key. This signature key is used to detect tampering the next time a cookie is received.</li>
+<li><code>overwrite</code>: a boolean indicating whether to overwrite previously set cookies of the same name (<code>false</code> by default). If this is true, all cookies set during the same request with the same name (regardless of path or domain) are filtered out of the Set-Cookie header when setting this cookie.</li>
 </ul>
-<p>Koa uses the <a href="https://github.com/jed/cookies">cookies</a> module where options are simply passed.</p>
+<p>Koa uses the <a href="https://github.com/pillarjs/cookies">cookies</a> module where options are simply passed.</p>
 <h3 id="ctx-throw-status-msg-properties-">ctx.throw([status], [msg], [properties])</h3>
 <p>  Helper method to throw an error with a <code>.status</code> property
   defaulting to <code>500</code> that will allow Koa to respond appropriately.
   The following combinations are allowed:</p>
-<div id = "example-15"><pre><code class = "lang-js">ctx.throw(400);
+<div id = "example-17"><pre><code class = "lang-js">ctx.throw(400);
 ctx.throw(400, &#39;name required&#39;);
 ctx.throw(400, &#39;name required&#39;, { user: user });</code></pre></div><p>  For example <code>ctx.throw(400, &#39;name required&#39;)</code> is equivalent to:</p>
-<div id = "example-16"><pre><code class = "lang-js">const err = new Error(&#39;name required&#39;);
+<div id = "example-18"><pre><code class = "lang-js">const err = new Error(&#39;name required&#39;);
 err.status = 400;
 err.expose = true;
 throw err;</code></pre></div><p>  Note that these are user-level errors and are flagged with
@@ -227,12 +270,12 @@ throw err;</code></pre></div><p>  Note that these are user-level errors and are 
   error messages since you do not want to leak failure
   details.</p>
 <p>  You may optionally pass a <code>properties</code> object which is merged into the error as-is, useful for decorating machine-friendly errors which are reported to the requester upstream.</p>
-<div id = "example-17"><pre><code class = "lang-js">ctx.throw(401, &#39;access_denied&#39;, { user: user });</code></pre></div><p>Koa uses <a href="https://github.com/jshttp/http-errors">http-errors</a> to create errors.</p>
+<div id = "example-19"><pre><code class = "lang-js">ctx.throw(401, &#39;access_denied&#39;, { user: user });</code></pre></div><p>Koa uses <a href="https://github.com/jshttp/http-errors">http-errors</a> to create errors. <code>status</code> should only be passed as the first parameter.</p>
 <h3 id="ctx-assert-value-status-msg-properties-">ctx.assert(value, [status], [msg], [properties])</h3>
 <p>  Helper method to throw an error similar to <code>.throw()</code>
   when <code>!value</code>. Similar to node&#39;s <a href="http://nodejs.org/api/assert.html">assert()</a>
   method.</p>
-<div id = "example-18"><pre><code class = "lang-js">ctx.assert(ctx.state.user, 401, &#39;User not found. Please login!&#39;);</code></pre></div><p>Koa uses <a href="https://github.com/jshttp/http-assert">http-assert</a> for assertions.</p>
+<div id = "example-20"><pre><code class = "lang-js">ctx.assert(ctx.state.user, 401, &#39;User not found. Please login!&#39;);</code></pre></div><p>Koa uses <a href="https://github.com/jshttp/http-assert">http-assert</a> for assertions.</p>
 <h3 id="ctx-respond">ctx.respond</h3>
 <p>  To bypass Koa&#39;s built-in response handling, you may explicitly set <code>ctx.respond = false;</code>. Use this if you want to write to the raw <code>res</code> object instead of letting Koa handle the response for you.</p>
 <p>  Note that using this is <strong>not</strong> supported by Koa. This may break intended functionality of Koa middleware and Koa itself. Using this property is considered a hack and is only a convenience to those wishing to use traditional <code>fn(req, res)</code> functions and middleware within Koa.</p>
@@ -299,7 +342,8 @@ throw err;</code></pre></div><p>  Note that these are user-level errors and are 
   development.</p>
 <h2 id="api">API</h2>
 <h3 id="request-header">request.header</h3>
-<p> Request header object.</p>
+<p> Request header object.  This is the same as the <a href="https://nodejs.org/api/http.html#http_message_headers"><code>headers</code></a> field
+ on node&#39;s <a href="https://nodejs.org/api/http.html#http_class_http_incomingmessage"><code>http.IncomingMessage</code></a>.</p>
 <h3 id="request-header-">request.header=</h3>
 <p> Set request header object.</p>
 <h3 id="request-headers">request.headers</h3>
@@ -321,10 +365,10 @@ throw err;</code></pre></div><p>  Note that these are user-level errors and are 
 <p>  Get request original URL.</p>
 <h3 id="request-origin">request.origin</h3>
 <p>  Get origin of URL, include <code>protocol</code> and <code>host</code>.</p>
-<div id = "example-19"><pre><code class = "lang-js">ctx.request.origin
+<div id = "example-21"><pre><code class = "lang-js">ctx.request.origin
 // =&gt; http://example.com</code></pre></div><h3 id="request-href">request.href</h3>
 <p>  Get full request URL, include <code>protocol</code>, <code>host</code> and <code>url</code>.</p>
-<div id = "example-20"><pre><code class = "lang-js">ctx.request.href;
+<div id = "example-22"><pre><code class = "lang-js">ctx.request.href;
 // =&gt; http://example.com/foo/bar?q=1</code></pre></div><h3 id="request-path">request.path</h3>
 <p>  Get request pathname.</p>
 <h3 id="request-path-">request.path=</h3>
@@ -350,25 +394,25 @@ throw err;</code></pre></div><p>  Note that these are user-level errors and are 
 <p>  Get WHATWG parsed URL object.</p>
 <h3 id="request-type">request.type</h3>
 <p>  Get request <code>Content-Type</code> void of parameters such as &quot;charset&quot;.</p>
-<div id = "example-21"><pre><code class = "lang-js">const ct = ctx.request.type;
+<div id = "example-23"><pre><code class = "lang-js">const ct = ctx.request.type;
 // =&gt; &quot;image/png&quot;</code></pre></div><h3 id="request-charset">request.charset</h3>
 <p>  Get request charset when present, or <code>undefined</code>:</p>
-<div id = "example-22"><pre><code class = "lang-js">ctx.request.charset;
+<div id = "example-24"><pre><code class = "lang-js">ctx.request.charset;
 // =&gt; &quot;utf-8&quot;</code></pre></div><h3 id="request-query">request.query</h3>
 <p>  Get parsed query-string, returning an empty object when no
   query-string is present. Note that this getter does <em>not</em>
   support nested parsing.</p>
 <p>  For example &quot;color=blue&amp;size=small&quot;:</p>
-<div id = "example-23"><pre><code class = "lang-js">{
+<div id = "example-25"><pre><code class = "lang-js">{
   color: &#39;blue&#39;,
   size: &#39;small&#39;
 }</code></pre></div><h3 id="request-query-">request.query=</h3>
 <p>  Set query-string to the given object. Note that this
   setter does <em>not</em> support nested objects.</p>
-<div id = "example-24"><pre><code class = "lang-js">ctx.query = { next: &#39;/login&#39; };</code></pre></div><h3 id="request-fresh">request.fresh</h3>
+<div id = "example-26"><pre><code class = "lang-js">ctx.query = { next: &#39;/login&#39; };</code></pre></div><h3 id="request-fresh">request.fresh</h3>
 <p>  Check if a request cache is &quot;fresh&quot;, aka the contents have not changed. This
   method is for cache negotiation between <code>If-None-Match</code> / <code>ETag</code>, and <code>If-Modified-Since</code> and <code>Last-Modified</code>. It should be referenced after setting one or more of these response headers.</p>
-<div id = "example-25"><pre><code class = "lang-js">// freshness check requires status 20x or 304
+<div id = "example-27"><pre><code class = "lang-js">// freshness check requires status 20x or 304
 ctx.status = 200;
 ctx.set(&#39;ETag&#39;, &#39;123&#39;);
 
@@ -393,9 +437,34 @@ ctx.body = await db.find(&#39;something&#39;);</code></pre></div><h3 id="request
   is <strong>true</strong>.</p>
 <h3 id="request-ips">request.ips</h3>
 <p>  When <code>X-Forwarded-For</code> is present and <code>app.proxy</code> is enabled an array
-  of these ips is returned, ordered from upstream -&gt; downstream. When disabled
-  an empty array is returned.</p>
-<h3 id="request-subdomains">request.subdomains</h3>
+  of these ips is returned, ordered from upstream -&gt; downstream. When
+  disabled an empty array is returned.</p>
+<p>  For example if the value were &quot;client, proxy1, proxy2&quot;,
+  you would receive the array <code>[&quot;client&quot;, &quot;proxy1&quot;, &quot;proxy2&quot;]</code>.</p>
+<p>  Most of the reverse proxy(nginx) set x-forwarded-for via
+  <code>proxy_add_x_forwarded_for</code>, which poses a certain security risk.
+  A malicious attacker can forge a client&#39;s ip address by forging
+  a <code>X-Forwarded-For</code>request header. The request sent by the client
+  has an <code>X-Forwarded-For</code> request header for &#39;forged&#39;. After being
+  forwarded by the reverse proxy, <code>request.ips</code> will be
+  [&#39;forged&#39;, &#39;client&#39;, &#39;proxy1&#39;, &#39;proxy2&#39;].</p>
+<p>  Koa offers two options to avoid being bypassed.</p>
+<p>  If you can control the reverse proxy, you can avoid bypassing
+  by adjusting the configuration, or use the <code>app.proxyIpHeader</code>
+  provided by koa to avoid reading <code>x-forwarded-for</code> to get ips.</p>
+<div id = "example-28"><pre><code class = "lang-js">  const app = new Koa({
+    proxy: true,
+    proxyIpHeader: &#39;X-Real-IP&#39;,
+  });</code></pre></div><p>  If you know exactly how many reverse proxies are in front of
+  the server, you can avoid reading the user&#39;s forged request
+  header by configuring <code>app.maxIpsCount</code>:</p>
+<div id = "example-29"><pre><code class = "lang-js">  const app = new Koa({
+    proxy: true,
+    maxIpsCount: 1, // only one proxy in front of the server
+  });
+
+  // request.header[&#39;X-Forwarded-For&#39;] === [ &#39;127.0.0.1&#39;, &#39;127.0.0.2&#39; ];
+  // ctx.ips === [ &#39;127.0.0.2&#39; ];</code></pre></div><h3 id="request-subdomains">request.subdomains</h3>
 <p>  Return subdomains as an array.</p>
 <p>  Subdomains are the dot-separated parts of the host before the main domain of
   the app. By default, the domain of the app is assumed to be the last two
@@ -409,7 +478,7 @@ ctx.body = await db.find(&#39;something&#39;);</code></pre></div><h3 id="request
   If there is no request body, <code>null</code> is returned.
   If there is no content type, or the match fails <code>false</code> is returned.
   Otherwise, it returns the matching content-type.</p>
-<div id = "example-26"><pre><code class = "lang-js">// With Content-Type: text/html; charset=utf-8
+<div id = "example-30"><pre><code class = "lang-js">// With Content-Type: text/html; charset=utf-8
 ctx.is(&#39;html&#39;); // =&gt; &#39;html&#39;
 ctx.is(&#39;text/html&#39;); // =&gt; &#39;text/html&#39;
 ctx.is(&#39;text/*&#39;, &#39;text/html&#39;); // =&gt; &#39;text/html&#39;
@@ -421,7 +490,7 @@ ctx.is(&#39;html&#39;, &#39;application/*&#39;); // =&gt; &#39;application/json&
 
 ctx.is(&#39;html&#39;); // =&gt; false</code></pre></div><p>  For example if you want to ensure that
   only images are sent to a given route:</p>
-<div id = "example-27"><pre><code class = "lang-js">if (ctx.is(&#39;image/*&#39;)) {
+<div id = "example-31"><pre><code class = "lang-js">if (ctx.is(&#39;image/*&#39;)) {
   // process
 } else {
   ctx.throw(415, &#39;images only!&#39;);
@@ -440,7 +509,7 @@ ctx.is(&#39;html&#39;); // =&gt; false</code></pre></div><p>  For example if you
 <p>  Check if the given <code>type(s)</code> is acceptable, returning the best match when true, otherwise <code>false</code>. The <code>type</code> value may be one or more mime type string
   such as &quot;application/json&quot;, the extension name
   such as &quot;json&quot;, or an array <code>[&quot;json&quot;, &quot;html&quot;, &quot;text/plain&quot;]</code>.</p>
-<div id = "example-28"><pre><code class = "lang-js">// Accept: text/html
+<div id = "example-32"><pre><code class = "lang-js">// Accept: text/html
 ctx.accepts(&#39;html&#39;);
 // =&gt; &quot;html&quot;
 
@@ -470,53 +539,53 @@ ctx.accepts(&#39;html&#39;, &#39;json&#39;);
 ctx.accepts(&#39;json&#39;, &#39;html&#39;);
 // =&gt; &quot;json&quot;</code></pre></div><p>  You may call <code>ctx.accepts()</code> as many times as you like,
   or use a switch:</p>
-<div id = "example-29"><pre><code class = "lang-js">switch (ctx.accepts(&#39;json&#39;, &#39;html&#39;, &#39;text&#39;)) {
+<div id = "example-33"><pre><code class = "lang-js">switch (ctx.accepts(&#39;json&#39;, &#39;html&#39;, &#39;text&#39;)) {
   case &#39;json&#39;: break;
   case &#39;html&#39;: break;
   case &#39;text&#39;: break;
   default: ctx.throw(406, &#39;json, html, or text only&#39;);
 }</code></pre></div><h3 id="request-acceptsencodings-encodings-">request.acceptsEncodings(encodings)</h3>
 <p>  Check if <code>encodings</code> are acceptable, returning the best match when true, otherwise <code>false</code>. Note that you should include <code>identity</code> as one of the encodings!</p>
-<div id = "example-30"><pre><code class = "lang-js">// Accept-Encoding: gzip
+<div id = "example-34"><pre><code class = "lang-js">// Accept-Encoding: gzip
 ctx.acceptsEncodings(&#39;gzip&#39;, &#39;deflate&#39;, &#39;identity&#39;);
 // =&gt; &quot;gzip&quot;
 
 ctx.acceptsEncodings([&#39;gzip&#39;, &#39;deflate&#39;, &#39;identity&#39;]);
 // =&gt; &quot;gzip&quot;</code></pre></div><p>  When no arguments are given all accepted encodings
   are returned as an array:</p>
-<div id = "example-31"><pre><code class = "lang-js">// Accept-Encoding: gzip, deflate
+<div id = "example-35"><pre><code class = "lang-js">// Accept-Encoding: gzip, deflate
 ctx.acceptsEncodings();
 // =&gt; [&quot;gzip&quot;, &quot;deflate&quot;, &quot;identity&quot;]</code></pre></div><p>  Note that the <code>identity</code> encoding (which means no encoding) could be unacceptable if the client explicitly sends <code>identity;q=0</code>. Although this is an edge case, you should still handle the case where this method returns <code>false</code>.</p>
 <h3 id="request-acceptscharsets-charsets-">request.acceptsCharsets(charsets)</h3>
 <p>  Check if <code>charsets</code> are acceptable, returning
   the best match when true, otherwise <code>false</code>.</p>
-<div id = "example-32"><pre><code class = "lang-js">// Accept-Charset: utf-8, iso-8859-1;q=0.2, utf-7;q=0.5
+<div id = "example-36"><pre><code class = "lang-js">// Accept-Charset: utf-8, iso-8859-1;q=0.2, utf-7;q=0.5
 ctx.acceptsCharsets(&#39;utf-8&#39;, &#39;utf-7&#39;);
 // =&gt; &quot;utf-8&quot;
 
 ctx.acceptsCharsets([&#39;utf-7&#39;, &#39;utf-8&#39;]);
 // =&gt; &quot;utf-8&quot;</code></pre></div><p>  When no arguments are given all accepted charsets
   are returned as an array:</p>
-<div id = "example-33"><pre><code class = "lang-js">// Accept-Charset: utf-8, iso-8859-1;q=0.2, utf-7;q=0.5
+<div id = "example-37"><pre><code class = "lang-js">// Accept-Charset: utf-8, iso-8859-1;q=0.2, utf-7;q=0.5
 ctx.acceptsCharsets();
 // =&gt; [&quot;utf-8&quot;, &quot;utf-7&quot;, &quot;iso-8859-1&quot;]</code></pre></div><h3 id="request-acceptslanguages-langs-">request.acceptsLanguages(langs)</h3>
 <p>  Check if <code>langs</code> are acceptable, returning
   the best match when true, otherwise <code>false</code>.</p>
-<div id = "example-34"><pre><code class = "lang-js">// Accept-Language: en;q=0.8, es, pt
+<div id = "example-38"><pre><code class = "lang-js">// Accept-Language: en;q=0.8, es, pt
 ctx.acceptsLanguages(&#39;es&#39;, &#39;en&#39;);
 // =&gt; &quot;es&quot;
 
 ctx.acceptsLanguages([&#39;en&#39;, &#39;es&#39;]);
 // =&gt; &quot;es&quot;</code></pre></div><p>  When no arguments are given all accepted languages
   are returned as an array:</p>
-<div id = "example-35"><pre><code class = "lang-js">// Accept-Language: en;q=0.8, es, pt
+<div id = "example-39"><pre><code class = "lang-js">// Accept-Language: en;q=0.8, es, pt
 ctx.acceptsLanguages();
 // =&gt; [&quot;es&quot;, &quot;pt&quot;, &quot;en&quot;]</code></pre></div><h3 id="request-idempotent">request.idempotent</h3>
 <p>  Check if the request is idempotent.</p>
 <h3 id="request-socket">request.socket</h3>
 <p>  Return the request socket.</p>
 <h3 id="request-get-field-">request.get(field)</h3>
-<p>  Return request header.</p>
+<p>  Return request header with case-insensitive <code>field</code>.</p>
 </div></section><section><div class="content"><h1 id="response">Response</h1>
 <p>  A Koa <code>Response</code> object is an abstraction on top of node&#39;s vanilla response object,
   providing additional functionality that is useful for every day HTTP server
@@ -527,7 +596,7 @@ ctx.acceptsLanguages();
 <h3 id="response-headers">response.headers</h3>
 <p>  Response header object. Alias as <code>response.header</code>.</p>
 <h3 id="response-socket">response.socket</h3>
-<p>  Request socket.</p>
+<p>  Response socket. Points to net.Socket instance as <code>request.socket</code>.</p>
 <h3 id="response-status">response.status</h3>
 <p>  Get response status. By default, <code>response.status</code> is set to <code>404</code> unlike node&#39;s <code>res.statusCode</code> which defaults to <code>200</code>.</p>
 <h3 id="response-status-">response.status=</h3>
@@ -595,7 +664,12 @@ ctx.acceptsLanguages();
 <p><strong>NOTE</strong>: don&#39;t worry too much about memorizing these strings,
 if you have a typo an error will be thrown, displaying this list
 so you can make a correction.</p>
-<h3 id="response-message">response.message</h3>
+<p>  Since <code>response.status</code> default is set to <code>404</code>, to send a response
+  without a body and with a different status is to be done like this:</p>
+<div id = "example-40"><pre><code class = "lang-js">ctx.response.status = 200;
+
+// Or whatever other status
+ctx.response.status = 204;</code></pre></div><h3 id="response-message">response.message</h3>
 <p>  Get response status message. By default, <code>response.message</code> is
   associated with <code>response.status</code>.</p>
 <h3 id="response-message-">response.message=</h3>
@@ -614,10 +688,19 @@ so you can make a correction.</p>
 <li><code>Buffer</code> written</li>
 <li><code>Stream</code> piped</li>
 <li><code>Object</code> || <code>Array</code> json-stringified</li>
-<li><code>null</code> no content response</li>
+<li><code>null</code> || <code>undefined</code> no content response</li>
 </ul>
-<p>If <code>response.status</code> has not been set, Koa will automatically set the status to <code>200</code> or <code>204</code>.</p>
-<h4 id="string">String</h4>
+<p>If <code>response.status</code> has not been set, Koa will automatically set the status to <code>200</code> or <code>204</code> depending on <code>response.body</code>. Specifically, if <code>response.body</code> has not been set or has been set as <code>null</code> or <code>undefined</code>, Koa will automatically set <code>response.status</code> to <code>204</code>. If you really want to send no content response with other status, you should override the <code>204</code> status as the following way:</p>
+<div id = "example-41"><pre><code class = "lang-js">// This must be always set first before status, since null | undefined
+// body automatically sets the status to 204
+ctx.body = null;
+// Now we override the 204 status with the desired one
+ctx.status = 200;</code></pre></div><p>Koa doesn&#39;t guard against everything that could be put as a response body -- a function doesn&#39;t serialise meaningfully, returning a boolean may make sense based on your application, and while an error works, it may not work as intended as some properties of an error are not enumerable.  We recommend adding middleware in your app that asserts body types per app.  A sample middleware might be:</p>
+<div id = "example-42"><pre><code class = "lang-js">app.use(async (ctx, next) =&gt; {
+  await next()
+
+  ctx.assert.equal(&#39;object&#39;, typeof ctx.body, 500, &#39;some dev did something wrong&#39;)
+})</code></pre></div><h4 id="string">String</h4>
 <p>  The Content-Type is defaulted to text/html or text/plain, both with
   a default charset of utf-8. The Content-Length field is also set.</p>
 <h4 id="buffer">Buffer</h4>
@@ -631,31 +714,35 @@ so you can make a correction.</p>
   For example, you may not want this when setting the body as an HTTP stream in a proxy as it would destroy the underlying connection.</p>
 <p>  See: <a href="https://github.com/koajs/koa/pull/612">https://github.com/koajs/koa/pull/612</a> for more information.</p>
 <p>  Here&#39;s an example of stream error handling without automatically destroying the stream:</p>
-<div id = "example-36"><pre><code class = "lang-js">const PassThrough = require(&#39;stream&#39;).PassThrough;
+<div id = "example-43"><pre><code class = "lang-js">const PassThrough = require(&#39;stream&#39;).PassThrough;
 
 app.use(async ctx =&gt; {
-  ctx.body = someHTTPStream.on(&#39;error&#39;, ctx.onerror).pipe(PassThrough());
+  ctx.body = someHTTPStream.on(&#39;error&#39;, (err) =&gt; ctx.onerror(err)).pipe(PassThrough());
 });</code></pre></div><h4 id="object">Object</h4>
 <p>  The Content-Type is defaulted to application/json. This includes plain objects <code>{ foo: &#39;bar&#39; }</code> and arrays <code>[&#39;foo&#39;, &#39;bar&#39;]</code>.</p>
 <h3 id="response-get-field-">response.get(field)</h3>
 <p>  Get a response header field value with case-insensitive <code>field</code>.</p>
-<div id = "example-37"><pre><code class = "lang-js">const etag = ctx.response.get(&#39;ETag&#39;);</code></pre></div><h3 id="response-set-field-value-">response.set(field, value)</h3>
+<div id = "example-44"><pre><code class = "lang-js">const etag = ctx.response.get(&#39;ETag&#39;);</code></pre></div><h3 id="response-has-field-">response.has(field)</h3>
+<p>  Returns <code>true</code> if the header identified by name is currently set in the outgoing headers.
+  The header name matching is case-insensitive.</p>
+<div id = "example-45"><pre><code class = "lang-js">const rateLimited = ctx.response.has(&#39;X-RateLimit-Limit&#39;);</code></pre></div><h3 id="response-set-field-value-">response.set(field, value)</h3>
 <p>  Set response header <code>field</code> to <code>value</code>:</p>
-<div id = "example-38"><pre><code class = "lang-js">ctx.set(&#39;Cache-Control&#39;, &#39;no-cache&#39;);</code></pre></div><h3 id="response-append-field-value-">response.append(field, value)</h3>
+<div id = "example-46"><pre><code class = "lang-js">ctx.set(&#39;Cache-Control&#39;, &#39;no-cache&#39;);</code></pre></div><h3 id="response-append-field-value-">response.append(field, value)</h3>
 <p>  Append additional header <code>field</code> with value <code>val</code>.</p>
-<div id = "example-39"><pre><code class = "lang-js">ctx.append(&#39;Link&#39;, &#39;&lt;http://127.0.0.1/&gt;&#39;);</code></pre></div><h3 id="response-set-fields-">response.set(fields)</h3>
+<div id = "example-47"><pre><code class = "lang-js">ctx.append(&#39;Link&#39;, &#39;&lt;http://127.0.0.1/&gt;&#39;);</code></pre></div><h3 id="response-set-fields-">response.set(fields)</h3>
 <p>  Set several response header <code>fields</code> with an object:</p>
-<div id = "example-40"><pre><code class = "lang-js">ctx.set({
+<div id = "example-48"><pre><code class = "lang-js">ctx.set({
   &#39;Etag&#39;: &#39;1234&#39;,
   &#39;Last-Modified&#39;: date
-});</code></pre></div><h3 id="response-remove-field-">response.remove(field)</h3>
+});</code></pre></div><p>This delegates to <a href="https://nodejs.org/dist/latest/docs/api/http.html#http_request_setheader_name_value">setHeader</a> which sets or updates headers by specified keys and doesn&#39;t reset the entire header.</p>
+<h3 id="response-remove-field-">response.remove(field)</h3>
 <p>  Remove header <code>field</code>.</p>
 <h3 id="response-type">response.type</h3>
 <p>  Get response <code>Content-Type</code> void of parameters such as &quot;charset&quot;.</p>
-<div id = "example-41"><pre><code class = "lang-js">const ct = ctx.type;
+<div id = "example-49"><pre><code class = "lang-js">const ct = ctx.type;
 // =&gt; &quot;image/png&quot;</code></pre></div><h3 id="response-type-">response.type=</h3>
 <p>  Set response <code>Content-Type</code> via mime string or file extension.</p>
-<div id = "example-42"><pre><code class = "lang-js">ctx.type = &#39;text/plain; charset=utf-8&#39;;
+<div id = "example-50"><pre><code class = "lang-js">ctx.type = &#39;text/plain; charset=utf-8&#39;;
 ctx.type = &#39;image/png&#39;;
 ctx.type = &#39;.png&#39;;
 ctx.type = &#39;png&#39;;</code></pre></div><p>  Note: when appropriate a <code>charset</code> is selected for you, for
@@ -668,7 +755,7 @@ ctx.type = &#39;png&#39;;</code></pre></div><p>  Note: when appropriate a <code>
   manipulate responses.</p>
 <p>  For example, this is a middleware that minifies
   all HTML responses except for streams.</p>
-<div id = "example-43"><pre><code class = "lang-js">const minify = require(&#39;html-minifier&#39;);
+<div id = "example-51"><pre><code class = "lang-js">const minify = require(&#39;html-minifier&#39;);
 
 app.use(async (ctx, next) =&gt; {
   await next();
@@ -685,17 +772,17 @@ app.use(async (ctx, next) =&gt; {
 <p>  The string &quot;back&quot; is special-cased
   to provide Referrer support, when Referrer
   is not present <code>alt</code> or &quot;/&quot; is used.</p>
-<div id = "example-44"><pre><code class = "lang-js">ctx.redirect(&#39;back&#39;);
+<div id = "example-52"><pre><code class = "lang-js">ctx.redirect(&#39;back&#39;);
 ctx.redirect(&#39;back&#39;, &#39;/index.html&#39;);
 ctx.redirect(&#39;/login&#39;);
 ctx.redirect(&#39;http://google.com&#39;);</code></pre></div><p>  To alter the default status of <code>302</code>, simply assign the status
   before or after this call. To alter the body, assign it after this call:</p>
-<div id = "example-45"><pre><code class = "lang-js">ctx.status = 301;
+<div id = "example-53"><pre><code class = "lang-js">ctx.status = 301;
 ctx.redirect(&#39;/cart&#39;);
-ctx.body = &#39;Redirecting to shopping cart&#39;;</code></pre></div><h3 id="response-attachment-filename-">response.attachment([filename])</h3>
+ctx.body = &#39;Redirecting to shopping cart&#39;;</code></pre></div><h3 id="response-attachment-filename-options-">response.attachment([filename], [options])</h3>
 <p>  Set <code>Content-Disposition</code> to &quot;attachment&quot; to signal the client
   to prompt for download. Optionally specify the <code>filename</code> of the
-  download.</p>
+  download and some <a href="https://github.com/jshttp/content-disposition#options">options</a>.</p>
 <h3 id="response-headersent">response.headerSent</h3>
 <p>  Check if a response header has already been sent. Useful for seeing
   if the client may be notified on error.</p>
@@ -704,10 +791,10 @@ ctx.body = &#39;Redirecting to shopping cart&#39;;</code></pre></div><h3 id="res
 <h3 id="response-lastmodified-">response.lastModified=</h3>
 <p>  Set the <code>Last-Modified</code> header as an appropriate UTC string.
   You can either set it as a <code>Date</code> or date string.</p>
-<div id = "example-46"><pre><code class = "lang-js">ctx.response.lastModified = new Date();</code></pre></div><h3 id="response-etag-">response.etag=</h3>
+<div id = "example-54"><pre><code class = "lang-js">ctx.response.lastModified = new Date();</code></pre></div><h3 id="response-etag-">response.etag=</h3>
 <p>  Set the ETag of a response including the wrapped <code>&quot;</code>s.
   Note that there is no corresponding <code>response.etag</code> getter.</p>
-<div id = "example-47"><pre><code class = "lang-js">ctx.response.etag = crypto.createHash(&#39;md5&#39;).update(ctx.body).digest(&#39;hex&#39;);</code></pre></div><h3 id="response-vary-field-">response.vary(field)</h3>
+<div id = "example-55"><pre><code class = "lang-js">ctx.response.etag = crypto.createHash(&#39;md5&#39;).update(ctx.body).digest(&#39;hex&#39;);</code></pre></div><h3 id="response-vary-field-">response.vary(field)</h3>
 <p>  Vary on <code>field</code>.</p>
 <h3 id="response-flushheaders-">response.flushHeaders()</h3>
 <p>  Flush any set headers, and begin the body.</p>

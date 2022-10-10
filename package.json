@@ -4,7 +4,7 @@
   "version": "0.0.1",
   "description": "the koa website",
   "dependencies": {
-    "highlight.js": "^9.14.2",
+    "highlight.js": "^10.4.1",
     "marked": "~0.3.17",
     "pug": "^2.0.0-rc.2",
     "pug-cli": "^1.0.0-alpha6",

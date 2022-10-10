@@ -6,7 +6,7 @@
   "dependencies": {
     "highlight.js": "^9.14.2",
     "marked": "~0.3.17",
-    "pug": "^2.0.0-rc.2",
+    "pug": "^3.0.1",
     "pug-cli": "^1.0.0-alpha6",
     "stdin": "0.0.1"
   }

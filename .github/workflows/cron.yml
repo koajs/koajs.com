@@ -1,6 +1,7 @@
 name: Update Site
 
 on:
+  workflow_dispatch:
   schedule:
   - cron: '0 1 * * *'
 
@@ -14,32 +15,9 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v1
         with:
-          node-version: 16.x
-
-      - name: restore node_modules
-        uses: actions/cache@v2.1.7
-        id: node-cache
-        with:
-          path: node_modules
-          key: ${{ runner.os }}-node-${{ hashFiles('package-lock.json') }}
-
-      - name: Get npm cache directory path
-        if: steps.node-cache.outputs.cache-hit != 'true'
-        id: npm-cache-dir-path
-        run: echo "::set-output name=dir::$(npm config get cache)"
-
-      - name: npm-cache
-        if: steps.node-cache.outputs.cache-hit != 'true'
-        uses: actions/cache@v2.1.7
-        id: npm-cache
-        with:
-          path: ${{ steps.npm-cache-dir-path.outputs.dir }}
-          key: ${{ runner.os }}-npm-${{ hashFiles('package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-npm-
+          node-version: 22.x
 
       - name: Install Deps
-        if: steps.node-cache.outputs.cache-hit != 'true'
         run: npm ci
 
       - name: Build

@@ -7,9 +7,9 @@ to ditch callbacks and greatly increase error-handling. Koa does not bundle any
 middleware within its core, and it provides an elegant suite of methods that make
 writing servers fast and enjoyable.
 </p></div></section><section><div class="content"><h1 id="installation">Installation</h1>
-<p>  Koa requires <strong>node v12</strong> or higher for ES2015 and async function support.</p>
-<p>  You can quickly install a supported version of node with your favorite version manager:</p>
-<div id = "example-0"><pre><code class = "lang-bash">$ nvm install 7
+<p>  Koa requires <strong>node v18</strong> or higher for ES2015 and async function support.</p>
+<p>  You can quickly install a supported version of Node with your favorite version manager:</p>
+<div id = "example-0"><pre><code class = "lang-bash">$ nvm install 12
 $ npm i koa
 $ node my-koa-app.js</code></pre></div><h1 id="application">Application</h1>
 <p>  A Koa application is an object containing an array of middleware functions
@@ -51,7 +51,7 @@ app.listen(3000);</code></pre></div><script>(function endpoint(id, count) {
                 });
             })("example-1")</script><h2 id="cascading">Cascading</h2>
 <p>  Koa middleware cascade in a more traditional way as you may be used to with similar tools -
-  this was previously difficult to make user friendly with node&#39;s use of callbacks.
+  this was previously difficult to make user friendly with Node&#39;s use of callbacks.
   However with async functions we can achieve &quot;true&quot; middleware. Contrasting Connect&#39;s implementation which
   simply passes control through series of functions until one returns, Koa invoke &quot;downstream&quot;, then
   control flows back &quot;upstream&quot;.</p>
@@ -195,7 +195,7 @@ app.use(async ctx =&gt; {
   appropriately with a 500 &quot;Internal Server Error&quot;. In either case
   an app-level &quot;error&quot; is emitted for logging purposes.</p>
 </div></section><section><div class="content"><h1 id="context">Context</h1>
-<p>  A Koa Context encapsulates node&#39;s <code>request</code> and <code>response</code> objects
+<p>  A Koa Context encapsulates Node&#39;s <code>request</code> and <code>response</code> objects
   into a single object which provides many helpful methods for writing
   web applications and APIs.
   These operations are used so frequently in HTTP server development
@@ -217,7 +217,7 @@ app.use(async ctx =&gt; {
 <p>  Node&#39;s <code>request</code> object.</p>
 <h3 id="ctx-res">ctx.res</h3>
 <p>  Node&#39;s <code>response</code> object.</p>
-<p>  Bypassing Koa&#39;s response handling is <strong>not supported</strong>. Avoid using the following node properties:</p>
+<p>  Bypassing Koa&#39;s response handling is <strong>not supported</strong>. Avoid using the following Node properties:</p>
 <ul>
 <li><code>res.statusCode</code></li>
 <li><code>res.writeHead()</code></li>
@@ -249,6 +249,8 @@ app.use(async ctx =&gt; {
 <li><code>domain</code>: a string indicating the domain of the cookie (no default).</li>
 <li><code>secure</code>: a boolean indicating whether the cookie is only to be sent over HTTPS (<code>false</code> by default for HTTP, <code>true</code> by default for HTTPS). <a href="https://github.com/pillarjs/cookies#secure-cookies">Read more about this option</a>.</li>
 <li><code>httpOnly</code>: a boolean indicating whether the cookie is only to be sent over HTTP(S), and not made available to client JavaScript (<code>true</code> by default).</li>
+<li><code>partitioned</code>: a boolean indicating whether to partition the cookie in Chrome for the <a href="https://developers.google.com/privacy-sandbox/3pcd/chips">CHIPS Update</a> (<code>false</code> by default). If this is true, Cookies from embedded sites will be partitioned and only readable from the same top level site from which it was created.</li>
+<li><code>priority</code>: a string indicating the cookie priority. This can be set to <code>&#39;low&#39;</code>, <code>&#39;medium&#39;</code>, or <code>&#39;high&#39;</code>.</li>
 <li><code>sameSite</code>: a boolean or string indicating whether the cookie is a &quot;same site&quot; cookie (<code>false</code> by default). This can be set to <code>&#39;strict&#39;</code>, <code>&#39;lax&#39;</code>, <code>&#39;none&#39;</code>, or <code>true</code> (which maps to <code>&#39;strict&#39;</code>).</li>
 <li><code>signed</code>: a boolean indicating whether the cookie is to be signed (<code>false</code> by default). If this is true, another cookie of the same name with the <code>.sig</code> suffix appended will also be sent, with a 27-byte url-safe base64 SHA1 value representing the hash of <em>cookie-name</em>=<em>cookie-value</em> against the first <a href="https://www.npmjs.com/package/keygrip">Keygrip</a> key. This signature key is used to detect tampering the next time a cookie is received.</li>
 <li><code>overwrite</code>: a boolean indicating whether to overwrite previously set cookies of the same name (<code>false</code> by default). If this is true, all cookies set during the same request with the same name (regardless of path or domain) are filtered out of the Set-Cookie header when setting this cookie.</li>
@@ -273,7 +275,7 @@ throw err;</code></pre></div><p>  Note that these are user-level errors and are 
 <div id = "example-19"><pre><code class = "lang-js">ctx.throw(401, &#39;access_denied&#39;, { user: user });</code></pre></div><p>Koa uses <a href="https://github.com/jshttp/http-errors">http-errors</a> to create errors. <code>status</code> should only be passed as the first parameter.</p>
 <h3 id="ctx-assert-value-status-msg-properties-">ctx.assert(value, [status], [msg], [properties])</h3>
 <p>  Helper method to throw an error similar to <code>.throw()</code>
-  when <code>!value</code>. Similar to node&#39;s <a href="http://nodejs.org/api/assert.html">assert()</a>
+  when <code>!value</code>. Similar to Node&#39;s <a href="http://nodejs.org/api/assert.html">assert()</a>
   method.</p>
 <div id = "example-20"><pre><code class = "lang-js">ctx.assert(ctx.state.user, 401, &#39;User not found. Please login!&#39;);</code></pre></div><p>Koa uses <a href="https://github.com/jshttp/http-assert">http-assert</a> for assertions.</p>
 <h3 id="ctx-respond">ctx.respond</h3>
@@ -319,6 +321,7 @@ throw err;</code></pre></div><p>  Note that these are user-level errors and are 
 <ul>
 <li><code>ctx.body</code></li>
 <li><code>ctx.body=</code></li>
+<li><code>ctx.has()</code></li>
 <li><code>ctx.status</code></li>
 <li><code>ctx.status=</code></li>
 <li><code>ctx.message</code></li>
@@ -327,6 +330,7 @@ throw err;</code></pre></div><p>  Note that these are user-level errors and are 
 <li><code>ctx.length</code></li>
 <li><code>ctx.type=</code></li>
 <li><code>ctx.type</code></li>
+<li><code>ctx.vary()</code></li>
 <li><code>ctx.headerSent</code></li>
 <li><code>ctx.redirect()</code></li>
 <li><code>ctx.attachment()</code></li>
@@ -335,15 +339,16 @@ throw err;</code></pre></div><p>  Note that these are user-level errors and are 
 <li><code>ctx.remove()</code></li>
 <li><code>ctx.lastModified=</code></li>
 <li><code>ctx.etag=</code></li>
+<li><code>ctx.writable</code></li>
 </ul>
 </div></section><section><div class="content"><h1 id="request">Request</h1>
-<p>  A Koa <code>Request</code> object is an abstraction on top of node&#39;s vanilla request object,
+<p>  A Koa <code>Request</code> object is an abstraction on top of Node&#39;s vanilla request object,
   providing additional functionality that is useful for every day HTTP server
   development.</p>
 <h2 id="api">API</h2>
 <h3 id="request-header">request.header</h3>
 <p> Request header object.  This is the same as the <a href="https://nodejs.org/api/http.html#http_message_headers"><code>headers</code></a> field
- on node&#39;s <a href="https://nodejs.org/api/http.html#http_class_http_incomingmessage"><code>http.IncomingMessage</code></a>.</p>
+ on Node&#39;s <a href="https://nodejs.org/api/http.html#http_class_http_incomingmessage"><code>http.IncomingMessage</code></a>.</p>
 <h3 id="request-header-">request.header=</h3>
 <p> Set request header object.</p>
 <h3 id="request-headers">request.headers</h3>
@@ -587,7 +592,7 @@ ctx.acceptsLanguages();
 <h3 id="request-get-field-">request.get(field)</h3>
 <p>  Return request header with case-insensitive <code>field</code>.</p>
 </div></section><section><div class="content"><h1 id="response">Response</h1>
-<p>  A Koa <code>Response</code> object is an abstraction on top of node&#39;s vanilla response object,
+<p>  A Koa <code>Response</code> object is an abstraction on top of Node&#39;s vanilla response object,
   providing additional functionality that is useful for every day HTTP server
   development.</p>
 <h2 id="api">API</h2>
@@ -598,7 +603,7 @@ ctx.acceptsLanguages();
 <h3 id="response-socket">response.socket</h3>
 <p>  Response socket. Points to net.Socket instance as <code>request.socket</code>.</p>
 <h3 id="response-status">response.status</h3>
-<p>  Get response status. By default, <code>response.status</code> is set to <code>404</code> unlike node&#39;s <code>res.statusCode</code> which defaults to <code>200</code>.</p>
+<p>  Get response status. By default, <code>response.status</code> is set to <code>404</code> unlike Node&#39;s <code>res.statusCode</code> which defaults to <code>200</code>.</p>
 <h3 id="response-status-">response.status=</h3>
 <p>  Set response status via numeric code:</p>
 <ul>
@@ -767,19 +772,17 @@ app.use(async (ctx, next) =&gt; {
 
   if (Buffer.isBuffer(body)) body = body.toString();
   ctx.body = minify(body);
-});</code></pre></div><h3 id="response-redirect-url-alt-">response.redirect(url, [alt])</h3>
+});</code></pre></div><h3 id="response-redirect-url-">response.redirect(url)</h3>
 <p>  Perform a [302] redirect to <code>url</code>.</p>
-<p>  The string &quot;back&quot; is special-cased
-  to provide Referrer support, when Referrer
-  is not present <code>alt</code> or &quot;/&quot; is used.</p>
-<div id = "example-52"><pre><code class = "lang-js">ctx.redirect(&#39;back&#39;);
-ctx.redirect(&#39;back&#39;, &#39;/index.html&#39;);
-ctx.redirect(&#39;/login&#39;);
+<div id = "example-52"><pre><code class = "lang-js">ctx.redirect(&#39;/login&#39;);
 ctx.redirect(&#39;http://google.com&#39;);</code></pre></div><p>  To alter the default status of <code>302</code>, simply assign the status
   before or after this call. To alter the body, assign it after this call:</p>
 <div id = "example-53"><pre><code class = "lang-js">ctx.status = 301;
 ctx.redirect(&#39;/cart&#39;);
-ctx.body = &#39;Redirecting to shopping cart&#39;;</code></pre></div><h3 id="response-attachment-filename-options-">response.attachment([filename], [options])</h3>
+ctx.body = &#39;Redirecting to shopping cart&#39;;</code></pre></div><h3 id="response-back-url-">response.back(url)</h3>
+<p>  Similar to <code>.redirect(url)</code>, but first checks the <code>referer</code> header to redirect.
+  This is new in v3 as <code>.redirect(url, alt)</code> removes the special case <code>url = &#39;back&#39;</code> option.</p>
+<h3 id="response-attachment-filename-options-">response.attachment([filename], [options])</h3>
 <p>  Set <code>Content-Disposition</code> to &quot;attachment&quot; to signal the client
   to prompt for download. Optionally specify the <code>filename</code> of the
   download and some <a href="https://github.com/jshttp/content-disposition#options">options</a>.</p>
@@ -798,6 +801,8 @@ ctx.body = &#39;Redirecting to shopping cart&#39;;</code></pre></div><h3 id="res
 <p>  Vary on <code>field</code>.</p>
 <h3 id="response-flushheaders-">response.flushHeaders()</h3>
 <p>  Flush any set headers, and begin the body.</p>
+<h3 id="response-writable">response.writable</h3>
+<p>  A boolean that indicates whether the response is still writable</p>
 </div></section><section><div class="content"><h1 id="sponsor">Sponsor</h1><p><a href="https://apex.sh/ping">Apex Ping </a>is a beautiful uptime monitoring solution for websites and APIs, by one of the original authors of Koa.</p><a href="https://apex.sh/ping"><img src="https://apex-inc.imgix.net/images/products/apex-ping/marketing/overview.png?auto=format&amp;w=1400"></a></div></section><section><div class="content"><h1 id="links">Links</h1><p>Community links to discover third-party middleware for Koa, full runnable examples,
 thorough guides and more! If you have questions join us in IRC!
 </p><ul><li><a href="https://github.com/koajs/koa">GitHub repository</a></li><li><a href="https://github.com/koajs/examples">Examples</a></li><li><a href="https://github.com/koajs/koa/wiki">Middleware</a></li><li><a href="https://github.com/koajs/koa/wiki">Wiki</a></li><li><a href="https://groups.google.com/forum/#!forum/koajs">Mailing list</a></li><li><a href="https://github.com/koajs/koa/blob/master/docs/guide.md">Guide</a></li><li><a href="https://github.com/koajs/koa/blob/master/docs/faq.md">FAQ</a></li><li><strong>#koajs</strong> on freenode</li></ul></div></section></body></html>
